@@ -1,10 +1,19 @@
 # Setup
 
+- **Backend**
+  - navigate to backend directory (cd backend)
+  - install dependencies (npm i)
 
-- **Frontend** (npm i for dependencies in /frontend)
-    - Angular >= 21
+- **Frontend**
+  - navigate to backend directory (cd frontend)
+  - install dependencies (npm i)
 
 # Execution
+
+- **Backend**
+  - run node server.js 
+  - Test base route on "http://localhost:3000/"
+  - Test user route on "http://localhost:3000/api/users/"
 
 - **Frontend**
   - in terminal:
