@@ -1,14 +1,190 @@
-DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Review;
 
-CREATE TABLE User
+DROP TABLE IF EXISTS OrderItem;
+DROP TABLE IF EXISTS "Order";
+DROP TABLE IF EXISTS Customer;
+
+DROP TABLE IF EXISTS SiteManager;
+
+DROP TABLE IF EXISTS Dish;
+DROP TABLE IF EXISTS Menu;
+DROP TABLE IF EXISTS Restaurant;
+DROP TABLE IF EXISTS RestaurantOwner;
+
+DROP TABLE IF EXISTS AppUser;
+
+CREATE TABLE AppUser
 (
-  email PRIMARY KEY,
+  username varchar(100) PRIMARY KEY,
   password varchar(100) NOT NULL,
-  fullname varchar(100) NOT NULL
+  firstname varchar(100),
+  lastname varchar(100)
 );
 
-INSERT INTO User (email, password, fullname)
+INSERT INTO AppUser (username, password, firstname, lastname)
 VALUES 
-    ('Amy@abc.com', 'mypassA', 'Amy Peterson'),
-    ('Brian@bobble.co.uk', 'secretB', 'Brian Benderson'),
-    ('Cam@cambridge.edu.uk', 'MyPasswordC', 'Cameron Charleston');
+    ('admin', 'admin', NULL, NULL),
+    ('RO1', 'passRO1', NULL, NULL),
+    ('RO2', 'passRO2', NULL, NULL),
+    ('Amy@abc.com', 'passA', 'Amy', 'Peterson'),
+    ('Brian@bobble.co.uk', 'passB', 'Brian', 'Benderson'),
+    ('Cam@cambridge.edu.uk', 'passC', 'Cameron', 'Charleston'),
+    ('Dan@deven.at', 'passD', 'Daniel', 'Dealy'),
+    ('Emily@Ely.fr', 'passE', 'Emily', 'Ellington');
+
+
+
+
+DROP TYPE IF EXISTS blocked_status;
+CREATE TYPE blocked_status as ENUM('not-blocked', 'warned', 'blocked');
+
+CREATE TABLE Customer
+(
+  username varchar(100) PRIMARY KEY REFERENCES public.AppUser(username),
+  blockedStatus blocked_status,
+  address varchar(100),
+  postcode varchar(100),
+  phoneNumber varchar(100)
+);
+
+INSERT INTO Customer (username, blockedStatus, address, postcode, phoneNumber)
+VALUES 
+    ('Amy@abc.com', 'not-blocked', '1 Florabella Villas, Chalfont St Giles', 'HP8 4PE', '(01494) 048820'),
+    ('Brian@bobble.co.uk', 'not-blocked', '46 Beatrice Avenue, Saltash', 'PL12 4NG', '(01752) 645533'),
+    ('Cam@cambridge.edu.uk', 'not-blocked', 'The Conifers, Sodyllt Bank, Dudleston', 'SY12 9EJ', '(01978) 664871'),
+    ('Dan@deven.at', 'warned', 'Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham', 'B3 1RZ', '(0121) 476 5706'),
+    ('Emily@Ely.fr', 'blocked', '14 Stour Road, Grays', 'RM16 4BS', '(01375) 257756');
+
+
+
+
+CREATE TABLE SiteManager
+(
+  username varchar(100) PRIMARY KEY REFERENCES public.AppUser(username)
+);
+
+INSERT INTO SiteManager (username)
+VALUES
+  ('admin');
+
+
+
+
+CREATE TABLE RestaurantOwner
+(
+  username varchar(100) PRIMARY KEY REFERENCES public.AppUser(username)
+);
+
+INSERT INTO RestaurantOwner (username)
+VALUES
+  ('RO1'),
+  ('RO2');
+
+
+
+
+
+DROP TYPE IF EXISTS approval_status;
+CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved');
+
+CREATE TABLE Restaurant
+(
+  restaurantID SERIAL PRIMARY KEY,
+  restaurantName varchar(100) NOT NULL,
+  restaurantOwnerUsername varchar(100) REFERENCES public.RestaurantOwner(username),
+  approvalStatus approval_status,
+  address varchar(100)  NOT NULL,
+  postcode varchar(100) NOT NULL,
+  phoneNumber varchar(100) NOT NULL
+);
+
+INSERT INTO Restaurant (restaurantName, restaurantOwnerUsername, approvalStatus, address, postcode, phoneNumber)
+VALUES
+  ('Resto1', 'RO1', 'pending', 'Loiblziele', 'OL9 8NT', '(01788) 471434'),
+  ('YumYumHouse', 'RO1', 'approved', '54 Whinfield Terrace, Rowlands Gill', 'NE39 2JY', '(01484) 387035'),
+  ('Eatery', 'RO1', 'rejected', '12 Bridle Close, Hoddesdon', 'EN11 9QA', '(01233) 416101'),
+  ('ScranFud', 'RO2', 'pending', '1 Oldham Square, New Mills', 'SK22 4BZ', '(01757) 667027'),
+  ('Nutri', 'RO2', 'approved', 'Flat 102, Russell Court, Woburn Place, London', 'WC1H 0LP', '(01708) 308411');
+
+
+
+
+CREATE TABLE Review
+(
+  reviewID SERIAL PRIMARY KEY,
+  restaurantID int REFERENCES public.Restaurant(restaurantID),
+  customerUsername varchar(100) REFERENCES public.Customer(username),
+  timeStamp timeStamptz NOT NULL,
+  rating int NOT NULL,
+  description varchar(500)
+);
+
+INSERT INTO Review(restaurantID, customerUsername, timeStamp, rating, description)
+VALUES
+  (1, 'Amy@abc.com', '2025-12-01 18:30:00+01', 5, 'Best Tafelspitz I have ever had in Vienna!'),
+  (2, 'Brian@bobble.co.uk', '2025-12-05 12:45:00+00', 4, 'Lovely atmosphere, though the service was a bit slow today.'),
+  (1, 'Cam@cambridge.edu.uk', '2025-12-10 19:15:00+00', 3, 'Food was okay, but a bit overpriced for a student budget.'),
+  (3, 'Dan@deven.at', '2025-12-15 20:00:00+01', 5, 'Phänomenales Essen! The local wine selection is top-notch.'),
+  (2, 'Emily@Ely.fr', '2025-12-20 13:20:00+01', 4, 'Very charming bistro. The desserts reminded me of home.'),
+  (3, 'Dan@deven.at', NOW(), 2, 'Wait time was over an hour even with a reservation. Disappointing.'),
+  (1, 'Amy@abc.com', NOW(), 5, 'Came back for a second visit, still 5 stars!');
+
+
+
+CREATE TABLE Menu (
+    menuID SERIAL PRIMARY KEY,
+    restaurantID int REFERENCES public.Restaurant(restaurantID) ON DELETE CASCADE,
+    name varchar(100) NOT NULL,
+    description varchar(255)
+);
+
+INSERT INTO Menu (restaurantID, name, description)
+VALUES 
+    (1, 'Lunch Specials', 'Available 12pm - 3pm'),
+    (2, 'Evening Menu', 'Our full selection of gourmet dishes');
+
+
+
+CREATE TABLE Dish (
+    dishID SERIAL PRIMARY KEY,
+    menuID int REFERENCES public.Menu(menuID) ON DELETE CASCADE,
+    name varchar(100) NOT NULL,
+    description varchar(255),
+    price DECIMAL(10, 2) NOT NULL,
+    photoLink varchar(255)
+);
+
+INSERT INTO Dish (menuID, name, description, price, photoLink)
+VALUES 
+    (1, 'Wiener Schnitzel', 'Classic veal schnitzel', 18.50, 'schnitzel.jpg'),
+    (2, 'Vegetable Stir Fry', 'Fresh seasonal veggies', 12.00, 'stirfry.jpg');
+
+
+
+CREATE TABLE "Order" (
+    orderID SERIAL PRIMARY KEY,
+    customerUsername varchar(100) REFERENCES public.Customer(username),
+    restaurantID int REFERENCES public.Restaurant(restaurantID),
+    status varchar(50) DEFAULT 'pending',
+    discountCodes varchar(50),
+    deliveryAddress varchar(255),
+    deliveryOptions varchar(100)
+);
+
+INSERT INTO "Order" (customerUsername, restaurantID, status, deliveryAddress)
+VALUES 
+    ('Amy@abc.com', 1, 'completed', '1 Florabella Villas, Chalfont St Giles'),
+    ('Brian@bobble.co.uk', 2, 'processing', '46 Beatrice Avenue, Saltash');
+
+CREATE TABLE OrderItem (
+    orderID int REFERENCES "Order"(orderID) ON DELETE CASCADE,
+    dishID int REFERENCES Dish(dishID),
+    quantity int NOT NULL DEFAULT 1,
+    unitPrice DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (orderID, dishID)
+);
+
+INSERT INTO OrderItem (orderID, dishID, quantity, unitPrice)
+VALUES 
+    (1, 1, 2, 18.50), -- Amy ordered 2 Schnitzels
+    (2, 2, 1, 12.00); -- Brian ordered 1 Stir Fry
