@@ -10,8 +10,6 @@ const jwt = require('jsonwebtoken');
 router.post('/login', (req, res) => {
 
     const { username, password } = req.body;
-    console.log(username);
-    console.log(password);
 
     if (!username || !password) {
         return res.status(400).json({message:'Missing username or password.'});
@@ -23,7 +21,6 @@ router.post('/login', (req, res) => {
     // issue query (returns promise)
     pool.query(query, [username, password])
         .then (results => {
-          console.log(results);
 
 			// handle no match (login failed)
             if (results.rows.length === 0) {

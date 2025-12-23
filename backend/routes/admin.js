@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../pool.js');
-const check_auth = require('../check_auth.js');
 
-router.get('/users', check_auth, async (req, res) => {
+router.get('/users', async (req, res) => {
     try {
         const query = {
             text: 'SELECT * FROM AppUser',
