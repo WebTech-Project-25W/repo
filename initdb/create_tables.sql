@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS Review;
+DROP VIEW View_User_Roles;
 
 DROP TABLE IF EXISTS OrderItem;
 DROP TABLE IF EXISTS "Order";
@@ -191,13 +192,13 @@ VALUES
 
 
 
-CREATE OR REPLACE VIEW View_User_Roles AS
+CREATE VIEW View_User_Roles AS
 SELECT 
     a.username, 
     a.password,
     CASE 
-        WHEN s.username IS NOT NULL THEN 'Site Manager'
-        WHEN r.username IS NOT NULL THEN 'Restaurant Owner'
+        WHEN s.username IS NOT NULL THEN 'SiteManager'
+        WHEN r.username IS NOT NULL THEN 'RestaurantOwner'
         WHEN c.username IS NOT NULL THEN 'Customer'
         ELSE 'Generic User'
     END AS role
