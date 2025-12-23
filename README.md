@@ -4,6 +4,11 @@
   - navigate to backend directory (cd backend)
   - install dependencies (npm i)
 
+- **Database**
+  - create projectDB in postgres (can use command create_database.sql)
+  - initialise with comands in create_tables.sql
+  - set user credentials (username and password in config.json file in backend)
+
 - **Frontend**
   - navigate to backend directory (cd frontend)
   - install dependencies (npm i)

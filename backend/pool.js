@@ -6,7 +6,6 @@ const pool = new Pool({
     host: cfg.database.host,
     database: cfg.database.db,
     password: cfg.database.password,
-    port: cfg.database.port,
 });
 
 module.exports = pool;
