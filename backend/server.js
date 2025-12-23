@@ -7,9 +7,11 @@ app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
-const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
+const authRoutes = require('./routes/auth');
 
-app.use('/api/users', userRoutes);
+app.use('/admin', adminRoutes);
+app.use('/auth', authRoutes);
 
 
 app.get("/", (req, res) => {

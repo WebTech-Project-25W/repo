@@ -1,21 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../pool.js');
+const check_auth = require('../check_auth.js');
 
-router.get('/test', (req, res) => {
-  res.json({ message: "test user route"});
-});
-
-router.get('/', async (req, res) => {
+router.get('/users', check_auth, async (req, res) => {
     try {
         const query = {
-            text: 'SELECT * FROM products',
+            text: 'SELECT * FROM AppUser',
             values: []
         };
 
-        console.log("before pool call");
         const results = await pool.query(query);
-        console.log("after pool call: "+results);
 
         if (results.rows.length <= 0) {
             return res.status(404).json({ error: "Nothing found" });

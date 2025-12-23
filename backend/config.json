@@ -3,6 +3,10 @@
     "host": "localhost",
     "user": "postgres",
     "password": "password",
-    "db": "postgres"
-  }
+    "db": "projectDB"
+  },
+  	"auth": {
+        "jwt_key": "secret",
+        "expiration": "1h"
+    }
 }
