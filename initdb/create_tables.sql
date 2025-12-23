@@ -188,3 +188,20 @@ INSERT INTO OrderItem (orderID, dishID, quantity, unitPrice)
 VALUES 
     (1, 1, 2, 18.50), -- Amy ordered 2 Schnitzels
     (2, 2, 1, 12.00); -- Brian ordered 1 Stir Fry
+
+
+
+CREATE OR REPLACE VIEW View_User_Roles AS
+SELECT 
+    a.username, 
+    a.password,
+    CASE 
+        WHEN s.username IS NOT NULL THEN 'Site Manager'
+        WHEN r.username IS NOT NULL THEN 'Restaurant Owner'
+        WHEN c.username IS NOT NULL THEN 'Customer'
+        ELSE 'Generic User'
+    END AS role
+FROM AppUser a
+LEFT JOIN SiteManager s ON a.username = s.username
+LEFT JOIN RestaurantOwner r ON a.username = r.username
+LEFT JOIN Customer c ON a.username = c.username;

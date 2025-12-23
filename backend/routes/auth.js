@@ -15,7 +15,7 @@ router.post('/login', (req, res) => {
         return res.status(400).json({message:'Missing username or password.'});
     }
 
-    const query = `SELECT username, password FROM public.appuser
+    const query = `SELECT username, role FROM View_User_Roles
     WHERE username = $1 and password = $2`;
 
     // issue query (returns promise)
@@ -37,7 +37,8 @@ router.post('/login', (req, res) => {
             
 			res.status(200).json({
                 "message": "login successful",
-                login: resultUser.login,
+                username: resultUser.username,
+                role: resultUser.role,
                 token: token
             });
 
