@@ -42,4 +42,8 @@
         }
       });
     }
+
+    toRegistration() {
+      this.router.navigate(['/auth/registration']);
+    }
   } 

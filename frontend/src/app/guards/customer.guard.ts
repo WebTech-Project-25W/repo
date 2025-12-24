@@ -9,6 +9,6 @@ export const CustomerGuard = () => {
     return true
   }
 
-  router.navigate(['/login']);
+  router.navigate(['auth/login']);
   return false;
 };

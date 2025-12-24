@@ -1,0 +1,27 @@
+<p>Registration</p>
+<div class="registration-div">
+  
+  <form class="customer-registration-form" (submit)="onRegistration()">
+    
+    <label for="username-input">username</label>
+    <input [(ngModel)]="username" name="username-input" id="username-input" type="text" required placeholder="username">
+    
+    <label for="password-input">password</label>
+    <input [(ngModel)]="password" name="password-input" id="password-input" type="password" required placeholder="password">
+
+    <label for="address-input">address</label>
+    <input [(ngModel)]="address" name="address-input" id="address-input" type="text" required placeholder="address">
+
+    <label for="postcode-input">postcode</label>
+    <input [(ngModel)]="postcode" name="postcode-input" id="postcode-input" type="text" required placeholder="postcode">
+
+    <label for="phoneNumber-input">phone number</label>
+    <input [(ngModel)]="phoneNumber" name="phoneNumber-input" id="phoneNumber-input" type="text" required placeholder="phone number">
+
+
+    <button type="submit">Register</button>
+  
+  </form>
+
+
+</div>
