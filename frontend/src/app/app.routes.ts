@@ -3,16 +3,19 @@ import { LoginComponent } from './login/login.component';
 import { AdminDashboardComponent } from './admin/dashboard/dashboard.component';
 import { OwnerDashboardComponent } from './restaurantOwner/dashboard/dashboard.component';
 import { CustomerDashboardComponent } from './customer/dashboard/dashboard.component';
+import { AdminGuard } from './guards/admin.guard';
+import { OwnerGuard } from './guards/owner.guard';
+import { CustomerGuard } from './guards/customer.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   
   // Site Manager Routes
-  { path: 'admin/dashboard', component: AdminDashboardComponent }, //, canActivate: [AdminGuard] },
+  { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard] },
   
   // Owner Routes
-  { path: 'owner/dashboard', component: OwnerDashboardComponent }, //, canActivate: [OwnerGuard] },
+  { path: 'owner/dashboard', component: OwnerDashboardComponent, canActivate: [OwnerGuard] },
   
   // Customer Routes
-  { path: 'customer/dashboard', component: CustomerDashboardComponent } //, canActivate: [UserGuard] },
+  { path: 'customer/dashboard', component: CustomerDashboardComponent, canActivate: [CustomerGuard] },
 ];

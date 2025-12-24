@@ -23,7 +23,8 @@
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
           console.log('Login successful!', response);
-          localStorage.setItem('token', response.token); // Store the JWT
+          localStorage.setItem('token', response.token); // Store the response including role and token
+          localStorage.setItem('role', response.role); // Store the response including role and token
 
           const role = response.role;
           
