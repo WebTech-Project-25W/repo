@@ -11,12 +11,13 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin')
 const customerRoutes = require('./routes/customer')
 const restaurantOwnerRoutes = require('./routes/restaurantOwner');
-const check_auth = require('./check_auth');
+const authenticate = require('./middleware/authenticate');
+const authorise = require('./middleware/authorise');
 
 app.use('/auth', authRoutes);
-app.use('/admin', check_auth, adminRoutes);
-app.use('/customer', check_auth, customerRoutes);
-app.use('/owner', check_auth, restaurantOwnerRoutes);
+app.use('/admin', authenticate, authorise(['SiteManager']), adminRoutes);
+app.use('/customer', authenticate, authorise(['Customer']), customerRoutes);
+app.use('/owner', authenticate, authorise(['RestaurantOwner']), restaurantOwnerRoutes);
 
 
 app.get("/", (req, res) => {

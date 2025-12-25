@@ -1,4 +1,4 @@
-let cfg = require('./config.json')
+let cfg = require('../config.json')
 const jwt = require('jsonwebtoken');
 
 
@@ -22,4 +22,4 @@ module.exports = (req, res, next) => {
         return res.status(401).json({message: "Authentication failed"});
     }
 
-};
+};  
