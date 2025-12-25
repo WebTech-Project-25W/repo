@@ -1,105 +1,116 @@
-let cfg = require('../config.json')
+const cfg = require('../config.json')
+const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
 
 const pool = require('../pool.js');
-
 const jwt = require('jsonwebtoken');
+
+const numSaltRounds = 10;
 
 // login route creating/returning a token on successful login
 router.post('/login', async (req, res) => {
 
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({message:'Missing username or password.'});
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Missing username or password.' });
+  }
+
+  try {
+    const query = `SELECT username, password, role FROM View_User_Roles
+    WHERE username = $1`;
+    const results = await pool.query(query, [username]);
+
+    // handle no match
+    const invalidMessage = 'Invalid username or password.';
+    if (results.rows.length === 0) {
+      return res.status(401).json({ message: invalidMessage });
     }
 
-    const query = `SELECT username, role FROM View_User_Roles
-    WHERE username = $1 and password = $2`;
+    // user found
+    const user = results.rows[0];
 
-    // issue query (returns promise)
-    await pool.query(query, [username, password])
-        .then (results => {
+    const isMatch = await bcrypt.compare(password, user.password);
 
-			// handle no match (login failed)
-            if (results.rows.length === 0) {
-                return res.status(400).json({message: "login failed"});
-            }
+    if (!isMatch) {
+      return res.status(401).json({ message: invalidMessage });
+    }
 
-            // everything is ok
-            const resultUser = results.rows[0];
-            
-            /* form the token with userData (accessible when decoding token), jwtkey, expiry time */;
-			const token = jwt.sign(
-                resultUser, cfg.auth.jwt_key, { expiresIn: cfg.auth.expiration }
-            );
-            
-			res.status(200).json({
-                "message": "login successful",
-                username: resultUser.username,
-                role: resultUser.role,
-                token: token
-            });
+    // password match: form the token with userData
+    const payload = {
+      username: user.username,
+      role: user.role
+    }
 
-        })
-        .catch(error => {
-            // handle error accessing db
-            console.error('Database query error:'+error);
-            res.status(500).json({ message: "Database access error"});
-        });
+    const token = jwt.sign(
+      payload, cfg.auth.jwt_key, { expiresIn: cfg.auth.expiration }
+    );
 
+    res.status(200).json({
+      "message": "login successful",
+      username: user.username,
+      role: user.role,
+      token: token
+    });
+  } catch (err) {
+    console.error('Login error: ' + err);
+    res.status(500).json({ message: "Internal server error." });
+  }
 });
 
-// registration logic
+
+// registration route
 router.post('/register', async (req, res) => {
 
   const { username, password, firstName, lastName, address, postcode, phoneNumber } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({message:'Missing username or password.'});
+    return res.status(400).json({ message: 'Missing username or password.' });
   }
 
-const client = await pool.connect();
+  const client = await pool.connect();
 
-try {
-  await client.query('BEGIN');
+  try {
+    const hashedPassword = await bcrypt.hash(password, numSaltRounds);
 
-  const userQuery = `
+    await client.query('BEGIN');
+
+    const userQuery = `
     INSERT INTO AppUser(username, password, firstname, lastname)
     VALUES
       ($1, $2, $3, $4)
     RETURNING username
   `;
-  const userQueryParams = [username, password, firstName, lastName];
-  const userResults = await pool.query(userQuery, userQueryParams);
+    const userQueryParams = [username, hashedPassword, firstName, lastName];
+    const userResults = await client.query(userQuery, userQueryParams);
 
-  const customerQuery = `
+    const customerQuery = `
     INSERT INTO Customer (username, blockedStatus, address, postcode, phoneNumber)
       VALUES ($1, 'not-blocked', $2, $3, $4);
   `;
-  const customerQueryParams = [username, address, postcode, phoneNumber];
-  await pool.query(customerQuery, customerQueryParams);
+    const customerQueryParams = [username, address, postcode, phoneNumber];
+    await client.query(customerQuery, customerQueryParams);
 
-  await client.query('COMMIT');
+    await client.query('COMMIT');
 
-  res.status(201).json({
-        message: 'User registration succesful',
-        username: userResults.rows[0].username
-      })
-} catch (err) {
-  await client.query('ROLLBACK');
+    res.status(201).json({
+      message: 'User registration succesful',
+      username: userResults.rows[0].username
+    })
+  } catch (err) {
+    await client.query('ROLLBACK');
 
-  if(err.code === '23505') { // unique violation (username already exists)
-    return res.status(409).json({message: 'Username already taken.'});
+    if (err.code === '23505') { // unique violation (username already exists)
+      return res.status(409).json({ message: 'Username already taken.' });
+    }
+
+    console.error('Database error on registration: ', err);
+    res.status(500).json({ message: 'Internal server error' });
+
+  } finally {
+    client.release();
   }
-
-  console.error('Database error on registration: ', err);
-  res.status(500).json({ message: 'Internal server error'});
-
-} finally {
-  client.release();
-}
 })
 
 module.exports = router;
