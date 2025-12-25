@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
 // registration logic
 router.post('/register', async (req, res) => {
 
-  const { username, password, firstname, lastname, address, postcode, phoneNumber } = req.body;
+  const { username, password, firstName, lastName, address, postcode, phoneNumber } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({message:'Missing username or password.'});
@@ -71,7 +71,7 @@ try {
       ($1, $2, $3, $4)
     RETURNING username
   `;
-  const userQueryParams = [username, password, firstname, lastname];
+  const userQueryParams = [username, password, firstName, lastName];
   const userResults = await pool.query(userQuery, userQueryParams);
 
   const customerQuery = `

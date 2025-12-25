@@ -15,4 +15,24 @@ export class AuthService {
     // to match the { user, pass } of the backend
     return this.http.post(`${this.apiUrl}/login`, { "username": user, "password": pass });
   }
+
+  register(
+    user: string, 
+    password: string,
+    firstName: string,
+    lastName: string,
+    address: string,
+    postcode: string,
+    phoneNumber: string
+  ): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { 
+      "username": user, 
+      "password": password,
+      "firstName": firstName,
+      "lastName": lastName,
+      "address": address,
+      "postcode": postcode,
+      "phoneNumber": phoneNumber 
+    });
+  }
 }

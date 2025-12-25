@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -11,11 +13,34 @@ import { FormsModule } from '@angular/forms';
 export class RegistrationComponent {
   username = '';
   password = '';
+  firstName = '';
+  lastName = '';
   address = '';
   postcode = '';
   phoneNumber = '';
 
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
   onRegistration() {
-    console.log('registration');
+    this.authService.register(
+      this.username,
+      this.password,
+      this.firstName,
+      this.lastName,
+      this.address,
+      this.postcode,
+      this.phoneNumber
+    ).subscribe({
+      next: (response) => {
+        console.log('Registration successfull.', response);
+        this.router.navigate(['/auth/login']);
+      },
+      error: (err) => {
+        alert('Registration failed: ' + err.error.message);
+      }
+    })
   }
 }
