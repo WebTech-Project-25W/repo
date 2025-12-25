@@ -7,7 +7,7 @@ const pool = require('../pool.js');
 const jwt = require('jsonwebtoken');
 
 // login route creating/returning a token on successful login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
 
     const { username, password } = req.body;
 
@@ -19,7 +19,7 @@ router.post('/login', (req, res) => {
     WHERE username = $1 and password = $2`;
 
     // issue query (returns promise)
-    pool.query(query, [username, password])
+    await pool.query(query, [username, password])
         .then (results => {
 
 			// handle no match (login failed)
@@ -50,5 +50,56 @@ router.post('/login', (req, res) => {
         });
 
 });
+
+// registration logic
+router.post('/register', async (req, res) => {
+
+  const { username, password, firstname, lastname, address, postcode, phoneNumber } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({message:'Missing username or password.'});
+  }
+
+const client = await pool.connect();
+
+try {
+  await client.query('BEGIN');
+
+  const userQuery = `
+    INSERT INTO AppUser(username, password, firstname, lastname)
+    VALUES
+      ($1, $2, $3, $4)
+    RETURNING username
+  `;
+  const userQueryParams = [username, password, firstname, lastname];
+  const userResults = await pool.query(userQuery, userQueryParams);
+
+  const customerQuery = `
+    INSERT INTO Customer (username, blockedStatus, address, postcode, phoneNumber)
+      VALUES ($1, 'not-blocked', $2, $3, $4);
+  `;
+  const customerQueryParams = [username, address, postcode, phoneNumber];
+  await pool.query(customerQuery, customerQueryParams);
+
+  await client.query('COMMIT');
+
+  res.status(201).json({
+        message: 'User registration succesful',
+        username: userResults.rows[0].username
+      })
+} catch (err) {
+  await client.query('ROLLBACK');
+
+  if(err.code === '23505') { // unique violation (username already exists)
+    return res.status(409).json({message: 'Username already taken.'});
+  }
+
+  console.error('Database error on registration: ', err);
+  res.status(500).json({ message: 'Internal server error'});
+
+} finally {
+  client.release();
+}
+})
 
 module.exports = router;
