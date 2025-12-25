@@ -1,0 +1,42 @@
+{
+  "siteManagers": [
+    { "username": "admin", "password": "admin", "firstname": null, "lastname": null }
+  ],
+  "restaurantOwners": [
+    { "username": "RO1", "password": "passRO1", "firstname": null, "lastname": null },
+    { "username": "RO2", "password": "passRO2", "firstname": null, "lastname": null }
+  ],
+  "customers": [
+    { "username": "Amy@abc.com", "password": "passA", "firstname": "Amy", "lastname": "Peterson", "status": "not-blocked", "addr": "1 Florabella Villas, Chalfont St Giles", "postcode": "HP8 4PE", "phone": "(01494) 048820" },
+    { "username": "Brian@bobble.co.uk", "password": "passB", "firstname": "Brian", "lastname": "Benderson", "status": "not-blocked", "addr": "46 Beatrice Avenue, Saltash", "postcode": "PL12 4NG", "phone": "(01752) 645533" },
+    { "username": "Cam@cambridge.edu.uk", "password": "passC", "firstname": "Cameron", "lastname": "Charleston", "status": "not-blocked", "addr": "The Conifers, Sodyllt Bank, Dudleston", "postcode": "SY12 9EJ", "phone": "(01978) 664871" },
+    { "username": "Dan@deven.at", "password": "passD", "firstname": "Daniel", "lastname": "Dealy", "status": "warned", "addr": "Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham", "postcode": "B3 1RZ", "phone": "(0121) 476 5706" },
+    { "username": "Emily@Ely.fr", "password": "passE", "firstname": "Emily", "lastname": "Ellington", "status": "blocked", "addr": "14 Stour Road, Grays", "postcode": "RM16 4BS", "phone": "(01375) 257756" }
+  ],
+  "restaurants": [
+    { "name": "Resto1", "owner": "RO1", "status": "pending", "addr": "Loiblziele", "postcode": "OL9 8NT", "phone": "(01788) 471434" },
+    { "name": "YumYumHouse", "owner": "RO1", "status": "approved", "addr": "54 Whinfield Terrace, Rowlands Gill", "postcode": "NE39 2JY", "phone": "(01484) 387035" },
+    { "name": "Eatery", "owner": "RO1", "status": "rejected", "addr": "12 Bridle Close, Hoddesdon", "postcode": "EN11 9QA", "phone": "(01233) 416101" },
+    { "name": "ScranFud", "owner": "RO2", "status": "pending", "addr": "1 Oldham Square, New Mills", "postcode": "SK22 4BZ", "phone": "(01757) 667027" },
+    { "name": "Nutri", "owner": "RO2", "status": "approved", "addr": "Flat 102, Russell Court, Woburn Place, London", "postcode": "WC1H 0LP", "phone": "(01708) 308411" }
+  ],
+  "reviews": [
+    { "restoID": 0, "username": "Amy@abc.com", "rating": 5, "desc": "Best Tafelspitz I have ever had in Vienna!", "time": "2025-12-01 18:30:00+01" },
+    { "restoID": 1, "username": "Brian@bobble.co.uk", "rating": 4, "desc": "Lovely atmosphere, though the service was a bit slow today.", "time": "2025-12-05 12:45:00+00" },
+    { "restoID": 0, "username": "Cam@cambridge.edu.uk", "rating": 3, "desc": "Food was okay, but a bit overpriced.", "time": "2025-12-10 19:15:00+00" },
+    { "restoID": 2, "username": "Dan@deven.at", "rating": 5, "desc": "Phänomenales Essen!", "time": "2025-12-15 20:00:00+01" },
+    { "restoID": 1, "username": "Emily@Ely.fr", "rating": 4, "desc": "Very charming bistro.", "time": "2025-12-20 13:20:00+01" }
+  ],
+  "menus": [
+    { "restoID": 0, "name": "Lunch Specials", "desc": "Available 12pm - 3pm" },
+    { "restoID": 1, "name": "Evening Menu", "desc": "Our full selection" }
+  ],
+  "dishes": [
+    { "menuID": 0, "name": "Wiener Schnitzel", "desc": "Classic veal", "price": 18.50, "link": "schnitzel.jpg" },
+    { "menuID": 1, "name": "Vegetable Stir Fry", "desc": "Seasonal veggies", "price": 12.00, "link": "stirfry.jpg" }
+  ],
+  "orders": [
+    { "customerUsername": "Amy@abc.com", "restoID": 0, "status": "completed", "addr": "1 Florabella Villas, Chalfont St Giles", "items": [{ "dishID": 0, "qty": 2, "price": 18.50 },{ "dishID": 1, "qty": 1, "price": 12.00 }] },
+    { "customerUsername": "Brian@bobble.co.uk", "restoID": 1, "status": "processing", "addr": "46 Beatrice Avenue, Saltash", "items": [{ "dishID": 1, "qty": 1, "price": 12.00 }] }
+  ]
+}
