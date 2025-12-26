@@ -17,7 +17,15 @@ export class PasswordResetComponent {
   ) {}
 
   onResetPassword() {
-    console.log('resetpass');
+    this.authService.resetPassword(this.newPassword).subscribe({
+      next: (response) => {
+        console.log('Password reset successful!', response);
+        alert(`Password reset successful for user ${response.message}`);
+      },
+      error: (err) => {
+        alert('Password reset failed: ' + err.error.message);
+      }
+    })
   }
 
 }

@@ -1,6 +1,5 @@
-// auth.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,7 +16,7 @@ export class AuthService {
   }
 
   register(
-    user: string, 
+    user: string,
     password: string,
     firstName: string,
     lastName: string,
@@ -25,14 +24,27 @@ export class AuthService {
     postcode: string,
     phoneNumber: string
   ): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { 
-      "username": user, 
+    return this.http.post(`${this.apiUrl}/register`, {
+      "username": user,
       "password": password,
       "firstName": firstName,
       "lastName": lastName,
       "address": address,
       "postcode": postcode,
-      "phoneNumber": phoneNumber 
+      "phoneNumber": phoneNumber
     });
+  }
+
+  resetPassword(newPassword: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.post(`${this.apiUrl}/reset-password`,
+      { "password": newPassword },
+      { headers }
+    );
   }
 }
