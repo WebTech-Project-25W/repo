@@ -5,6 +5,7 @@ const router = express.Router();
 
 const pool = require('../pool.js');
 const jwt = require('jsonwebtoken');
+const authenticate = require('../middleware/authenticate.js');
 
 const numSaltRounds = 10;
 
@@ -111,6 +112,35 @@ router.post('/register', async (req, res) => {
   } finally {
     client.release();
   }
-})
+});
+
+
+
+router.post('/reset-password', authenticate, async (req, res) => {
+  const username = req.user.username; // username comes from authenticate middleware
+  const { password: newPassword  } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).json({ message: 'New password is required.' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, numSaltRounds);
+
+    const query = 'UPDATE AppUser SET password = $1 WHERE username = $2 RETURNING username';
+    const params = [hashedPassword, username];
+
+    const result = await pool.query(query, params);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    res.status(200).json({ message: 'Password reset successful.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error during password reset.' });
+  }
+
+});
 
 module.exports = router;
