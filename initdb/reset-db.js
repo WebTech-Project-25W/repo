@@ -25,11 +25,11 @@ async function resetDatabase() {
     const seedUser = async (user, roleTable, extraCols = "", extraVals = []) => {
       const hash = await bcrypt.hash(user.password, saltRounds);
       await client.query(
-        'INSERT INTO AppUser (username, password, firstname, lastname) VALUES ($1, $2, $3, $4)',
-        [user.username, hash, user.firstname, user.lastname]
+        'INSERT INTO AppUser (email, password, firstname, lastname) VALUES ($1, $2, $3, $4)',
+        [user.email, hash, user.firstname, user.lastname]
       );
-      const roleSql = `INSERT INTO ${roleTable} (username ${extraCols}) VALUES ($1 ${extraVals.map((_, i) => ', $' + (i + 2)).join('')})`;
-      await client.query(roleSql, [user.username, ...extraVals]);
+      const roleSql = `INSERT INTO ${roleTable} (email ${extraCols}) VALUES ($1 ${extraVals.map((_, i) => ', $' + (i + 2)).join('')})`;
+      await client.query(roleSql, [user.email, ...extraVals]);
     };
 
     // Seed Users
@@ -46,7 +46,7 @@ async function resetDatabase() {
     const restoIDs = [];
     for (const restaurant of seedData.restaurants) {
       const result = await client.query(
-        `INSERT INTO Restaurant (restaurantName, restaurantOwnerUsername, approvalStatus, address, postcode, phoneNumber) 
+        `INSERT INTO Restaurant (restaurantName, restaurantOwnerEmail, approvalStatus, address, postcode, phoneNumber) 
                  VALUES ($1, $2, $3, $4, $5, $6) RETURNING restaurantID`,
         [restaurant.name, restaurant.owner, restaurant.status, restaurant.addr, restaurant.postcode, restaurant.phone]
       );
@@ -56,7 +56,7 @@ async function resetDatabase() {
     // Seed Reviews
     for (const review of seedData.reviews) {
       await client.query(
-        'INSERT INTO Review (restaurantID, customerUsername, timeStamp, rating, description) VALUES ($1, $2, $3, $4, $5)',
+        'INSERT INTO Review (restaurantID, customerEmail, timeStamp, rating, description) VALUES ($1, $2, $3, $4, $5)',
         [restoIDs[review.restoID], review.user, review.time, review.rating, review.desc]
       );
     }
@@ -85,8 +85,8 @@ async function resetDatabase() {
     console.log("Seeding Orders...");
     for (const order of seedData.orders) {
       const result = await client.query(
-        'INSERT INTO "Order" (customerUsername, restaurantID, status, deliveryAddress) VALUES ($1, $2, $3, $4) RETURNING orderID',
-        [order.customerUsername, restoIDs[order.restoID], order.status, order.addr]
+        'INSERT INTO "Order" (customerEmail, restaurantID, status, deliveryAddress) VALUES ($1, $2, $3, $4) RETURNING orderID',
+        [order.customerEmail, restoIDs[order.restoID], order.status, order.addr]
       );
       const orderId = result.rows[0].orderid;
       for (const item of order.items) {
