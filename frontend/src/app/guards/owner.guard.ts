@@ -1,14 +1,15 @@
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { inject  } from '@angular/core';
 
 export const OwnerGuard = () => {
-  const router= inject(Router);
-  const token = localStorage.getItem('role');
+  const router = inject(Router);
 
-  if (token && token === 'RestaurantOwner') {
-    return true
+  const role = localStorage.getItem('role');
+
+  if (role === 'RestaurantOwner') {
+    return true;
   }
 
-  router.navigate(['auth/login']);
-  return false;
+ 
+  return router.createUrlTree(['/auth/login']);
 };

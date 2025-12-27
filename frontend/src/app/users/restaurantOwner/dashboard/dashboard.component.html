@@ -1,2 +1,36 @@
-<p>Restaurant owner dashboard works!</p>
-<app-password-reset></app-password-reset>
+<h1>Restaurant Owner Dashboard</h1>
+
+<div *ngIf="loading">
+  Loading menus...
+</div>
+
+<div *ngIf="!loading && menus.length === 0">
+  <p>No menus found.</p>
+</div>
+
+<div *ngFor="let menu of menus" class="menu-card">
+  <h2>{{ menu.name }}</h2>
+  <p>{{ menu.description }}</p>
+
+  <h3>Dishes</h3>
+
+  <!-- Loading -->
+  <div *ngIf="!dishes[menu.menuid]">
+    Loading dishes...
+  </div>
+
+  <!-- When dishes exist -->
+  <ng-container *ngIf="dishes[menu.menuid] as menuDishes">
+    <ul *ngIf="menuDishes.length > 0">
+      <li *ngFor="let dish of menuDishes">
+        <strong>{{ dish.name }}</strong>
+        — {{ dish.description }}
+        (€{{ dish.price }})
+      </li>
+    </ul>
+
+    <p *ngIf="menuDishes.length === 0">
+      No dishes in this menu.
+    </p>
+  </ng-container>
+</div>

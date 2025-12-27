@@ -37,9 +37,23 @@
           }
 
         },
-        error: (err) => {
-          alert('Login failed: ' + err.error.message);
-        }
+       error: (err) => {
+  console.error('Login error full object:', err);
+
+  let message = 'Unable to login';
+
+  if (err?.error?.message) {
+    message = err.error.message;
+  } else if (typeof err?.error === 'string') {
+    message = err.error;
+  } else if (err?.status === 0) {
+    message = 'Cannot reach server (CORS or backend down)';
+  }
+
+  alert('Login failed: ' + message);
+}
+
+
       });
     }
 

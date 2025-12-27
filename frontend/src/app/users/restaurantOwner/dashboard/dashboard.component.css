@@ -1,0 +1,32 @@
+.dashboard-container {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background-color: #fafafa;
+}
+
+.menu-card h3 {
+  margin: 0 0 8px 0;
+}
+
+.menu-card p {
+  margin: 0;
+  color: #555;
+}

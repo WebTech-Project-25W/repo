@@ -9,6 +9,9 @@ import { CustomerGuard } from './guards/customer.guard';
 import { RegistrationComponent } from './registration/registration.component';
 
 export const routes: Routes = [
+  
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+
   // Authentification / Registration routes
   { path: 'auth/login', component: LoginComponent },
   { path: 'auth/registration', component: RegistrationComponent },
