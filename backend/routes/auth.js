@@ -12,21 +12,19 @@ const numSaltRounds = 10;
 // login route creating/returning a token on successful login
 router.post('/login', async (req, res) => {
 
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Missing username or password.' });
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Missing email or password.' });
   }
 
 
   try {
-   const query = `
-  SELECT username, password, role
-  FROM View_User_Roles
-  WHERE username = $1
-`;
-
-   const results = await pool.query(query, [username]);
+    const query = `
+    SELECT email, password, role 
+    FROM View_User_Roles
+    WHERE email = $1`;
+    const results = await pool.query(query, [email]);
 
     // handle no match
     const invalidMessage = 'Invalid email or password.';
@@ -44,22 +42,21 @@ router.post('/login', async (req, res) => {
     }
 
     // password match: form the token with userData
-const payload = {
-  username: user.username,
-  role: user.role
-};
+    const payload = {
+      email: user.email,
+      role: user.role
+    }
 
     const token = jwt.sign(
       payload, cfg.auth.jwt_key, { expiresIn: cfg.auth.expiration }
     );
 
- res.status(200).json({
-  message: 'login successful',
-  username: user.username,
-  role: user.role,
-  token
-});
-
+    res.status(200).json({
+      message: 'login successful',
+      email: user.email,
+      role: user.role,
+      token: token
+    });
   } catch (err) {
     console.error('Login error: ' + err);
     res.status(500).json({ message: "Internal server error." });
@@ -123,8 +120,8 @@ router.post('/register', async (req, res) => {
 
 
 router.post('/reset-password', authenticate, async (req, res) => {
-req.user.email
- // email comes from authenticate middleware
+  const email = req.user.email; 
+  // email comes from authenticate middleware
   const { password: newPassword  } = req.body;
 
   if (!newPassword) {
