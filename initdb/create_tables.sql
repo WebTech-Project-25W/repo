@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS AppUser;
 
 CREATE TABLE AppUser
 (
-  username varchar(100) PRIMARY KEY,
+  email varchar(100) PRIMARY KEY,
   password varchar(100) NOT NULL,
   firstname varchar(100),
   lastname varchar(100)
@@ -31,7 +31,7 @@ DROP TYPE IF EXISTS blocked_status;
 CREATE TYPE blocked_status as ENUM('not-blocked', 'warned', 'blocked');
 CREATE TABLE Customer
 (
-  username varchar(100) PRIMARY KEY REFERENCES public.AppUser(username),
+  email varchar(100) PRIMARY KEY REFERENCES public.AppUser(email),
   blockedStatus blocked_status,
   address varchar(100),
   postcode varchar(100),
@@ -40,12 +40,12 @@ CREATE TABLE Customer
 
 CREATE TABLE SiteManager
 (
-  username varchar(100) PRIMARY KEY REFERENCES public.AppUser(username)
+  email varchar(100) PRIMARY KEY REFERENCES public.AppUser(email)
 );
 
 CREATE TABLE RestaurantOwner
 (
-  username varchar(100) PRIMARY KEY REFERENCES public.AppUser(username)
+  email varchar(100) PRIMARY KEY REFERENCES public.AppUser(email)
 );
 
 DROP TYPE IF EXISTS approval_status;
@@ -54,7 +54,7 @@ CREATE TABLE Restaurant
 (
   restaurantID SERIAL PRIMARY KEY,
   restaurantName varchar(100) NOT NULL,
-  restaurantOwnerUsername varchar(100) REFERENCES public.RestaurantOwner(username),
+  restaurantOwnerEmail varchar(100) REFERENCES public.RestaurantOwner(email),
   approvalStatus approval_status,
   address varchar(100)  NOT NULL,
   postcode varchar(100) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE Review
 (
   reviewID SERIAL PRIMARY KEY,
   restaurantID int REFERENCES public.Restaurant(restaurantID),
-  customerUsername varchar(100) REFERENCES public.Customer(username),
+  customerEmail varchar(100) REFERENCES public.Customer(email),
   timeStamp timeStamptz NOT NULL,
   rating int NOT NULL,
   description varchar(500)
@@ -89,7 +89,7 @@ CREATE TABLE Dish (
 
 CREATE TABLE "Order" (
     orderID SERIAL PRIMARY KEY,
-    customerUsername varchar(100) REFERENCES public.Customer(username),
+    customerEmail varchar(100) REFERENCES public.Customer(email),
     restaurantID int REFERENCES public.Restaurant(restaurantID),
     status varchar(50) DEFAULT 'pending',
     discountCodes varchar(50),
@@ -110,23 +110,23 @@ CREATE TABLE OrderItem (
 
 CREATE VIEW View_User_Roles AS
 SELECT 
-    a.username, 
-    a.password,
+    u.email, 
+    u.password,
     CASE 
-        WHEN s.username IS NOT NULL THEN 'SiteManager'
-        WHEN r.username IS NOT NULL THEN 'RestaurantOwner'
-        WHEN c.username IS NOT NULL THEN 'Customer'
+        WHEN s.email IS NOT NULL THEN 'SiteManager'
+        WHEN r.email IS NOT NULL THEN 'RestaurantOwner'
+        WHEN c.email IS NOT NULL THEN 'Customer'
         ELSE 'Generic User'
     END AS role
-FROM AppUser a
-LEFT JOIN SiteManager s ON a.username = s.username
-LEFT JOIN RestaurantOwner r ON a.username = r.username
-LEFT JOIN Customer c ON a.username = c.username;
+FROM AppUser u
+LEFT JOIN SiteManager s ON u.email = s.email
+LEFT JOIN RestaurantOwner r ON u.email = r.email
+LEFT JOIN Customer c ON u.email = c.email;
 
 
 
 
--- INSERT INTO AppUser (username, password, firstname, lastname)
+-- INSERT INTO AppUser (email, password, firstname, lastname)
 -- VALUES 
 --     ('admin', 'admin', NULL, NULL),
 --     ('RO1', 'passRO1', NULL, NULL),
@@ -137,11 +137,11 @@ LEFT JOIN Customer c ON a.username = c.username;
 --     ('Dan@deven.at', 'passD', 'Daniel', 'Dealy'),
 --     ('Emily@Ely.fr', 'passE', 'Emily', 'Ellington');
 
--- INSERT INTO SiteManager (username)
+-- INSERT INTO SiteManager (email)
 -- VALUES
 --   ('admin');
 
--- INSERT INTO Customer (username, blockedStatus, address, postcode, phoneNumber)
+-- INSERT INTO Customer (email, blockedStatus, address, postcode, phoneNumber)
 -- VALUES 
 --     ('Amy@abc.com', 'not-blocked', '1 Florabella Villas, Chalfont St Giles', 'HP8 4PE', '(01494) 048820'),
 --     ('Brian@bobble.co.uk', 'not-blocked', '46 Beatrice Avenue, Saltash', 'PL12 4NG', '(01752) 645533'),
@@ -149,12 +149,12 @@ LEFT JOIN Customer c ON a.username = c.username;
 --     ('Dan@deven.at', 'warned', 'Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham', 'B3 1RZ', '(0121) 476 5706'),
 --     ('Emily@Ely.fr', 'blocked', '14 Stour Road, Grays', 'RM16 4BS', '(01375) 257756');
 
--- INSERT INTO RestaurantOwner (username)
+-- INSERT INTO RestaurantOwner (email)
 -- VALUES
 --   ('RO1'),
 --   ('RO2');
 
--- INSERT INTO Restaurant (restaurantName, restaurantOwnerUsername, approvalStatus, address, postcode, phoneNumber)
+-- INSERT INTO Restaurant (restaurantName, restaurantOwnerEmail, approvalStatus, address, postcode, phoneNumber)
 -- VALUES
 --   ('Resto1', 'RO1', 'pending', 'Loiblziele', 'OL9 8NT', '(01788) 471434'),
 --   ('YumYumHouse', 'RO1', 'approved', '54 Whinfield Terrace, Rowlands Gill', 'NE39 2JY', '(01484) 387035'),
@@ -162,7 +162,7 @@ LEFT JOIN Customer c ON a.username = c.username;
 --   ('ScranFud', 'RO2', 'pending', '1 Oldham Square, New Mills', 'SK22 4BZ', '(01757) 667027'),
 --   ('Nutri', 'RO2', 'approved', 'Flat 102, Russell Court, Woburn Place, London', 'WC1H 0LP', '(01708) 308411');
 
--- INSERT INTO Review(restaurantID, customerUsername, timeStamp, rating, description)
+-- INSERT INTO Review(restaurantID, customerEmail, timeStamp, rating, description)
 -- VALUES
 --   (1, 'Amy@abc.com', '2025-12-01 18:30:00+01', 5, 'Best Tafelspitz I have ever had in Vienna!'),
 --   (2, 'Brian@bobble.co.uk', '2025-12-05 12:45:00+00', 4, 'Lovely atmosphere, though the service was a bit slow today.'),
@@ -182,7 +182,7 @@ LEFT JOIN Customer c ON a.username = c.username;
 --     (1, 'Wiener Schnitzel', 'Classic veal schnitzel', 18.50, 'schnitzel.jpg'),
 --     (2, 'Vegetable Stir Fry', 'Fresh seasonal veggies', 12.00, 'stirfry.jpg');
 
--- INSERT INTO "Order" (customerUsername, restaurantID, status, deliveryAddress)
+-- INSERT INTO "Order" (customerEmail, restaurantID, status, deliveryAddress)
 -- VALUES 
 --     ('Amy@abc.com', 1, 'completed', '1 Florabella Villas, Chalfont St Giles'),
 --     ('Brian@bobble.co.uk', 2, 'processing', '46 Beatrice Avenue, Saltash');

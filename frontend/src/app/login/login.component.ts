@@ -11,7 +11,7 @@
     styleUrl: './login.component.css'
   })
   export class LoginComponent {
-    username = '';
+    email = '';
     password = '';
 
     constructor(
@@ -20,7 +20,7 @@
     ) {}
   
     onLogin() {
-      this.authService.login(this.username, this.password).subscribe({
+      this.authService.login(this.email, this.password).subscribe({
         next: (response) => {
           console.log('Login successful!', response);
           localStorage.setItem('token', response.token); // Store the response including role and token

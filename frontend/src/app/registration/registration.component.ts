@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrl: './registration.component.css'
 })
 export class RegistrationComponent {
-  username = '';
+  email = '';
   password = '';
   firstName = '';
   lastName = '';
@@ -26,7 +26,7 @@ export class RegistrationComponent {
 
   onRegistration() {
     this.authService.register(
-      this.username,
+      this.email,
       this.password,
       this.firstName,
       this.lastName,
