@@ -1,5 +1,5 @@
 export class User {
   email!: string;
-  firstName?: string;
-  lastName?: string;
+  firstname?: string;
+  lastname?: string;
 }
