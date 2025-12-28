@@ -46,11 +46,11 @@ async function resetDatabase() {
     const restoIDs = [];
     for (const restaurant of seedData.restaurants) {
       const result = await client.query(
-        `INSERT INTO Restaurant (restaurantName, restaurantOwnerEmail, approvalStatus, address, postcode, phoneNumber) 
-                 VALUES ($1, $2, $3, $4, $5, $6) RETURNING restaurantID`,
+        `INSERT INTO Restaurant (name, ownerEmail, approvalStatus, address, postcode, phoneNumber) 
+                 VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
         [restaurant.name, restaurant.owner, restaurant.status, restaurant.addr, restaurant.postcode, restaurant.phone]
       );
-      restoIDs.push(result.rows[0].restaurantid);
+      restoIDs.push(result.rows[0].id);
     }
 
     // Seed Reviews
