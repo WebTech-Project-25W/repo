@@ -10,23 +10,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-<<<<<<< HEAD
-  //login(user: string, pass: string): Observable<any> {
-    // to match the { user, pass } of the backend
-    //return this.http.post(`${this.apiUrl}/login`, { "username": user, "password": pass });
-  //}
-login(username: string, password: string) {
-  return this.http.post<any>(
-    `${this.apiUrl}/auth/login`,
-    { username, password }
-  );
-}
-=======
   login(email: string, pass: string): Observable<any> {
     // to match the { email, pass } of the backend
     return this.http.post(`${this.apiUrl}/login`, { "email": email, "password": pass });
   }
->>>>>>> a8a262200d6d7f35aee789d4ddfb565345f56d56
 
   register(
     email: string,
