@@ -52,9 +52,9 @@ DROP TYPE IF EXISTS approval_status;
 CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved');
 CREATE TABLE Restaurant
 (
-  restaurantID SERIAL PRIMARY KEY,
-  restaurantName varchar(100) NOT NULL,
-  restaurantOwnerEmail varchar(100) REFERENCES public.RestaurantOwner(email),
+  id SERIAL PRIMARY KEY,
+  "name" varchar(100) NOT NULL,
+  ownerEmail varchar(100) REFERENCES public.RestaurantOwner(email),
   approvalStatus approval_status,
   address varchar(100)  NOT NULL,
   postcode varchar(100) NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE Restaurant
 CREATE TABLE Review
 (
   reviewID SERIAL PRIMARY KEY,
-  restaurantID int REFERENCES public.Restaurant(restaurantID),
+  restaurantID int REFERENCES public.Restaurant(id),
   customerEmail varchar(100) REFERENCES public.Customer(email),
   timeStamp timeStamptz NOT NULL,
   rating int NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE Review
 
 CREATE TABLE Menu (
     menuID SERIAL PRIMARY KEY,
-    restaurantID int REFERENCES public.Restaurant(restaurantID) ON DELETE CASCADE,
+    restaurantID int REFERENCES public.Restaurant(id) ON DELETE CASCADE,
     name varchar(100) NOT NULL,
     description varchar(255)
 );
@@ -90,7 +90,7 @@ CREATE TABLE Dish (
 CREATE TABLE "Order" (
     orderID SERIAL PRIMARY KEY,
     customerEmail varchar(100) REFERENCES public.Customer(email),
-    restaurantID int REFERENCES public.Restaurant(restaurantID),
+    restaurantID int REFERENCES public.Restaurant(id),
     status varchar(50) DEFAULT 'pending',
     discountCodes varchar(50),
     deliveryAddress varchar(255),
