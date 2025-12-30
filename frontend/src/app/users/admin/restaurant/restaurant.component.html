@@ -3,4 +3,8 @@
   <p>Owner: "{{ restaurant.owneremail }}"</p>
   <p>Address: "{{ restaurant.addr }}" Postcode: "{{ restaurant.postcode }}"</p>
   <p>Phone number: "{{ restaurant.phonenumber }}"</p>
+  <p>Approval Status: "{{restaurant.approvalstatus}}"</p>
+  <button (click)="updateApprovalStatus('approved')">Approve</button> 
+  <button (click)="updateApprovalStatus('rejected')"> Reject</button> 
+  <button (click)="updateApprovalStatus('suspended')">Suspend</button>
 </div>

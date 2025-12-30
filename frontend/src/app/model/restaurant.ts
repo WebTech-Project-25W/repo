@@ -1,8 +1,8 @@
 export class Restaurant{
-  id!: Number;
+  id!: number;
   name!: string;
   owneremail!: string;
-  approvalStatus!: string;
+  approvalstatus!: string;
   addr!: string;
   postcode!: string;
   phonenumber!: string;
