@@ -49,7 +49,7 @@ CREATE TABLE RestaurantOwner
 );
 
 DROP TYPE IF EXISTS approval_status;
-CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved');
+CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved', 'suspended');
 CREATE TABLE Restaurant
 (
   id SERIAL PRIMARY KEY,
