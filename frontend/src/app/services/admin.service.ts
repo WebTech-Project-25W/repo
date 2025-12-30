@@ -22,23 +22,17 @@ export class AdminService {
   }
 
   getUsers() {
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
     return this.http.get<User[]>(`${this.apiUrl}/users`, this.authHeaders());
   }
 
   getRestaurants() {
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
     return this.http.get<Restaurant[]>(`${this.apiUrl}/restaurants`, this.authHeaders());
   }
 
+  updateApprovalStatus(restaurantId: number, newStatus: string) {
+    return this.http.patch(
+      `${this.apiUrl}/restaurants/${restaurantId}/approval-status`,
+      { "approvalStatus": newStatus }, this.authHeaders()
+    );
+  }
 }
