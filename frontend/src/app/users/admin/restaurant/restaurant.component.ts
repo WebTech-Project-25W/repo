@@ -21,8 +21,11 @@ export class RestaurantComponent {
       next: (response: any) => {
 
         console.log(
-          `Approval status of restaurant ${this.restaurant.id} succesfully update to ${newStatus}`,
-          response)
+          `Approval status of restaurant ${response.id} succesfully update to ${response.approvalstatus}`,
+          response
+        );
+
+        this.restaurant.approvalstatus = response.approvalstatus;
       },
       error: (err: any) => console.error("Error updating status:", err)
     })
