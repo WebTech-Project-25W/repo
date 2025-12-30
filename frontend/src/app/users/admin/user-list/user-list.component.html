@@ -1,0 +1,8 @@
+<div class="user-list">
+  <p>user-list:</p>
+
+  @for ( user of userList; track user.email ) {
+  <app-user [user]="user"></app-user>
+  }
+
+</div>
