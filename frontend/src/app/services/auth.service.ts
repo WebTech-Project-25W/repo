@@ -10,10 +10,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(email: string, pass: string): Observable<any> {
-    // to match the { email, pass } of the backend
-    return this.http.post(`${this.apiUrl}/login`, { "email": email, "password": pass });
-  }
+ login(username: string, pass: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/login`, {
+    "username": username,
+    "password": pass
+  });
+}
 
   register(
     email: string,
