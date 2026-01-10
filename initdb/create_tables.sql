@@ -4,7 +4,7 @@ DROP VIEW IF EXISTS "View_User_Roles";
 
 DROP TABLE IF EXISTS OrderItem;   
 DROP TABLE IF EXISTS "Order";
-DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Customer Cascade;
 
 DROP TABLE IF EXISTS SiteManager;
 
