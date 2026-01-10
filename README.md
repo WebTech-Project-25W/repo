@@ -8,8 +8,9 @@
   - set db name and password in config.json file
   - install dependencies (npm i in initdb directory)
   - create projectDB in postgres (can use command create_database.sql)
-  - initialise with comands in create_tables.sql
-  - set user credentials (username and password in config.json file in backend)
+  - set user credentials (username and password in initdb/config.json file)
+    - cd initdb
+  - node reset-db.js
 
 - **Frontend**
   - navigate to backend directory (cd frontend)
