@@ -17,7 +17,6 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Missing email or password." });
   }
 
-
   try {
     const query = `
     SELECT email, password, role 
