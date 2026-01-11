@@ -21,7 +21,6 @@ router.get("/restaurant", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to load restaurant" });
-    res.status(500).json({ message: "Failed to load restaurant" });
   }
 });
 
@@ -40,7 +39,6 @@ router.post("/restaurant", async (req, res) => {
 
     if (existing.rows.length > 0) {
       return res.status(400).json({ message: "Restaurant already exists" });
-      return res.status(400).json({ message: "Restaurant already exists" });
     }
 
     await pool.query(
@@ -51,10 +49,8 @@ router.post("/restaurant", async (req, res) => {
     );
 
     res.json({ message: "Restaurant created" });
-    res.json({ message: "Restaurant created" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to create restaurant" });
     res.status(500).json({ message: "Failed to create restaurant" });
   }
 });
@@ -69,33 +65,26 @@ router.post("/menus", async (req, res) => {
   try {
     const restaurant = await pool.query(
       "SELECT restaurantid FROM Restaurant WHERE owneremail = $1",
-      "SELECT restaurantid FROM Restaurant WHERE owneremail = $1",
       [ownerUsername]
     );
 
     if (restaurant.rows.length === 0) {
       return res.status(400).json({ message: "Create restaurant first" });
-      return res.status(400).json({ message: "Create restaurant first" });
     }
 
     await pool.query(
-      "INSERT INTO Menu (restaurantid, name, description) VALUES ($1, $2, $3)",
       "INSERT INTO Menu (restaurantid, name, description) VALUES ($1, $2, $3)",
       [restaurant.rows[0].restaurantid, name, description]
     );
 
     res.json({ message: "Menu created" });
-    res.json({ message: "Menu created" });
   } catch (err) {
-    console.error("CREATE MENU ERROR:", err);
-    res.status(500).json({ message: "Failed to create menu" });
     console.error("CREATE MENU ERROR:", err);
     res.status(500).json({ message: "Failed to create menu" });
   }
 });
 
 // =====================================================
-// GET my menus  ✅ FIXED
 // GET my menus  ✅ FIXED
 // =====================================================
 router.get("/menus", async (req, res) => {
@@ -109,19 +98,11 @@ router.get("/menus", async (req, res) => {
       JOIN Restaurant r ON r.restaurantid = m.restaurantid
       WHERE r.owneremail = $1
       `,
-      `
-      SELECT m.*
-      FROM Menu m
-      JOIN Restaurant r ON r.restaurantid = m.restaurantid
-      WHERE r.owneremail = $1
-      `,
       [ownerUsername]
     );
 
     res.json({ menus: result.rows });
   } catch (err) {
-    console.error("GET MENUS ERROR:", err);
-    res.status(500).json({ message: "Failed to load menus" });
     console.error("GET MENUS ERROR:", err);
     res.status(500).json({ message: "Failed to load menus" });
   }
@@ -130,7 +111,6 @@ router.get("/menus", async (req, res) => {
 // =====================================================
 // CREATE dish
 // =====================================================
-router.post("/dishes", async (req, res) => {
 router.post("/dishes", async (req, res) => {
   const { menuID, name, description, price, photoLink } = req.body;
 
@@ -142,10 +122,8 @@ router.post("/dishes", async (req, res) => {
     );
 
     res.json({ message: "Dish created" });
-    res.json({ message: "Dish created" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to create dish" });
     res.status(500).json({ message: "Failed to create dish" });
   }
 });
@@ -154,13 +132,9 @@ router.post("/dishes", async (req, res) => {
 // GET dishes by menu
 // =====================================================
 router.get("/dishes/:menuID", async (req, res) => {
-router.get("/dishes/:menuID", async (req, res) => {
   const { menuID } = req.params;
 
   try {
-    const result = await pool.query("SELECT * FROM Dish WHERE menuID = $1", [
-      menuID,
-    ]);
     const result = await pool.query("SELECT * FROM Dish WHERE menuID = $1", [
       menuID,
     ]);
@@ -168,7 +142,6 @@ router.get("/dishes/:menuID", async (req, res) => {
     res.json({ dishes: result.rows });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to load dishes" });
     res.status(500).json({ message: "Failed to load dishes" });
   }
 });
@@ -202,27 +175,7 @@ router.put("/orders/:orderID/status", async (req, res) => {
 
     if (current.rows.length === 0) {
       return res.status(404).json({ message: "Order not found" });
-    if (current.rows.length === 0) {
-      return res.status(404).json({ message: "Order not found" });
     }
-
-    const currentStatus = current.rows[0].status;
-
-    if (!allowedTransitions[currentStatus]?.includes(status)) {
-      return res.status(400).json({
-        message: `Invalid transition from ${currentStatus} to ${status}`,
-      });
-    }
-
-    const updated = await pool.query(
-      `
-      UPDATE "Order"
-      SET status = $1
-      WHERE orderid = $2
-      RETURNING orderid, status
-      `,
-      [status, orderID]
-    );
 
     const currentStatus = current.rows[0].status;
 
@@ -245,12 +198,8 @@ router.put("/orders/:orderID/status", async (req, res) => {
     res.json({
       message: "Order status updated",
       order: updated.rows[0],
-      message: "Order status updated",
-      order: updated.rows[0],
     });
   } catch (err) {
-    console.error("UPDATE ORDER STATUS ERROR:", err);
-    res.status(500).json({ message: "Failed to update order status" });
     console.error("UPDATE ORDER STATUS ERROR:", err);
     res.status(500).json({ message: "Failed to update order status" });
   }
@@ -279,27 +228,7 @@ router.put("/restaurant/settings", async (req, res) => {
       return res
         .status(404)
         .json({ message: "Restaurant not found for this owner" });
-    if (r.rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Restaurant not found for this owner" });
     }
-
-    const id = r.rows[0].id;
-
-    const updated = await pool.query(
-      `
-      UPDATE restaurant
-      SET
-        name = COALESCE($1, name),
-        phonenumber = COALESCE($2, phonenumber),
-        openinghours = COALESCE($3, openinghours),
-        deliveryzone = COALESCE($4, deliveryzone)
-      WHERE id = $5
-      RETURNING id, name, phonenumber, openinghours, deliveryzone
-      `,
-      [name, phone, openingHours, deliveryZone, id]
-    );
 
     const id = r.rows[0].id;
 
@@ -320,12 +249,8 @@ router.put("/restaurant/settings", async (req, res) => {
     res.json({
       message: "Restaurant settings saved",
       restaurant: updated.rows[0],
-      message: "Restaurant settings saved",
-      restaurant: updated.rows[0],
     });
   } catch (err) {
-    console.error("SAVE SETTINGS ERROR:", err);
-    res.status(500).json({ message: "Failed to save restaurant settings" });
     console.error("SAVE SETTINGS ERROR:", err);
     res.status(500).json({ message: "Failed to save restaurant settings" });
   }
@@ -353,11 +278,9 @@ router.get("/analytics/orders", async (req, res) => {
     res.json({
       today: Number(result.rows[0].today),
       thisWeek: Number(result.rows[0].thisweek),
-      thisWeek: Number(result.rows[0].thisweek),
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to load order analytics" });
     res.status(500).json({ message: "Failed to load order analytics" });
   }
 });
