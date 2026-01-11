@@ -3,6 +3,11 @@
   display: flex;
   min-height: 100vh;
   background: #f4f6f8;
+/* LAYOUT */
+.owner-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f6f8;
   font-family: Arial, sans-serif;
 }
 
@@ -14,6 +19,26 @@
   padding: 20px;
 }
 
+.sidebar button {
+  width: 100%;
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.sidebar button.active,
+.sidebar button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 24px;
 .sidebar button {
   width: 100%;
   background: transparent;
