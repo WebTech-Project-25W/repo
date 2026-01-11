@@ -1,0 +1,31 @@
+<div class="hero"></div>
+
+<div class="page" *ngIf="restaurant">
+  <a routerLink="/" class="back">← Restaurants</a>
+
+  <h1>{{ restaurant.name }}</h1>
+
+  <!-- INFO CARD -->
+  <div class="info-card">
+    <div>📞 {{ restaurant.phonenumber }}</div>
+    <div>🕒 {{ restaurant.openinghours }}</div>
+    <div>📍 {{ restaurant.deliveryzone }}</div>
+  </div>
+
+  <!-- MENUS -->
+  <div class="menu-card" *ngFor="let menu of menus">
+    <h2>{{ menu.name }}</h2>
+    <p class="desc">{{ menu.description }}</p>
+
+    <div class="dish" *ngFor="let dish of menu.dishes">
+      <div class="dish-left">
+        <strong>{{ dish.name }}</strong>
+        <p>{{ dish.description }}</p>
+      </div>
+
+      <div class="dish-right">
+        <span class="price">{{ dish.price }} €</span>
+      </div>
+    </div>
+  </div>
+</div>

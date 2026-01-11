@@ -5,8 +5,8 @@
     "password": "password",
     "db": "projectDB"
   },
-  	"auth": {
-        "jwt_key": "secret",
-        "expiration": "1h"
-    }
+  "auth": {
+    "jwt_key": "secret",
+    "expiration": "1h"
+  }
 }

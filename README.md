@@ -1,15 +1,18 @@
 # Setup
 
 - **Backend**
+
   - navigate to backend directory (cd backend)
   - install dependencies (npm i)
 
 - **Database**
+
   - set db name and password in config.json file
   - install dependencies (npm i in initdb directory)
   - create projectDB in postgres (can use command create_database.sql)
-  - initialise with comands in create_tables.sql
-  - set user credentials (username and password in config.json file in backend)
+  - set user credentials (username and password in initdb/config.json file)
+    - cd initdb
+  - node reset-db.js
 
 - **Frontend**
   - navigate to backend directory (cd frontend)
@@ -18,7 +21,8 @@
 # Execution
 
 - **Backend**
-  - run node server.js 
+
+  - run node server.js
   - Test base route on "http://localhost:3000/"
   - Test user route on "http://localhost:3000/api/users/"
 
@@ -27,5 +31,3 @@
     - navigate to frontend folder (cd frontend)
     - run ng serve
   - navigate to "http://localhost:4200/"
-
-

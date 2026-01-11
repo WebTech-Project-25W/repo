@@ -1,32 +1,288 @@
-.dashboard-container {
-  padding: 24px;
-  max-width: 900px;
-  margin: 0 auto;
+/* LAYOUT */
+.owner-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f6f8;
   font-family: Arial, sans-serif;
 }
 
-.section {
-  margin-top: 24px;
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #111;
+  color: white;
+  padding: 20px;
 }
 
-.menu-list {
-  list-style: none;
-  padding: 0;
+.sidebar button {
+  width: 100%;
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  border-radius: 4px;
+  margin-bottom: 6px;
 }
 
-.menu-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
+.sidebar button.active,
+.sidebar button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 24px;
+}
+
+.page-title {
+  margin-bottom: 16px;
+}
+
+.section-title {
   margin-bottom: 12px;
-  background-color: #fafafa;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
 }
 
-.menu-card h3 {
-  margin: 0 0 8px 0;
+/* CARDS */
+.card,
+.menu-card,
+.order-card {
+  background: white;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
 }
 
-.menu-card p {
-  margin: 0;
-  color: #555;
+/* MENUS */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.menu-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.menu-dishes-box {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+/* ORDERS */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+/* FORMS */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+input,
+select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* BUTTONS */
+.primary-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+}
+
+.secondary-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+}
+
+.toggle-btn {
+  background: #e0e0e0;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+}
+
+.danger-btn {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+}
+
+/* STATUS */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+}
+
+.status-badge.pending {
+  background: gray;
+}
+.status-badge.accepted {
+  background: #1976d2;
+}
+.status-badge.preparing {
+  background: orange;
+}
+.status-badge.ready {
+  background: #4caf50;
+}
+.status-badge.dispatched {
+  background: purple;
+}
+.status-badge.rejected {
+  background: red;
+}
+
+/* TABLE */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+th,
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* STATS */
+.stats-card {
+  display: flex;
+  gap: 40px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* MISC */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.gap {
+  gap: 8px;
+}
+
+.right {
+  text-align: right;
+}
+
+.muted {
+  color: #777;
+}
+
+.saved-preview {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+}
+.form-row {
+  flex-wrap: wrap;
+}
+/* ===== DISH EDIT MODE ===== */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-dish-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+}
+
+.edit-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+}
+
+.edit-fields input {
+  width: 100%;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.dish-name {
+  font-weight: bold;
+}
+
+.dish-description {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
 }

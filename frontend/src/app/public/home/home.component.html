@@ -1,0 +1,48 @@
+<div
+  class="hero"
+  style="background-image: url('assets/images/background2.jpg')"
+>
+  <div class="overlay"></div>
+  <div class="hero-content">
+    <h1>
+      Food delivery<br />
+      made simple
+    </h1>
+
+    <p>
+      Discover restaurants, explore menus, and enjoy a modern food experience.
+    </p>
+
+    <a routerLink="/restaurants" class="cta"> Explore restaurants </a>
+  </div>
+</div>
+<!-- FEATURES -->
+<div class="features">
+  <div class="feature">
+    <h3>🍽 Quality restaurants</h3>
+    <p>Managed by restaurant owners.</p>
+  </div>
+
+  <div class="feature">
+    <h3>⚡ Fast & simple</h3>
+    <p>Clean UI inspired by modern food apps.</p>
+  </div>
+
+  <div class="feature">
+    <h3>🔒 Role-based system</h3>
+    <p>Separate admin, owner, and customer views.</p>
+  </div>
+</div>
+<!-- APP VALUE / STATS -->
+<div class="stats">
+  <div class="stat" *ngFor="let s of stats">
+    <h2>{{ s.value }}+</h2>
+    <p>{{ s.label }}</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>FoodDelivery © 2026</p>
+  <p>Final Project — Food Delivery System</p>
+</footer>
