@@ -61,7 +61,7 @@ export class OwnerService {
   getDishes(menuID: number): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/dishes/${menuID}`,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 
@@ -72,7 +72,7 @@ export class OwnerService {
     return this.http.put(
       `${this.baseUrl}/dishes/${dishID}`,
       data,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 
@@ -103,7 +103,7 @@ export class OwnerService {
     return this.http.put(
       `${this.baseUrl}/orders/${orderID}/status`,
       { status },
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 
@@ -118,7 +118,7 @@ export class OwnerService {
     return this.http.put(
       `${this.baseUrl}/restaurant/settings`,
       data,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 
@@ -128,7 +128,7 @@ export class OwnerService {
   getTopDishes(): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/analytics/top-dishes`,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 
@@ -143,20 +143,20 @@ export class OwnerService {
   getOrderStats(): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/analytics/orders`,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
   deleteMenu(menuID: number): Observable<any> {
     return this.http.delete(
       `${this.baseUrl}/menus/${menuID}`,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 
   deleteDish(dishID: number): Observable<any> {
     return this.http.delete(
       `${this.baseUrl}/dishes/${dishID}`,
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
   getOrderAnalytics(): Observable<{
@@ -166,7 +166,7 @@ export class OwnerService {
     return this.http.get<{
       today: number;
       thisWeek: number;
-    }>(`${this.apiUrl}/owner/analytics/orders`, { withCredentials: true });
+    }>(`${this.baseUrl}/analytics/orders`, this.authHeaders());
   }
 
   // ===== TEST ORDER (DEMO) =====
@@ -174,7 +174,7 @@ export class OwnerService {
     return this.http.post(
       `${this.baseUrl}/orders/test`,
       {},
-      this.authHeaders()
+      this.authHeaders(),
     );
   }
 }
