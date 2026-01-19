@@ -13,6 +13,9 @@ DROP TABLE IF EXISTS Menu;
 DROP TABLE IF EXISTS Restaurant;
 DROP TABLE IF EXISTS RestaurantOwner;
 
+DROP INDEX IF EXISTS idx_login_history_user_email;
+DROP TABLE IF EXISTS LogInHistory;
+
 DROP TABLE IF EXISTS AppUser;
 
 
@@ -27,6 +30,18 @@ CREATE TABLE AppUser
   firstname varchar(100),
   lastname varchar(100)
 );
+
+CREATE TABLE LogInHistory
+(
+  id SERIAL PRIMARY KEY,
+  userEmail varchar(100),
+  time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  ipAddress varchar(45),
+  status varchar(20) CHECK (status IN ('Success', 'Failure')),
+  userAgent varchar(100)
+);
+
+CREATE INDEX idx_login_history_user_email ON public.LogInHistory(userEmail);
 
 DROP TYPE IF EXISTS blocked_status;
 CREATE TYPE blocked_status as ENUM('not-blocked', 'warned', 'blocked');
