@@ -12,27 +12,19 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
-  private authHeaders() {
-    const token = localStorage.getItem('token');
-    return {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      })
-    };
-  }
 
   getUsers() {
-    return this.http.get<User[]>(`${this.apiUrl}/users`, this.authHeaders());
+    return this.http.get<User[]>(`${this.apiUrl}/users`);
   }
 
   getRestaurants() {
-    return this.http.get<Restaurant[]>(`${this.apiUrl}/restaurants`, this.authHeaders());
+    return this.http.get<Restaurant[]>(`${this.apiUrl}/restaurants`);
   }
 
   updateApprovalStatus(restaurantId: number, newStatus: string) {
     return this.http.patch(
       `${this.apiUrl}/restaurants/${restaurantId}/approval-status`,
-      { "approvalStatus": newStatus }, this.authHeaders()
+      { "approvalStatus": newStatus }
     );
   }
 }

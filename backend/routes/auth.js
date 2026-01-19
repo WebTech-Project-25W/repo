@@ -49,11 +49,18 @@ router.post("/login", async (req, res) => {
       expiresIn: cfg.auth.expiration,
     });
 
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: false, // TODO !! change to true and use https !!
+      sameSite: 'lax',
+      maxAge: parseToMSeconds(cfg.auth.expiration).toString(),
+      path: '/'
+    })
+
     res.status(200).json({
       message: "login successful",
       email: user.email,
       role: user.role,
-      token: token,
     });
   } catch (err) {
     console.error("Login error: " + err);
@@ -150,3 +157,24 @@ router.post("/reset-password", authenticate, async (req, res) => {
 });
 
 module.exports = router;
+
+const parseToMSeconds = (timeStr) => {
+  const unitMap = {
+    's': 1000,
+    'm': 60000,
+    'h': 3600000,
+    'd': 86400000
+  };
+
+  const match = timeStr.match(/^(\d+)([smhd])$/);
+  
+  if (!match) {
+    console.error("Failed to parse time string");
+    return 0; // Or handle error for invalid format
+  }
+
+  const value = parseInt(match[1], 10);
+  const unit = match[2];
+
+  return value * unitMap[unit];
+};
