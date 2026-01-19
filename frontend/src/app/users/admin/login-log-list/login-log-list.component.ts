@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { LoginLogComponent } from "../login-log/login-log.component";
 import { LoginLog } from '../../../model/LoginLog';
 import { AdminService } from '../../../services/admin.service';
+import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login-log-list',
   standalone: true,
-  imports: [LoginLogComponent],
+  imports: [DatePipe, FormsModule],
   templateUrl: './login-log-list.component.html',
   styleUrl: './login-log-list.component.css'
 })
@@ -17,16 +18,57 @@ export class LoginLogListComponent {
     private adminService: AdminService,
   ) { }
 
+  // for pagination
+  limit: number = 7;
+  currentPage: number = 0;
+
+  // search filters
+  searchEmail: string = '';
+  searchStatus: string = '';
+
+
   ngOnInit(): void {
-    this.adminService.getLoginLogs().subscribe({
+    this.loadLogs();
+  }
+
+  loadLogs() {
+    const offset = this.currentPage * this.limit;
+
+    this.adminService.getLoginLogs(this.searchEmail, this.searchStatus, this.limit, offset).subscribe({ // email and status can be passed through undefined
       next: (data: LoginLog[]) => {
         this.logs = data;
-        console.log('login-logs loaded: ', this.logs, data);
       },
       error: (err) => {
-        console.log('Error fetching login-logs: ', err);
+        console.error('Error fetching login-logs: ', err);
       }
     });
   }
 
+  applyFilters() {
+    this.currentPage = 0;
+    this.loadLogs();
+  }
+
+  clearFilters() {
+    this.searchEmail = '';
+    this.searchStatus = '';
+    this.applyFilters();
+  }
+  
+  onLimitChange() {
+    this.currentPage = 0;
+    this.loadLogs();
+  }
+
+  nextPage() {
+    this.currentPage++;
+    this.loadLogs();
+  }
+
+  previousPage() {
+    if (this.currentPage >0) {
+      this.currentPage--;
+      this.loadLogs();
+    }
+  }
 }

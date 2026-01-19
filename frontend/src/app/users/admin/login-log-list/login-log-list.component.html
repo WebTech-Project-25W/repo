@@ -1,8 +1,70 @@
-<div class="login-log-list">
-  <p>login-log-list:</p>
+<div class="login-log-container">
+  <h2>Login History</h2>
 
-  @for ( log of logs; track log.id ) {
-  <app-login-log [log]="log"></app-login-log>
-  }
+  <div class="filter-bar">
+    <input type="text" name="emailSearch" [(ngModel)]="searchEmail" placeholder="Search by Email..."
+      (keyup.enter)="applyFilters()">
 
+    <select [(ngModel)]="searchStatus">
+      <option value="">All Statuses</option>
+      <option value="Success">Success</option>
+      <option value="Failure">Failure</option>
+    </select>
+
+    <button (click)="applyFilters()" class="btn-search">Search</button>
+    <button (click)="clearFilters()" class="btn-clear">Clear</button>
+  </div>
+
+  <table class="login-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Email</th>
+        <th>IP Address</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (log of logs; track log.id) {
+      <tr>
+        <td>{{ log.time | date:'short' }}</td>
+        <td>{{ log.useremail}}</td>
+        <td>{{ log.ipaddress }}</td>
+        <td>
+          <span [class.status-pill]="true" [attr.data-status]="log.status">
+            {{ log.status }}
+          </span>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="4" class="no-data">No login attempts found.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="pagination-controls">
+    <div class="limit-selector">
+      <label for="limit">Rows per page:</label>
+      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+        <option [ngValue]="50">50</option>
+        <option [ngValue]="100">100</option>
+      </select>
+    </div>
+    <div class="page-navigation">
+
+      <button (click)="previousPage()" [disabled]="currentPage === 0">
+        Previous
+      </button>
+      
+      <span>Page {{ currentPage + 1 }}</span>
+      
+      <button (click)="nextPage()" [disabled]="currentPage*limit > logs.length +1 ">
+        Next
+      </button>
+    </div>
+  </div>
 </div>
