@@ -59,7 +59,8 @@ CREATE TABLE Restaurant
   approvalStatus approval_status,
   address varchar(100)  NOT NULL,
   postcode varchar(100) NOT NULL,
-  phoneNumber varchar(100) NOT NULL
+  phoneNumber varchar(100) NOT NULL,
+  cuisine varchar(50)
 );
 
 CREATE TABLE Review
