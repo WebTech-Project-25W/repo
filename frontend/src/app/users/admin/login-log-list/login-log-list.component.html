@@ -1,0 +1,8 @@
+<div class="login-log-list">
+  <p>login-log-list:</p>
+
+  @for ( log of logs; track log.id ) {
+  <app-login-log [log]="log"></app-login-log>
+  }
+
+</div>

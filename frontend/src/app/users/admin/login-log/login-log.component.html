@@ -1,0 +1,8 @@
+<div class="login-log">
+  <p>
+    <strong>Email:</strong> {{ log.useremail }} | 
+    <strong>IP:</strong> {{ log.ipaddress }} | 
+    <strong>Status:</strong> {{ log.status }}
+    <strong>Attempted At:</strong> {{ log.time | date:'medium' }}
+  </p>
+</div>
