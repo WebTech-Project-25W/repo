@@ -27,6 +27,7 @@ router.post("/login", async (req, res) => {
     // handle no match
     const invalidMessage = "Invalid email or password.";
     if (results.rows.length === 0) {
+      logLogInAttempt(email, req.ip, 'Failure', req.headers["user-agent"]);
       return res.status(401).json({ message: invalidMessage });
     }
 
@@ -36,10 +37,13 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
+      logLogInAttempt(email, req.ip, 'Failure', req.headers["user-agent"]);
       return res.status(401).json({ message: invalidMessage });
     }
 
     // password match: form the token with userData
+    logLogInAttempt(email, req.ip, 'Success', req.headers["user-agent"]);
+
     const payload = {
       email: user.email,
       role: user.role,
@@ -178,3 +182,12 @@ const parseToMSeconds = (timeStr) => {
 
   return value * unitMap[unit];
 };
+
+
+// helper function 
+async function logLogInAttempt(email, ip, status, deviceInfo) {
+  const query = `
+    INSERT INTO LogInHistory (userEmail, ipAddress, status, userAgent)
+    VALUES ($1, $2, $3, $4)`;
+  await pool.query(query, [email, ip, status, deviceInfo]);
+}
