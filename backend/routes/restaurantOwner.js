@@ -13,8 +13,8 @@ router.get("/restaurant", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT * FROM Restaurant WHERE owneremail = $1",
-      [ownerUsername]
+      "SELECT * FROM restaurant WHERE owneremail = $1",
+      [ownerUsername],
     );
 
     res.json({ restaurant: result.rows[0] || null });
@@ -33,8 +33,8 @@ router.post("/restaurant", async (req, res) => {
 
   try {
     const existing = await pool.query(
-      "SELECT 1 FROM Restaurant WHERE owneremail = $1",
-      [ownerUsername]
+      "SELECT 1 FROM restaurant WHERE owneremail = $1",
+      [ownerUsername],
     );
 
     if (existing.rows.length > 0) {
@@ -42,10 +42,12 @@ router.post("/restaurant", async (req, res) => {
     }
 
     await pool.query(
-      `INSERT INTO Restaurant
-       (owneremail, approvalStatus, street, streetNumber, postcode, region, phoneNum)
-       VALUES ($1, 'pending', $2, $3, $4, $5, $6)`,
-      [ownerUsername, street, number, postcode, region, phoneNum]
+      `
+      INSERT INTO restaurant
+      (owneremail, approvalstatus, address, postcode, phonenumber, name)
+      VALUES ($1, 'pending', $2, $3, $4, 'My Restaurant')
+      `,
+      [ownerUsername, street, postcode, phoneNum],
     );
 
     res.json({ message: "Restaurant created" });
@@ -64,8 +66,8 @@ router.post("/menus", async (req, res) => {
 
   try {
     const restaurant = await pool.query(
-      "SELECT restaurantid FROM Restaurant WHERE owneremail = $1",
-      [ownerUsername]
+      "SELECT id FROM restaurant WHERE owneremail = $1 AND approvalstatus = 'approved'",
+      [ownerUsername],
     );
 
     if (restaurant.rows.length === 0) {
@@ -73,8 +75,8 @@ router.post("/menus", async (req, res) => {
     }
 
     await pool.query(
-      "INSERT INTO Menu (restaurantid, name, description) VALUES ($1, $2, $3)",
-      [restaurant.rows[0].restaurantid, name, description]
+      "INSERT INTO menu (restaurantid, name, description) VALUES ($1, $2, $3)",
+      [restaurant.rows[0].id, name, description],
     );
 
     res.json({ message: "Menu created" });
@@ -85,7 +87,7 @@ router.post("/menus", async (req, res) => {
 });
 
 // =====================================================
-// GET my menus  ✅ FIXED
+// GET my menus
 // =====================================================
 router.get("/menus", async (req, res) => {
   const ownerUsername = req.user.email;
@@ -94,11 +96,12 @@ router.get("/menus", async (req, res) => {
     const result = await pool.query(
       `
       SELECT m.*
-      FROM Menu m
-      JOIN Restaurant r ON r.restaurantid = m.restaurantid
-      WHERE r.owneremail = $1
+      FROM menu m
+      JOIN restaurant r ON r.id = m.restaurantid
+      WHERE r.owneremail = $1 
+      AND approvalstatus = 'approved'
       `,
-      [ownerUsername]
+      [ownerUsername],
     );
 
     res.json({ menus: result.rows });
@@ -116,9 +119,11 @@ router.post("/dishes", async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO Dish (menuID, name, description, price, photoLink)
-       VALUES ($1,$2,$3,$4,$5)`,
-      [menuID, name, description, price, photoLink]
+      `
+      INSERT INTO dish (menuid, name, description, price, photolink)
+      VALUES ($1, $2, $3, $4, $5)
+      `,
+      [menuID, name, description, price, photoLink],
     );
 
     res.json({ message: "Dish created" });
@@ -135,7 +140,7 @@ router.get("/dishes/:menuID", async (req, res) => {
   const { menuID } = req.params;
 
   try {
-    const result = await pool.query("SELECT * FROM Dish WHERE menuID = $1", [
+    const result = await pool.query("SELECT * FROM dish WHERE menuid = $1", [
       menuID,
     ]);
 
@@ -147,7 +152,7 @@ router.get("/dishes/:menuID", async (req, res) => {
 });
 
 // =====================================================
-// UPDATE order status (robust: handles schema differences)
+// UPDATE order status
 // =====================================================
 router.put("/orders/:orderID/status", async (req, res) => {
   const ownerUsername = req.user.email;
@@ -166,11 +171,11 @@ router.put("/orders/:orderID/status", async (req, res) => {
       `
       SELECT o.status
       FROM "Order" o
-      JOIN Restaurant r ON r.id = o.restaurantid
+      JOIN restaurant r ON r.id = o.restaurantid
       WHERE o.orderid = $1
         AND r.owneremail = $2
       `,
-      [orderID, ownerUsername]
+      [orderID, ownerUsername],
     );
 
     if (current.rows.length === 0) {
@@ -192,7 +197,7 @@ router.put("/orders/:orderID/status", async (req, res) => {
       WHERE orderid = $2
       RETURNING orderid, status
       `,
-      [status, orderID]
+      [status, orderID],
     );
 
     res.json({
@@ -206,22 +211,22 @@ router.put("/orders/:orderID/status", async (req, res) => {
 });
 
 // =====================================================
-// UPDATE restaurant profile (name/phone/openingHours/deliveryZone)
+// UPDATE restaurant profile
 // =====================================================
 router.put("/restaurant/settings", async (req, res) => {
   const owner = req.user.email;
-  const { restaurantID, name, phone, openingHours, deliveryZone } = req.body;
+  const { restaurantID, name, phone } = req.body;
 
   try {
     const r = await pool.query(
       `
       SELECT id
       FROM restaurant
-      WHERE (ownerusername = $1 OR owneremail = $1)
+      WHERE owneremail = $1
       ${restaurantID ? "AND id = $2" : ""}
       LIMIT 1
       `,
-      restaurantID ? [owner, restaurantID] : [owner]
+      restaurantID ? [owner, restaurantID] : [owner],
     );
 
     if (r.rows.length === 0) {
@@ -237,13 +242,11 @@ router.put("/restaurant/settings", async (req, res) => {
       UPDATE restaurant
       SET
         name = COALESCE($1, name),
-        phonenumber = COALESCE($2, phonenumber),
-        openinghours = COALESCE($3, openinghours),
-        deliveryzone = COALESCE($4, deliveryzone)
-      WHERE id = $5
-      RETURNING id, name, phonenumber, openinghours, deliveryzone
+        phonenumber = COALESCE($2, phonenumber)
+      WHERE id = $3
+      RETURNING *
       `,
-      [name, phone, openingHours, deliveryZone, id]
+      [name, phone, id],
     );
 
     res.json({
@@ -265,19 +268,18 @@ router.get("/analytics/orders", async (req, res) => {
   try {
     const result = await pool.query(
       `
-      SELECT
-        COUNT(*) FILTER (WHERE o.createdAt::date = CURRENT_DATE) AS today,
-        COUNT(*) FILTER (WHERE o.createdAt >= CURRENT_DATE - INTERVAL '7 days') AS thisWeek
-      FROM OrderTable o
-      JOIN Restaurant r ON r.restaurantID = o.restaurantID
+      SELECT COUNT(*) AS total
+      FROM "Order" o
+      JOIN restaurant r ON r.id = o.restaurantid
       WHERE r.owneremail = $1
+      AND approvalstatus = 'approved'
       `,
-      [ownerUsername]
+      [ownerUsername],
     );
 
     res.json({
-      today: Number(result.rows[0].today),
-      thisWeek: Number(result.rows[0].thisweek),
+      today: Number(result.rows[0].total),
+      thisWeek: Number(result.rows[0].total),
     });
   } catch (err) {
     console.error(err);
@@ -295,16 +297,17 @@ router.get("/analytics/top-dishes", async (req, res) => {
     const result = await pool.query(
       `
       SELECT d.name, COUNT(*) AS count
-      FROM OrderItem oi
-      JOIN Dish d ON d.dishID = oi.dishID
-      JOIN OrderTable o ON o.orderID = oi.orderID
-      JOIN Restaurant r ON r.restaurantID = o.restaurantID
+      FROM orderitem oi
+      JOIN dish d ON d.dishid = oi.dishid
+      JOIN "Order" o ON o.orderid = oi.orderid
+      JOIN restaurant r ON r.id = o.restaurantid
       WHERE r.owneremail = $1
+      AND approvalstatus = 'approved'
       GROUP BY d.name
       ORDER BY count DESC
       LIMIT 5
       `,
-      [ownerUsername]
+      [ownerUsername],
     );
 
     res.json({ topDishes: result.rows });
@@ -315,7 +318,7 @@ router.get("/analytics/top-dishes", async (req, res) => {
 });
 
 // =====================================================
-// GET orders for my restaurant  ✅ REQUIRED
+// GET orders for my restaurant
 // =====================================================
 router.get("/orders", async (req, res) => {
   const ownerUsername = req.user.email;
@@ -323,21 +326,80 @@ router.get("/orders", async (req, res) => {
   try {
     const orders = await pool.query(
       `
-      SELECT o.orderid,
-             o.status,
-             o.createdat
+      SELECT
+        o.orderid,
+        o.status,
+        o.customeremail,
+        o.deliveryaddress
       FROM "Order" o
-      JOIN Restaurant r ON r.id = o.restaurantid
+      JOIN restaurant r ON r.id = o.restaurantid
       WHERE r.owneremail = $1
+      AND approvalstatus = 'approved'
       ORDER BY o.orderid DESC
       `,
-      [ownerUsername]
+      [ownerUsername],
     );
 
     res.json({ orders: orders.rows });
   } catch (err) {
     console.error("GET /owner/orders ERROR:", err);
     res.status(500).json({ message: "Failed to load orders" });
+  }
+});
+
+// =====================================================
+// UPDATE dish
+// =====================================================
+router.put("/dishes/:dishID", async (req, res) => {
+  const { dishID } = req.params;
+  const { name, description, price, photoLink } = req.body;
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE dish
+      SET
+        name = COALESCE($1, name),
+        description = COALESCE($2, description),
+        price = COALESCE($3, price),
+        photolink = COALESCE($4, photolink)
+      WHERE dishid = $5
+      RETURNING *
+      `,
+      [name, description, price, photoLink, dishID],
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Dish not found" });
+    }
+
+    res.json({ message: "Dish updated", dish: result.rows[0] });
+  } catch (err) {
+    console.error("UPDATE DISH ERROR:", err);
+    res.status(500).json({ message: "Failed to update dish" });
+  }
+});
+
+// =====================================================
+// DELETE dish
+// =====================================================
+router.delete("/dishes/:dishID", async (req, res) => {
+  const { dishID } = req.params;
+
+  try {
+    const result = await pool.query(
+      "DELETE FROM dish WHERE dishid = $1 RETURNING dishid",
+      [dishID],
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Dish not found" });
+    }
+
+    res.json({ message: "Dish deleted", dishID: result.rows[0].dishid });
+  } catch (err) {
+    console.error("DELETE DISH ERROR:", err);
+    res.status(500).json({ message: "Failed to delete dish" });
   }
 });
 

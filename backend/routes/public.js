@@ -13,10 +13,9 @@ router.get("/restaurants", async (req, res) => {
         name,
         address,
         postcode,
-        phonenumber,
-        openinghours,
-        deliveryzone
-      FROM Restaurant
+        phonenumber
+      FROM restaurant
+      WHERE approvalstatus = 'approved'
     `);
 
     res.json({ restaurants: result.rows });
@@ -34,12 +33,12 @@ router.get("/restaurants/:restaurantID/menus", async (req, res) => {
 
   try {
     const menus = await pool.query(
-      `SELECT * FROM Menu WHERE restaurantid = $1`,
-      [restaurantID]
+      `SELECT * FROM menu WHERE restaurantid = $1`,
+      [restaurantID],
     );
 
     for (let menu of menus.rows) {
-      const dishes = await pool.query(`SELECT * FROM Dish WHERE menuid = $1`, [
+      const dishes = await pool.query(`SELECT * FROM dish WHERE menuid = $1`, [
         menu.menuid,
       ]);
       menu.dishes = dishes.rows;
@@ -47,10 +46,11 @@ router.get("/restaurants/:restaurantID/menus", async (req, res) => {
 
     res.json({ menus: menus.rows });
   } catch (err) {
-    console.error(err);
+    console.error("PUBLIC MENUS ERROR:", err);
     res.status(500).json({ message: "Failed to load menus" });
   }
 });
+
 // =====================================================
 // GET single restaurant profile (PUBLIC)
 // =====================================================
@@ -65,13 +65,11 @@ router.get("/restaurants/:restaurantID", async (req, res) => {
         name,
         address,
         postcode,
-        phonenumber,
-        openinghours,
-        deliveryzone
-      FROM Restaurant
+        phonenumber
+      FROM restaurant
       WHERE id = $1
       `,
-      [restaurantID]
+      [restaurantID],
     );
 
     if (result.rows.length === 0) {
@@ -84,5 +82,5 @@ router.get("/restaurants/:restaurantID", async (req, res) => {
     res.status(500).json({ message: "Failed to load restaurant" });
   }
 });
-
+//..
 module.exports = router;
