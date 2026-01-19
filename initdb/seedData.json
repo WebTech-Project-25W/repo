@@ -74,54 +74,11 @@
     }
   ],
   "restaurants": [
-<<<<<<< HEAD
-    {
-      "name": "Resto1",
-      "owner": "RO1",
-      "status": "approved",
-      "addr": "Loiblziele",
-      "postcode": "OL9 8NT",
-      "phone": "(01788) 471434"
-    },
-    {
-      "name": "YumYumHouse",
-      "owner": "RO1",
-      "status": "pending",
-      "addr": "54 Whinfield Terrace, Rowlands Gill",
-      "postcode": "NE39 2JY",
-      "phone": "(01484) 387035"
-    },
-    {
-      "name": "Eatery",
-      "owner": "RO1",
-      "status": "rejected",
-      "addr": "12 Bridle Close, Hoddesdon",
-      "postcode": "EN11 9QA",
-      "phone": "(01233) 416101"
-    },
-    {
-      "name": "Nutri",
-      "owner": "RO2",
-      "status": "approved",
-      "addr": "Flat 102, Russell Court, Woburn Place, London",
-      "postcode": "WC1H 0LP",
-      "phone": "(01708) 308411"
-    },
-    {
-      "name": "ScranFud",
-      "owner": "RO2",
-      "status": "pending",
-      "addr": "1 Oldham Square, New Mills",
-      "postcode": "SK22 4BZ",
-      "phone": "(01757) 667027"
-    }
-=======
     { "name": "Resto1", "owner": "RO1", "status": "pending", "addr": "Loiblziele", "postcode": "OL9 8NT", "phone": "(01788) 471434", "cuisine": "Austrian" },
     { "name": "YumYumHouse", "owner": "RO1", "status": "approved", "addr": "54 Whinfield Terrace, Rowlands Gill", "postcode": "NE39 2JY", "phone": "(01484) 387035", "cuisine": "Asian"},
     { "name": "Eatery", "owner": "RO1", "status": "rejected", "addr": "12 Bridle Close, Hoddesdon", "postcode": "EN11 9QA", "phone": "(01233) 416101", "cuisine": "Italian" },
     { "name": "ScranFud", "owner": "RO2", "status": "pending", "addr": "1 Oldham Square, New Mills", "postcode": "SK22 4BZ", "phone": "(01757) 667027" , "cuisine": "Austrian"},
     { "name": "Nutri", "owner": "RO2", "status": "approved", "addr": "Flat 102, Russell Court, Woburn Place, London", "postcode": "WC1H 0LP", "phone": "(01708) 308411" , "cuisine": "Asian"}
->>>>>>> 077f020ff4b4f6e14023bb88643883a4bcac573c
   ],
   "reviews": [
     {
@@ -165,22 +122,6 @@
     { "restoID": 1, "name": "Evening Menu", "desc": "Our full selection" }
   ],
   "dishes": [
-<<<<<<< HEAD
-    {
-      "menuID": 0,
-      "name": "Wiener Schnitzel",
-      "desc": "Classic veal",
-      "price": 18.5,
-      "link": "schnitzel.jpg"
-    },
-    {
-      "menuID": 1,
-      "name": "Vegetable Stir Fry",
-      "desc": "Seasonal veggies",
-      "price": 12.0,
-      "link": "stirfry.jpg"
-    }
-=======
     { "menuID": 0, "name": "Wiener Schnitzel", "desc": "Classic veal", "price": 18.50, "link": "schnitzel.jpg" },
     { "menuID": 1, "name": "Vegetable Stir Fry", "desc": "Seasonal veggies", "price": 12.00, "link": "stirfry.jpg" },
     { "menuID": 3, "name": "Margherita Pizza", "desc": "Classic tomato and mozzarella pizza", "price": 10.50, "link": "pizza.jpg"},
@@ -190,7 +131,6 @@
     { "menuID": 5, "name": "Quinoa Salad", "desc": "Quinoa with fresh vegetables", "price": 9, "link": "quinoa.jpg" },
     { "menuID": 5, "name": "Grilled Salmon Bowl", "desc": "Salmon with greens and rice", "price": 13.50, "link": "salmon.jpg" },
     { "menuID": 5, "name": "Avocado Toast", "desc": "Wholegrain toast with avocado", "price": 7.50, "link": "avocado.jpg" }
->>>>>>> 077f020ff4b4f6e14023bb88643883a4bcac573c
   ],
   "orders": [
     {
