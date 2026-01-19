@@ -6,7 +6,7 @@ const pool = require('../pool.js');
 router.get('/restaurants', async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, name FROM restaurant ORDER BY name'
+      'SELECT id, name, cuisine FROM restaurant ORDER BY name'
     );
     res.json(result.rows);
   } catch (err) {
