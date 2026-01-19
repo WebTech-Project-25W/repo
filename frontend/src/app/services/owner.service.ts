@@ -12,27 +12,16 @@ export class OwnerService {
 
   constructor(private http: HttpClient) {}
 
-  // ===============================
-  // AUTH HEADER (JWT)
-  // ===============================
-  private authHeaders() {
-    const token = localStorage.getItem('token');
-    return {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      }),
-    };
-  }
 
   // ===============================
   // MENUS
   // ===============================
   getMenus(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/menus`, this.authHeaders());
+    return this.http.get(`${this.baseUrl}/menus`);
   }
 
   createMenu(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/menus`, data, this.authHeaders());
+    return this.http.post(`${this.baseUrl}/menus`, data);
   }
 
   /*
@@ -48,11 +37,11 @@ export class OwnerService {
    */
 
   // updateMenu(menuID: number, data: any): Observable<any> {
-  //   return this.http.put(`${this.baseUrl}/menus/${menuID}`, data, this.authHeaders());
+  //   return this.http.put(`${this.baseUrl}/menus/${menuID}`, data);
   // }
 
   // deleteMenu(menuID: number): Observable<any> {
-  //   return this.http.delete(`${this.baseUrl}/menus/${menuID}`, this.authHeaders());
+  //   return this.http.delete(`${this.baseUrl}/menus/${menuID}`);
   // }
 
   // ===============================
@@ -60,19 +49,17 @@ export class OwnerService {
   // ===============================
   getDishes(menuID: number): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/dishes/${menuID}`,
-      this.authHeaders(),
+      `${this.baseUrl}/dishes/${menuID}`
     );
   }
 
   createDish(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/dishes`, data, this.authHeaders());
+    return this.http.post(`${this.baseUrl}/dishes`, data);
   }
   updateDish(dishID: number, data: any): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/dishes/${dishID}`,
-      data,
-      this.authHeaders(),
+      data
     );
   }
 
@@ -85,25 +72,24 @@ export class OwnerService {
    */
 
   // updateDish(dishID: number, data: any): Observable<any> {
-  //   return this.http.put(`${this.baseUrl}/dishes/${dishID}`, data, this.authHeaders());
+  //   return this.http.put(`${this.baseUrl}/dishes/${dishID}`, data);
   // }
 
   // deleteDish(dishID: number): Observable<any> {
-  //   return this.http.delete(`${this.baseUrl}/dishes/${dishID}`, this.authHeaders());
+  //   return this.http.delete(`${this.baseUrl}/dishes/${dishID}`);
   // }
 
   // ===============================
   // ORDERS
   // ===============================
   getOrders(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/orders`, this.authHeaders());
+    return this.http.get(`${this.baseUrl}/orders`);
   }
 
   updateOrderStatus(orderID: number, status: string): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/orders/${orderID}/status`,
-      { status },
-      this.authHeaders(),
+      { status }
     );
   }
 
@@ -111,14 +97,13 @@ export class OwnerService {
   // RESTAURANT PROFILE
   // ===============================
   getRestaurant(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/restaurant`, this.authHeaders());
+    return this.http.get(`${this.baseUrl}/restaurant`);
   }
 
   updateRestaurantSettings(data: any): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/restaurant/settings`,
-      data,
-      this.authHeaders(),
+      data
     );
   }
 
@@ -127,8 +112,7 @@ export class OwnerService {
   // ===============================
   getTopDishes(): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/analytics/top-dishes`,
-      this.authHeaders(),
+      `${this.baseUrl}/analytics/top-dishes`
     );
   }
 
@@ -142,21 +126,18 @@ export class OwnerService {
    */
   getOrderStats(): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/analytics/orders`,
-      this.authHeaders(),
+      `${this.baseUrl}/analytics/orders`
     );
   }
   deleteMenu(menuID: number): Observable<any> {
     return this.http.delete(
-      `${this.baseUrl}/menus/${menuID}`,
-      this.authHeaders(),
+      `${this.baseUrl}/menus/${menuID}`
     );
   }
 
   deleteDish(dishID: number): Observable<any> {
     return this.http.delete(
-      `${this.baseUrl}/dishes/${dishID}`,
-      this.authHeaders(),
+      `${this.baseUrl}/dishes/${dishID}`
     );
   }
   getOrderAnalytics(): Observable<{
@@ -166,15 +147,14 @@ export class OwnerService {
     return this.http.get<{
       today: number;
       thisWeek: number;
-    }>(`${this.baseUrl}/analytics/orders`, this.authHeaders());
+    }>(`${this.baseUrl}/analytics/orders`);
   }
 
   // ===== TEST ORDER (DEMO) =====
   createTestOrder(): Observable<any> {
     return this.http.post(
       `${this.baseUrl}/orders/test`,
-      {},
-      this.authHeaders(),
+      {}
     );
   }
 }
