@@ -44,7 +44,8 @@ export class OwnerDashboardComponent implements OnInit {
   // RESTAURANT
   // ==========================
   restaurant: any = null;
-
+  restaurants: any[] = [];
+  activeRestaurantId: number | null = null;
   // ==========================
   // ORDERS  ✅ STEP 2
   // ==========================
@@ -66,26 +67,36 @@ export class OwnerDashboardComponent implements OnInit {
   // INIT
   // ==========================
   ngOnInit(): void {
-    this.loadRestaurant();
-    this.loadMenus();
-    this.loadOrders();
-    this.loadAnalytics(); // ✅
-    // 🔁 auto-refresh orders every 5 seconds (real-time feel)
-    this.orderInterval = setInterval(() => {
-      this.loadOrders();
-    }, 5000);
+    this.loadRestaurants();
   }
 
   // ==========================
   // RESTAURANT
   // ==========================
-  loadRestaurant(): void {
-    this.ownerService.getRestaurant().subscribe({
+  loadRestaurants(): void {
+    this.ownerService.getRestaurants().subscribe({
       next: (res: any) => {
-        this.restaurant = { ...res.restaurant }; // editable copy
-        this.savedRestaurant = { ...res.restaurant }; // last saved snapshot
+        this.restaurants = res.restaurants ?? [];
+      },
+      error: () => {
+        this.restaurants = [];
       },
     });
+  }
+  selectRestaurant(r: any): void {
+    this.activeRestaurantId = r.id;
+    this.restaurant = { ...r };
+    this.savedRestaurant = { ...r };
+
+    // now load data FOR THIS RESTAURANT
+    this.loadMenus();
+    this.loadOrders();
+    this.loadAnalytics();
+
+    // start auto-refresh AFTER selection
+    this.orderInterval = setInterval(() => {
+      this.loadOrders();
+    }, 5000);
   }
 
   // ==========================
@@ -149,10 +160,10 @@ export class OwnerDashboardComponent implements OnInit {
     if (!this.topDishes || this.topDishes.length === 0) return;
 
     const labels = this.topDishes.map(
-      (d: { name: string; count: number }) => d.name
+      (d: { name: string; count: number }) => d.name,
     );
     const data = this.topDishes.map(
-      (d: { name: string; count: number }) => d.count
+      (d: { name: string; count: number }) => d.count,
     );
 
     if (this.chart) {
