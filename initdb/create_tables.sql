@@ -66,17 +66,23 @@ CREATE TABLE RestaurantOwner
 
 DROP TYPE IF EXISTS approval_status;
 CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved', 'suspended');
-CREATE TABLE Restaurant
+CREATE TABLE restaurant
 (
   id SERIAL PRIMARY KEY,
-  "name" varchar(100) NOT NULL,
-  ownerEmail varchar(100) REFERENCES public.RestaurantOwner(email),
+  name varchar(100) NOT NULL,
+  ownerEmail varchar(100),
   approvalStatus approval_status,
-  address varchar(100)  NOT NULL,
+  address varchar(100) NOT NULL,
   postcode varchar(100) NOT NULL,
   phoneNumber varchar(100) NOT NULL,
-  cuisine varchar(50)
+
+  cuisine varchar(50),
+  openingHours varchar(100),
+  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C'))
 );
+
+
+
 
 CREATE TABLE Review
 (
