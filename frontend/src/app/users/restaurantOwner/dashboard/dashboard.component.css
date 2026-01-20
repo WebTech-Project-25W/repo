@@ -302,3 +302,45 @@ td {
   color: #666;
   margin-top: 4px;
 }
+/* ============================
+   RESTAURANT SELECTION (OWNER)
+   ============================ */
+
+.restaurant-select {
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.restaurant-select h2 {
+  margin-bottom: 20px;
+}
+
+.restaurant-select button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    background 0.2s ease;
+}
+
+.restaurant-select button:hover {
+  background: #125ea8;
+  transform: translateY(-1px);
+}
+
+.restaurant-select button:active {
+  transform: translateY(0);
+}
