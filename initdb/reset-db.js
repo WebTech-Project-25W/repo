@@ -149,6 +149,15 @@ async function resetDatabase() {
       }
     }
 
+    // Seed OrderHistory
+    console.log("Seeing OrderHistory...");
+    for (const orderlog of seedData.orderHistory) {
+      const result = await client.query(
+        `INSERT INTO OrderHistory (orderID, time, status, changedBy)VALUES ($1, $2, $3, $4)`,
+        [orderlog.orderId, orderlog.time, orderlog.status, orderlog.changedBy]
+      );
+    }
+
     await client.query("COMMIT");
     console.log("--- Database Reset & Seeded Successfully ---");
   } catch (err) {

@@ -1,0 +1,117 @@
+/* Container and Table Layout */
+.order-log-container {
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.order-table th {
+  background-color: #f8f9fa;
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 2px solid #dee2e6;
+  color: #495057;
+  font-weight: 600;
+}
+
+.order-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+/* Typography for Order Details */
+.timestamp {
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.email-text {
+  font-weight: 500;
+  color: #212529;
+}
+
+.address-text {
+  display: block;
+  color: #6c757d;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+/* Status Pills for order_status ENUM */
+.status-pill {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+/* Color Mapping for ENUM Values */
+.status-pill[data-status="pending"]    { background: #fff3cd; color: #856404; } /* Yellow */
+.status-pill[data-status="accepted"]   { background: #cfe2ff; color: #084298; } /* Blue */
+.status-pill[data-status="preparing"]  { background: #e2e3e5; color: #41464b; } /* Grey */
+.status-pill[data-status="ready"]      { background: #d1e7dd; color: #0f5132; } /* Light Green */
+.status-pill[data-status="dispatched"] { background: #e0cffc; color: #6610f2; } /* Purple */
+.status-pill[data-status="delivered"]  { background: #198754; color: #ffffff; } /* Solid Green */
+.status-pill[data-status="rejected"]   { background: #f8d7da; color: #842029; } /* Red */
+
+/* Filter Bar Styles */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-bar input, .filter-bar select {
+  padding: 8px 12px;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between; /* Pushes items to opposite sides */
+  align-items: center;
+  padding: 1rem;
+  background: #fdfdfd;
+  border: 1px solid #eee;
+  margin-top: -1px; /* Merges border with table */
+}
+
+.limit-selector label {
+  font-size: 0.9rem;
+  margin-right: 8px;
+  color: #555;
+}
+
+.limit-selector select {
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.page-navigation {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Spacing between Prev, Page info, and Next */
+}
+
+button {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

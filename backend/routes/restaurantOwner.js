@@ -203,7 +203,7 @@ router.get("/dishes/:menuID", async (req, res) => {
 // UPDATE order status
 // =====================================================
 router.put("/orders/:orderID/status", async (req, res) => {
-  const ownerUsername = req.user.email;
+  const ownerEmail = req.user.email;
   const { orderID } = req.params;
   const { status } = req.body;
 
@@ -223,7 +223,7 @@ router.put("/orders/:orderID/status", async (req, res) => {
       WHERE o.orderid = $1
         AND r.owneremail = $2
       `,
-      [orderID, ownerUsername],
+      [orderID, ownerEmail],
     );
 
     if (current.rows.length === 0) {
@@ -248,6 +248,8 @@ router.put("/orders/:orderID/status", async (req, res) => {
       [status, orderID],
     );
 
+    logOrderStatusChange(orderID, status, ownerEmail);
+
     res.json({
       message: "Order status updated",
       order: updated.rows[0],
@@ -257,6 +259,13 @@ router.put("/orders/:orderID/status", async (req, res) => {
     res.status(500).json({ message: "Failed to update order status" });
   }
 });
+
+async function logOrderStatusChange(orderId, status, changedBy) {
+  const query = `
+    INSERT INTO OrderHistory (orderId, status, changedBy)
+    VALUES ($1, $2, $3)`;
+  await pool.query(query, [orderId, status, changedBy]);
+}
 
 // =====================================================
 // UPDATE restaurant profile
