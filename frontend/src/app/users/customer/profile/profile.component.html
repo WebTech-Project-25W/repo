@@ -1,36 +1,65 @@
-<h2>My Profile</h2>
+<h1 class="page-title">My Profile</h1>
 
-<button type="button" (click)="goBack()">← Back to Restaurants</button>
+<div class="profile-card">
 
-<hr />
+  <!-- ===== Edit Profile ===== -->
+  <h2>Edit Profile</h2>
 
-<form>
-  <label>First name</label><br />
-  <input
-    [(ngModel)]="profile.firstname"
-    [ngModelOptions]="{ standalone: true }"
-  /><br /><br />
+  <div *ngIf="loading">Loading profile...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+  <div *ngIf="success" class="success-text">{{ success }}</div>
 
-  <label>Last name</label><br />
-  <input
-    [(ngModel)]="profile.lastname"
-    [ngModelOptions]="{ standalone: true }"
-  /><br /><br />
+  <div class="form-grid">
 
-  <label>Phone</label><br />
-  <input
-    [(ngModel)]="profile.phonenumber"
-    [ngModelOptions]="{ standalone: true }"
-  /><br /><br />
+    <div class="form-group">
+      <label>First name</label>
+      <input
+        name="firstname"
+        [(ngModel)]="profile.firstname"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
 
-  <label>Address</label><br />
-  <textarea
-    [(ngModel)]="profile.address"
-    [ngModelOptions]="{ standalone: true }"
-  ></textarea><br /><br />
+    <div class="form-group">
+      <label>Last name</label>
+      <input
+        name="lastname"
+        [(ngModel)]="profile.lastname"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
 
-  <button type="button" (click)="save()">Save</button>
-</form>
+    <div class="form-group">
+      <label>Phone number</label>
+      <input
+        name="phonenumber"
+        [(ngModel)]="profile.phonenumber"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
 
-<p *ngIf="success" style="color: green;">{{ success }}</p>
-<p *ngIf="error" style="color: red;">{{ error }}</p>
+    <div class="form-group full-width">
+      <label>Address</label>
+      <textarea
+        name="address"
+        rows="3"
+        [(ngModel)]="profile.address"
+        [ngModelOptions]="{ standalone: true }"
+      ></textarea>
+    </div>
+
+  </div>
+
+  <button class="primary-btn" (click)="save()">Save Settings</button>
+
+  <!-- ===== Current Saved Settings ===== -->
+  <h2 style="margin-top: 32px;">Current Saved Settings</h2>
+
+  <div class="saved-info">
+    <p><strong>First name:</strong> {{ savedProfile.firstname }}</p>
+    <p><strong>Last name:</strong> {{ savedProfile.lastname }}</p>
+    <p><strong>Phone:</strong> {{ savedProfile.phonenumber }}</p>
+    <p><strong>Address:</strong> {{ savedProfile.address }}</p>
+  </div>
+
+</div>

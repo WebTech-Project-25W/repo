@@ -1,7 +1,12 @@
-<div class="hero"></div>
-
 <div class="page" *ngIf="restaurant">
-  <a routerLink="/" class="back">← Restaurants</a>
+  <a
+  *ngIf="!isCustomerView"
+  routerLink="/restaurants"
+  class="back"
+>
+  ← Restaurants
+</a>
+
 
   <h1>{{ restaurant.name }}</h1>
 
@@ -24,8 +29,38 @@
       </div>
 
       <div class="dish-right">
-        <span class="price">{{ dish.price }} €</span>
-      </div>
-    </div>
+  <span class="price">{{ dish.price }} €</span>
+
+  <div class="qty-controls" *ngIf="isCustomer">
+    <button (click)="decrease(dish)">−</button>
+    <span>{{ getQuantity(dish) }}</span>
+    <button (click)="increase(dish)">+</button>
   </div>
 </div>
+
+    </div>
+  </div>
+  <!-- CART (Customer only) -->
+<div class="cart" *ngIf="isCustomer && cart.length > 0">
+  <h3>Cart</h3>
+
+  <div class="cart-item" *ngFor="let item of cart">
+    <span>{{ item.dish.name }} × {{ item.quantity }}</span>
+    <span>{{ item.dish.price * item.quantity }} €</span>
+
+    <button class="remove-btn" (click)="remove(item)">🗑️</button>
+
+  </div>
+
+  <hr />
+
+  <div class="cart-total">
+    <strong>Total: </strong>
+    <strong>{{ cartTotal }} €</strong>
+  </div>
+  <button class="place-order-btn" (click)="placeOrder()">
+    Place Order
+  </button>
+</div>
+</div>
+

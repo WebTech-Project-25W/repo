@@ -1,0 +1,68 @@
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+}
+
+.order-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.order-id {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.order-status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.order-status.placed {
+  background: #e6f0ff;
+  color: #3366ff;
+}
+
+.order-status.preparing {
+  background: #fff4e5;
+  color: #ff9800;
+}
+
+.order-status.delivered {
+  background: #e6f7ee;
+  color: #2e7d32;
+}
+
+.order-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.restaurant {
+  color: #555;
+}
+
+.total {
+  font-weight: 700;
+  font-size: 18px;
+}

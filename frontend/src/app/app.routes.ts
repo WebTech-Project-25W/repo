@@ -5,20 +5,16 @@ import { RegistrationComponent } from './registration/registration.component';
 
 import { AdminDashboardComponent } from './users/admin/dashboard/dashboard.component';
 import { OwnerDashboardComponent } from './users/restaurantOwner/dashboard/dashboard.component';
-import { CustomerDashboardComponent } from './users/customer/dashboard/dashboard.component';
 
 import { RestaurantsComponent } from './public/restaurants/restaurants.component';
 import { RestaurantDetailComponent } from './public/restaurant-detail/restaurant-detail.component';
 
 import { AdminGuard } from './guards/admin.guard';
 import { OwnerGuard } from './guards/owner.guard';
-import { CustomerGuard } from './guards/customer.guard';
 import { HomeComponent } from './public/home/home.component';
 
-import { MenuComponent } from './users/customer/menu/menu.component';
-import { OrdersComponent } from './users/customer/orders/orders.component';
-import { OrderDetailsComponent } from './users/customer/orders/order-details/order-details.component';
-import { ProfileComponent } from './users/customer/profile/profile.component';
+import { CustomerLayoutComponent } from './users/customer/layout/customer-layout/customer-layout.component';
+
 
 export const routes: Routes = [
   // 🌍 PUBLIC ROUTES (NO AUTH REQUIRED)
@@ -49,11 +45,48 @@ export const routes: Routes = [
   },
 
   // 👤 CUSTOMER (OTHER TEAMMATE / OPTIONAL)
-  { path: 'customer/dashboard',component: CustomerDashboardComponent,canActivate: [CustomerGuard],},
-  { path: 'customer/restaurants/:id', component: MenuComponent, canActivate: [CustomerGuard] },
-  { path: 'customer/orders', component: OrdersComponent,canActivate: [CustomerGuard]},
-  { path: 'customer/orders/:id', component: OrderDetailsComponent, canActivate: [CustomerGuard] },
-  { path: 'customer/profile',component: ProfileComponent,canActivate: [CustomerGuard]},
+  {
+  path: 'customer',
+  component: CustomerLayoutComponent,
+  children: [
+    {
+      path: 'dashboard',
+      loadComponent: () =>
+        import('./users/customer/dashboard/dashboard.component')
+          .then(m => m.CustomerDashboardComponent)
+    },
+    {
+      path: 'orders',
+      loadComponent: () =>
+        import('./users/customer/orders/orders.component')
+          .then(m => m.OrdersComponent)
+    },
+    {
+      path: 'profile',
+      loadComponent: () =>
+        import('./users/customer/profile/profile.component')
+          .then(m => m.ProfileComponent)
+    },
+    {
+     path: 'restaurants/:id',
+        loadComponent: () =>
+        import('./public/restaurant-detail/restaurant-detail.component')
+      .then(m => m.RestaurantDetailComponent)
+    },
+    {
+     path: 'orders/:orderId',
+        loadComponent: () =>
+        import('./users/customer/orders/order-details/order-details.component')
+      .then(m => m.OrderDetailsComponent)
+    },
+
+    {
+      path: '',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    }
+  ]
+},
 
 
   // 🚫 FALLBACK

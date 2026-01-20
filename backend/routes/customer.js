@@ -158,8 +158,15 @@ router.get('/profile', async (req, res) => {
       [email]
     );
 
-    res.json(result.rows[0]);
-  } catch (err) {
+    res.json({
+    profile: {
+    firstName: result.rows[0]?.firstname || '',
+    lastName: result.rows[0]?.lastname || '',
+    phone: result.rows[0]?.phonenumber || '',
+    address: result.rows[0]?.address || ''
+  }
+});
+    } catch (err) {
     console.error('Fetch profile error:', err);
     res.status(500).json({ error: 'Failed to fetch profile' });
   }

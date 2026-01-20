@@ -1,34 +1,28 @@
 <h2>My Orders</h2>
 
 <p *ngIf="loading">Loading orders...</p>
-
-<p *ngIf="!loading && error">
-  {{ error }}
-</p>
+<p *ngIf="!loading && error">{{ error }}</p>
 
 <p *ngIf="!loading && orders.length === 0">
   You have no orders yet.
 </p>
 
-<table *ngIf="!loading && orders.length > 0" cellpadding="8" border="1">
-  <thead>
-    <tr>
-      <th>Order ID</th>
-      <th>Restaurant</th>
-      <th>Status</th>
-      <th>Total (€)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let o of orders">
-      <td>
-     <a [routerLink]="['/customer/orders', o.orderid]">
-        #{{ o.orderid }}
-     </a>
-      </td>
-      <td>{{ o.restaurantname }}</td>
-      <td>{{ o.status }}</td>
-      <td>{{ o.total | number:'1.2-2' }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="orders-list" *ngIf="!loading && orders.length > 0">
+  <div
+    class="order-card"
+    *ngFor="let o of orders"
+    (click)="goToOrder(o.orderid)"
+  >
+    <div class="order-header">
+      <span class="order-id">Order #{{ o.orderid }}</span>
+      <span class="order-status" [ngClass]="o.status.toLowerCase()">
+        {{ o.status }}
+      </span>
+    </div>
+
+    <div class="order-body">
+      <div class="restaurant">{{ o.restaurantname }}</div>
+      <div class="total">€{{ o.total | number:'1.2-2' }}</div>
+    </div>
+  </div>
+</div>

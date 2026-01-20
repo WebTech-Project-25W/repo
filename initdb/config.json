@@ -2,7 +2,7 @@
   "database": {
     "host": "localhost",
     "user": "postgres",
-    "password": "password",
+    "password": "postgres",
     "db": "projectDB"
   }
 }

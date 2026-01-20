@@ -13,7 +13,8 @@ router.get("/restaurants", async (req, res) => {
         name,
         address,
         postcode,
-        phonenumber
+        phonenumber,
+        cuisine
       FROM restaurant
       WHERE approvalstatus = 'approved'
     `);

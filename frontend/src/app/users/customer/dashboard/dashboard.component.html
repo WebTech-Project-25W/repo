@@ -1,39 +1,44 @@
-<ul>
-  <li>Restaurants</li>
-  <li>
-  <a routerLink="/customer/orders">My Orders</a>
-  </li>
+<div class="owner-layout">
 
-  <li>
-  <a routerLink="/customer/profile">My Profile</a>
-  </li>
-</ul>
-  
-<h2>Restaurants</h2>
+  <!-- CONTENT -->
+  <main class="content">
+    <h1 class="page-title">Restaurants</h1>
 
-<input
-  type="text"
-  placeholder="Search restaurant"
-  [(ngModel)]="search"
-/>
+    <!-- RESTAURANTS -->
+    <section *ngIf="activeSection === 'restaurants'">
 
-<select [(ngModel)]="selectedCuisine">
-  <option value="ALL">All cuisines</option>
-  <option value="italian">Italian</option>
-  <option value="asian">Asian</option>
-  <option value="austrian">Austrian</option>
-</select>
+      <div class="card">
+        <div class="form-row">
+          <input
+            type="text"
+            placeholder="Search restaurant"
+            [(ngModel)]="searchText"
+          />
 
-<ul>
-  <li *ngFor="let r of filteredRestaurants">
-    <button
-      type="button"
-      (click)="openRestaurant(r.id)"
-      style="all: unset; cursor: pointer; color: blue; text-decoration: underline;"
-    >
-      {{ r.name }} 
-    </button>
-  </li>
-</ul>
+          <select [(ngModel)]="selectedCuisine">
+          <option value="ALL">All</option>
+          <option value="asian">Asian</option>
+          <option value="italian">Italian</option>
+          <option value="austrian">Austrian</option>
+          </select>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <ul>
+          <li *ngFor="let r of filteredRestaurants">
+      <a
+        [routerLink]="['/customer/restaurants', r.id]"
+        class="restaurant-link"
+      > 
+      {{ r.name }}
+       </a>
+      </li>
 
 
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>

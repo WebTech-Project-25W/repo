@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './orders.component.html'
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.css'],
 })
 export class OrdersComponent implements OnInit {
 
@@ -15,7 +17,7 @@ export class OrdersComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.http.get<any[]>('http://localhost:3000/customer/orders')
@@ -31,4 +33,7 @@ export class OrdersComponent implements OnInit {
         }
       });
   }
+  goToOrder(orderId: number) {
+  this.router.navigate(['/customer/orders', orderId]);
+}
 }

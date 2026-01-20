@@ -38,7 +38,7 @@ CREATE TABLE LogInHistory
   time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   ipAddress varchar(45),
   status varchar(20) CHECK (status IN ('Success', 'Failure')),
-  userAgent varchar(100)
+  userAgent TEXT
 );
 
 CREATE INDEX idx_login_history_user_email ON public.LogInHistory(userEmail);

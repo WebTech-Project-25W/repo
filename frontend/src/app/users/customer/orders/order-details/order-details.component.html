@@ -1,37 +1,41 @@
-<p>
-  <a [routerLink]="['/customer/orders']">
+<div class="page">
+
+  <!-- Back -->
+  <a class="back-link" [routerLink]="['/customer/orders']">
     ← Back to My Orders
   </a>
-</p>
 
-<h2>Order #{{ orderId }}</h2>
+  <!-- Order Card -->
+  <div class="card">
+    <h2 class="card-title">Order #{{ orderId }}</h2>
 
-<p *ngIf="loading">Loading order details...</p>
-<p *ngIf="!loading && error">{{ error }}</p>
+    <p *ngIf="loading" class="muted">Loading order details…</p>
+    <p *ngIf="!loading && error" class="error">{{ error }}</p>
 
-<p *ngIf="!loading && items.length === 0">
-  This order has no items.
-</p>
+    <div *ngIf="!loading && items.length === 0" class="muted">
+      This order has no items.
+    </div>
 
-<table *ngIf="!loading && items.length > 0" border="1" cellpadding="8">
-  <thead>
-    <tr>
-      <th>Dish</th>
-      <th>Quantity</th>
-      <th>Unit Price (€)</th>
-      <th>Subtotal (€)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let i of items">
-      <td>{{ i.name }}</td>
-      <td>{{ i.quantity }}</td>
-      <td>{{ i.unitprice | number:'1.2-2' }}</td>
-      <td>{{ i.subtotal | number:'1.2-2' }}</td>
-    </tr>
-  </tbody>
-</table>
+    <!-- Items -->
+    <div *ngIf="!loading && items.length > 0" class="items">
+      <div class="item header">
+        <span>Dish</span>
+        <span>Number</span>
+        <span>Price</span>
+        <span>Subtotal</span>
+      </div>
 
-<p *ngIf="items.length > 0">
-  <strong>Total: €{{ total | number:'1.2-2' }}</strong>
-</p>
+      <div class="item" *ngFor="let i of items">
+        <span>{{ i.name }}</span>
+        <span>{{ i.quantity }}</span>
+        <span>€{{ i.unitprice | number:'1.2-2' }}</span>
+        <span>€{{ i.subtotal | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="total">
+        Total: €{{ total | number:'1.2-2' }}
+      </div>
+    </div>
+  </div>
+
+</div>

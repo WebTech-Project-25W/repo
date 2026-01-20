@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './order-details.component.html',
+  styleUrls: ['./order-details.component.css'], 
 })
 export class OrderDetailsComponent implements OnInit {
 
@@ -23,21 +24,32 @@ export class OrderDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.orderId = Number(this.route.snapshot.paramMap.get('id'));
+  const idParam = this.route.snapshot.paramMap.get('orderId');
 
-    this.http.get<any[]>(
-      `http://localhost:3000/customer/orders/${this.orderId}`
-    ).subscribe({
-      next: data => {
-        this.items = data;
-        this.loading = false;
-      },
-      error: err => {
-        this.error = 'Failed to load order details';
-        this.loading = false;
-        console.error(err);
-      }
-    });
+  if (!idParam) {
+    this.error = 'Invalid order id';
+    this.loading = false;
+    return;
+  }
+
+  this.orderId = Number(idParam);
+
+  this.http.get<any[]>(
+    `http://localhost:3000/customer/orders/${this.orderId}`
+  ).subscribe({
+    next: data => {
+      this.items = data;
+      this.loading = false;
+    },
+    error: err => {
+      this.error = 'Failed to load order details';
+      this.loading = false;
+      console.error(err);
+    }
+  });
+
+
+
   }
 
   get total(): number {

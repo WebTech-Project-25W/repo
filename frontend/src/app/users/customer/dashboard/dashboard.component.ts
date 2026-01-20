@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dashboard.component.css'
 })
 export class CustomerDashboardComponent implements OnInit{
-  
+activeSection: 'restaurants' | 'orders' | 'profile' = 'restaurants';
 restaurants: any[] = [];
 
 constructor(
@@ -27,34 +27,44 @@ constructor(
 
 ngOnInit(): void {
   this.http
-    .get<any[]>('http://localhost:3000/customer/restaurants')
-    .subscribe({
-      next: data => {
-        this.restaurants = data;
-      },
-      error: err => {
-        console.error('Failed to load restaurants', err);
-      }
-    });
+  .get<any>('http://localhost:3000/public/restaurants')
+  .subscribe({
+    next: data => {
+      this.restaurants = data.restaurants ?? [];
+    },
+    error: err => {
+      console.error('Failed to load restaurants', err);
+      this.restaurants = [];
+    }
+  });
 }
 
 openRestaurant(restaurantId: number) {
-  console.log('Clicked restaurant id:', restaurantId);
   this.router.navigate(['/customer/restaurants', restaurantId]);
 }
-search: string = '';
-selectedCuisine: string = 'ALL';
+searchText: string = '';
+selectedCuisine = 'ALL';
+
+cuisines: string[] = [
+    'ALL',
+    'italian',
+    'asian',
+    'austrian'
+  ];
 
 get filteredRestaurants() {
-  const q = this.search.toLowerCase();
+  if (!Array.isArray(this.restaurants)) {
+    return [];
+  }
 
   return this.restaurants.filter(r => {
     const matchesSearch =
-      r.name.toLowerCase().includes(q);
+      !this.searchText ||
+      r.name.toLowerCase().includes(this.searchText.toLowerCase());
 
     const matchesCuisine =
       this.selectedCuisine === 'ALL' ||
-      r.cuisine?.toLowerCase() === this.selectedCuisine;
+      r.cuisine?.toLowerCase() === this.selectedCuisine.toLowerCase();
 
     return matchesSearch && matchesCuisine;
   });
@@ -62,5 +72,11 @@ get filteredRestaurants() {
 
 
 
+goToOrders() {
+  this.router.navigate(['/customer/orders']);
+}
 
+goToProfile() {
+  this.router.navigate(['/customer/profile']);
+}
 }
