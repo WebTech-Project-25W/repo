@@ -1,0 +1,511 @@
+{
+  "siteManagers": [
+    {
+      "email": "admin",
+      "password": "admin",
+      "firstname": null,
+      "lastname": null
+    }
+  ],
+  "restaurantOwners": [
+    {
+      "email": "RO1",
+      "password": "passRO1",
+      "firstname": null,
+      "lastname": null
+    },
+    {
+      "email": "RO2",
+      "password": "passRO2",
+      "firstname": null,
+      "lastname": null
+    }
+  ],
+  "customers": [
+    {
+      "email": "Amy@abc.com",
+      "password": "passA",
+      "firstname": "Amy",
+      "lastname": "Peterson",
+      "status": "not-blocked",
+      "addr": "1 Florabella Villas, Chalfont St Giles",
+      "postcode": "HP8 4PE",
+      "phone": "(01494) 048820"
+    },
+    {
+      "email": "Brian@bobble.co.uk",
+      "password": "passB",
+      "firstname": "Brian",
+      "lastname": "Benderson",
+      "status": "not-blocked",
+      "addr": "46 Beatrice Avenue, Saltash",
+      "postcode": "PL12 4NG",
+      "phone": "(01752) 645533"
+    },
+    {
+      "email": "Cam@cambridge.edu.uk",
+      "password": "passC",
+      "firstname": "Cameron",
+      "lastname": "Charleston",
+      "status": "not-blocked",
+      "addr": "The Conifers, Sodyllt Bank, Dudleston",
+      "postcode": "SY12 9EJ",
+      "phone": "(01978) 664871"
+    },
+    {
+      "email": "Dan@deven.at",
+      "password": "passD",
+      "firstname": "Daniel",
+      "lastname": "Dealy",
+      "status": "warned",
+      "addr": "Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham",
+      "postcode": "B3 1RZ",
+      "phone": "(0121) 476 5706"
+    },
+    {
+      "email": "Emily@Ely.fr",
+      "password": "passE",
+      "firstname": "Emily",
+      "lastname": "Ellington",
+      "status": "blocked",
+      "addr": "14 Stour Road, Grays",
+      "postcode": "RM16 4BS",
+      "phone": "(01375) 257756"
+    }
+  ],
+  "loginHistory": [
+    {
+      "userEmail": "admin@restaurant.com",
+      "time": "2026-01-20T08:00:00Z",
+      "ipAddress": "192.168.1.10",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "chef.mario@pizza.com",
+      "time": "2026-01-20T08:15:22Z",
+      "ipAddress": "172.16.254.1",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    },
+    {
+      "userEmail": "unknown@hacker.net",
+      "time": "2026-01-20T08:45:10Z",
+      "ipAddress": "45.12.33.101",
+      "status": "Failure",
+      "userAgent": "Python-urllib/3.9"
+    },
+    {
+      "userEmail": "manager@restaurant.com",
+      "time": "2026-01-19T22:10:05Z",
+      "ipAddress": "192.168.1.12",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)"
+    },
+    {
+      "userEmail": "admin@restaurant.com",
+      "time": "2026-01-19T21:00:00Z",
+      "ipAddress": "192.168.1.10",
+      "status": "Failure",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "chef.mario@pizza.com",
+      "time": "2026-01-19T09:30:15Z",
+      "ipAddress": "172.16.254.1",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    },
+    {
+      "userEmail": "waiter1@restaurant.com",
+      "time": "2026-01-19T08:00:11Z",
+      "ipAddress": "192.168.1.50",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Linux; Android 12)"
+    },
+    {
+      "userEmail": "waiter2@restaurant.com",
+      "time": "2026-01-19T07:55:40Z",
+      "ipAddress": "192.168.1.51",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Linux; Android 11)"
+    },
+    {
+      "userEmail": "guest@visitor.com",
+      "time": "2026-01-18T18:20:00Z",
+      "ipAddress": "88.123.44.12",
+      "status": "Failure",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; rv:91.0)"
+    },
+    {
+      "userEmail": "admin@restaurant.com",
+      "time": "2026-01-18T08:05:12Z",
+      "ipAddress": "192.168.1.10",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "delivery@speedy.com",
+      "time": "2026-01-18T11:45:30Z",
+      "ipAddress": "10.0.0.5",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Linux; Android 13)"
+    },
+    {
+      "userEmail": "test-user@qa.com",
+      "time": "2026-01-17T14:00:00Z",
+      "ipAddress": "127.0.0.1",
+      "status": "Success",
+      "userAgent": "PostmanRuntime/7.29.0"
+    },
+    {
+      "userEmail": "test-user@qa.com",
+      "time": "2026-01-17T13:55:00Z",
+      "ipAddress": "127.0.0.1",
+      "status": "Failure",
+      "userAgent": "PostmanRuntime/7.29.0"
+    },
+    {
+      "userEmail": "chef.mario@pizza.com",
+      "time": "2026-01-17T09:15:00Z",
+      "ipAddress": "172.16.254.1",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    },
+    {
+      "userEmail": "owner@restaurant.com",
+      "time": "2026-01-17T07:30:22Z",
+      "ipAddress": "192.168.1.2",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (iPad; CPU OS 15_4 like Mac OS X)"
+    },
+    {
+      "userEmail": "bot-attacker@evil.com",
+      "time": "2026-01-16T23:59:59Z",
+      "ipAddress": "1.2.3.4",
+      "status": "Failure",
+      "userAgent": "Go-http-client/1.1"
+    },
+    {
+      "userEmail": "bot-attacker@evil.com",
+      "time": "2026-01-16T23:59:50Z",
+      "ipAddress": "1.2.3.4",
+      "status": "Failure",
+      "userAgent": "Go-http-client/1.1"
+    },
+    {
+      "userEmail": "bot-attacker@evil.com",
+      "time": "2026-01-16T23:59:40Z",
+      "ipAddress": "1.2.3.4",
+      "status": "Failure",
+      "userAgent": "Go-http-client/1.1"
+    },
+    {
+      "userEmail": "manager@restaurant.com",
+      "time": "2026-01-16T10:00:00Z",
+      "ipAddress": "192.168.1.12",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)"
+    },
+    {
+      "userEmail": "waiter1@restaurant.com",
+      "time": "2026-01-16T08:05:00Z",
+      "ipAddress": "192.168.1.50",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Linux; Android 12)"
+    },
+    {
+      "userEmail": "admin@restaurant.com",
+      "time": "2026-01-15T08:00:00Z",
+      "ipAddress": "192.168.1.10",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "chef.mario@pizza.com",
+      "time": "2026-01-15T09:00:00Z",
+      "ipAddress": "172.16.254.1",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    },
+    {
+      "userEmail": "billing@restaurant.com",
+      "time": "2026-01-14T15:30:00Z",
+      "ipAddress": "192.168.1.20",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "unknown-user@gmail.com",
+      "time": "2026-01-14T12:00:15Z",
+      "ipAddress": "203.0.113.5",
+      "status": "Failure",
+      "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64)"
+    },
+    {
+      "userEmail": "waiter3@restaurant.com",
+      "time": "2026-01-14T08:10:00Z",
+      "ipAddress": "192.168.1.52",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10)"
+    },
+    {
+      "userEmail": "admin@restaurant.com",
+      "time": "2026-01-13T08:00:00Z",
+      "ipAddress": "192.168.1.10",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "chef.mario@pizza.com",
+      "time": "2026-01-13T09:20:00Z",
+      "ipAddress": "172.16.254.1",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    },
+    {
+      "userEmail": "manager@restaurant.com",
+      "time": "2026-01-12T10:15:00Z",
+      "ipAddress": "192.168.1.12",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)"
+    },
+    {
+      "userEmail": "suspicious@activity.com",
+      "time": "2026-01-12T03:00:00Z",
+      "ipAddress": "190.12.0.1",
+      "status": "Failure",
+      "userAgent": "curl/7.68.0"
+    },
+    {
+      "userEmail": "waiter1@restaurant.com",
+      "time": "2026-01-12T08:00:00Z",
+      "ipAddress": "192.168.1.50",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Linux; Android 12)"
+    },
+    {
+      "userEmail": "admin@restaurant.com",
+      "time": "2026-01-11T08:00:00Z",
+      "ipAddress": "192.168.1.10",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    },
+    {
+      "userEmail": "chef.mario@pizza.com",
+      "time": "2026-01-11T09:10:00Z",
+      "ipAddress": "172.16.254.1",
+      "status": "Success",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    }
+  ],
+  "restaurants": [
+    {
+      "name": "Resto1",
+      "owner": "RO1",
+      "status": "pending",
+      "addr": "Loiblziele",
+      "postcode": "OL9 8NT",
+      "phone": "(01788) 471434",
+      "openingHours": "08:00 - 20:00",
+      "deliveryZone": "C",
+      "cuisine": "Austrian"
+    },
+    {
+      "name": "YumYumHouse",
+      "owner": "RO1",
+      "status": "approved",
+      "addr": "54 Whinfield Terrace, Rowlands Gill",
+      "postcode": "NE39 2JY",
+      "phone": "(01484) 387035",
+      "openingHours": "11:00-22:00",
+      "deliveryZone": "B",
+      "cuisine": "Asian"
+    },
+    {
+      "name": "Eatery",
+      "owner": "RO1",
+      "status": "rejected",
+      "addr": "12 Bridle Close, Hoddesdon",
+      "postcode": "EN11 9QA",
+      "phone": "(01233) 416101",
+      "openingHours": "08:00 - 20:00",
+      "deliveryZone": "A",
+      "cuisine": "Italian"
+    },
+    {
+      "name": "ScranFud",
+      "owner": "RO2",
+      "status": "pending",
+      "addr": "1 Oldham Square, New Mills",
+      "postcode": "SK22 4BZ",
+      "phone": "(01757) 667027",
+      "openingHours": "08:00 - 20:00",
+      "deliveryZone": "A",
+      "cuisine": "Austrian"
+    },
+    {
+      "name": "Nutri",
+      "owner": "RO2",
+      "status": "approved",
+      "addr": "Flat 102, Russell Court, Woburn Place, London",
+      "postcode": "WC1H 0LP",
+      "phone": "(01708) 308411",
+      "openingHours": "08:00-20:00",
+      "deliveryZone": "A",
+      "cuisine": "Asian"
+    }
+  ],
+  "reviews": [
+    {
+      "restoID": 0,
+      "email": "Amy@abc.com",
+      "rating": 5,
+      "desc": "Best Tafelspitz I have ever had in Vienna!",
+      "time": "2025-12-01 18:30:00+01"
+    },
+    {
+      "restoID": 1,
+      "email": "Brian@bobble.co.uk",
+      "rating": 4,
+      "desc": "Lovely atmosphere, though the service was a bit slow today.",
+      "time": "2025-12-05 12:45:00+00"
+    },
+    {
+      "restoID": 0,
+      "email": "Cam@cambridge.edu.uk",
+      "rating": 3,
+      "desc": "Food was okay, but a bit overpriced.",
+      "time": "2025-12-10 19:15:00+00"
+    },
+    {
+      "restoID": 2,
+      "email": "Dan@deven.at",
+      "rating": 5,
+      "desc": "Phänomenales Essen!",
+      "time": "2025-12-15 20:00:00+01"
+    },
+    {
+      "restoID": 1,
+      "email": "Emily@Ely.fr",
+      "rating": 4,
+      "desc": "Very charming bistro.",
+      "time": "2025-12-20 13:20:00+01"
+    }
+  ],
+  "menus": [
+    { "restoID": 0, "name": "Resto1 Menu", "desc": "Traditional dishes" },
+
+    { "restoID": 1, "name": "YumYum Main", "desc": "Asian favourites" },
+    { "restoID": 1, "name": "YumYum Dinner", "desc": "Evening specials" },
+
+    { "restoID": 2, "name": "Eatery Classics", "desc": "Italian classics" },
+
+    { "restoID": 3, "name": "ScranFud Menu", "desc": "Comfort food" },
+
+    { "restoID": 4, "name": "Nutri Healthy", "desc": "Balanced meals" },
+    { "restoID": 4, "name": "Nutri Breakfast", "desc": "Morning bowls" }
+  ],
+  "dishes": [
+    {
+      "menuID": 0,
+      "name": "Wiener Schnitzel",
+      "desc": "Classic veal",
+      "price": 18.5,
+      "link": "schnitzel.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Vegetable Stir Fry",
+      "desc": "Seasonal veggies",
+      "price": 12.0,
+      "link": "stirfry.jpg"
+    },
+    {
+      "menuID": 3,
+      "name": "Margherita Pizza",
+      "desc": "Classic tomato and mozzarella pizza",
+      "price": 10.5,
+      "link": "pizza.jpg"
+    },
+    {
+      "menuID": 3,
+      "name": "Spaghetti Carbonara",
+      "desc": "Pasta with pancetta and egg sauce",
+      "price": 12.0,
+      "link": "pasta.jpg"
+    },
+    {
+      "menuID": 4,
+      "name": "Chicken Teriyaki",
+      "desc": "Grilled chicken with teriyaki sauce",
+      "price": 11.5,
+      "link": "teriyaki.jpg"
+    },
+    {
+      "menuID": 4,
+      "name": "Fried Rice",
+      "desc": "Rice with egg and vegetables",
+      "price": 8.5,
+      "link": "friedrice.jpg"
+    },
+    {
+      "menuID": 5,
+      "name": "Quinoa Salad",
+      "desc": "Quinoa with fresh vegetables",
+      "price": 9,
+      "link": "quinoa.jpg"
+    },
+    {
+      "menuID": 5,
+      "name": "Grilled Salmon Bowl",
+      "desc": "Salmon with greens and rice",
+      "price": 13.5,
+      "link": "salmon.jpg"
+    },
+    {
+      "menuID": 5,
+      "name": "Avocado Toast",
+      "desc": "Wholegrain toast with avocado",
+      "price": 7.5,
+      "link": "avocado.jpg"
+    }
+  ],
+  "orders": [
+    {
+      "customerEmail": "Amy@abc.com",
+      "restoID": 0,
+      "status": "pending",
+      "addr": "1 Florabella Villas",
+      "items": [{ "dishID": 0, "qty": 1, "price": 18.5 }]
+    },
+    {
+      "customerEmail": "Brian@bobble.co.uk",
+      "restoID": 1,
+      "status": "pending",
+      "addr": "46 Beatrice Avenue",
+      "items": [{ "dishID": 1, "qty": 2, "price": 13.0 }]
+    },
+    {
+      "customerEmail": "Cam@cambridge.edu.uk",
+      "restoID": 2,
+      "status": "pending",
+      "addr": "Cambridge Street",
+      "items": [{ "dishID": 3, "qty": 1, "price": 10.5 }]
+    },
+    {
+      "customerEmail": "Dan@deven.at",
+      "restoID": 3,
+      "status": "pending",
+      "addr": "Birmingham",
+      "items": [{ "dishID": 4, "qty": 1, "price": 11.5 }]
+    },
+    {
+      "customerEmail": "Emily@Ely.fr",
+      "restoID": 4,
+      "status": "pending",
+      "addr": "London",
+      "items": [{ "dishID": 5, "qty": 1, "price": 13.5 }]
+    }
+  ]
+}

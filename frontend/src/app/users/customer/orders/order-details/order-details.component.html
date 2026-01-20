@@ -1,0 +1,37 @@
+<p>
+  <a [routerLink]="['/customer/orders']">
+    ← Back to My Orders
+  </a>
+</p>
+
+<h2>Order #{{ orderId }}</h2>
+
+<p *ngIf="loading">Loading order details...</p>
+<p *ngIf="!loading && error">{{ error }}</p>
+
+<p *ngIf="!loading && items.length === 0">
+  This order has no items.
+</p>
+
+<table *ngIf="!loading && items.length > 0" border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>Dish</th>
+      <th>Quantity</th>
+      <th>Unit Price (€)</th>
+      <th>Subtotal (€)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let i of items">
+      <td>{{ i.name }}</td>
+      <td>{{ i.quantity }}</td>
+      <td>{{ i.unitprice | number:'1.2-2' }}</td>
+      <td>{{ i.subtotal | number:'1.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="items.length > 0">
+  <strong>Total: €{{ total | number:'1.2-2' }}</strong>
+</p>

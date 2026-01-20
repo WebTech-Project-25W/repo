@@ -1,0 +1,48 @@
+<div class="page">
+  <h1>Restaurants near you</h1>
+
+  <!-- 🔍 LONG SEARCH BAR -->
+  <div class="search-row">
+    <input
+      type="text"
+      placeholder="Search by restaurant name or opening hours"
+      [(ngModel)]="search"
+      class="search"
+    />
+
+    <select class="filter">
+      <option value="">All hours</option>
+      <option value="morning">Morning</option>
+      <option value="evening">Evening</option>
+    </select>
+  </div>
+
+  <div class="grid">
+    <a
+      class="card"
+      *ngFor="let r of filteredRestaurants"
+      [routerLink]="['/restaurants', r.id]"
+    >
+      <div
+        class="image"
+        style="background-image: url('assets/images/my-rest.jpg')"
+      ></div>
+
+      <div class="content">
+        <div class="top">
+          <h3>{{ r.name }}</h3>
+          <span class="badge open">Open</span>
+        </div>
+
+        <p>{{ r.address }}</p>
+
+        <!-- 🕒 opening hours (same design as Your restaurant) -->
+        <span class="mine"> 🕒 {{ r.openinghours }} </span>
+
+        <span *ngIf="r.id === myRestaurantId" class="mine">
+          My restaurant
+        </span>
+      </div>
+    </a>
+  </div>
+</div>

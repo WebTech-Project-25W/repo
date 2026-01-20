@@ -1,0 +1,116 @@
+.page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 32px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.image {
+  height: 150px; /* keep fixed size */
+  background-size: contain; /* SHOW FULL IMAGE */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f3f4f6;
+}
+
+.content {
+  padding: 18px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+p {
+  margin: 8px 0;
+  color: #6b7280;
+}
+
+.badge.open {
+  background: #dcfce7;
+  color: #166534;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mine {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  background: #e0f2fe;
+  color: #075985;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+/* SEARCH BAR — MATCHES MINIMAL UI */
+/* LONG SEARCH BAR */
+
+.search-row {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0 32px;
+}
+
+/* main search */
+.search {
+  flex: 1; /* 🔑 makes it long */
+  padding: 14px 20px;
+
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: white;
+
+  font-size: 15px;
+}
+
+/* separate filter box */
+.filter {
+  width: 180px;
+  padding: 14px 18px;
+
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: white;
+
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter:focus,
+.search:focus {
+  outline: none;
+  border-color: #111;
+}

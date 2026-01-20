@@ -1,0 +1,39 @@
+<ul>
+  <li>Restaurants</li>
+  <li>
+  <a routerLink="/customer/orders">My Orders</a>
+  </li>
+
+  <li>
+  <a routerLink="/customer/profile">My Profile</a>
+  </li>
+</ul>
+  
+<h2>Restaurants</h2>
+
+<input
+  type="text"
+  placeholder="Search restaurant"
+  [(ngModel)]="search"
+/>
+
+<select [(ngModel)]="selectedCuisine">
+  <option value="ALL">All cuisines</option>
+  <option value="italian">Italian</option>
+  <option value="asian">Asian</option>
+  <option value="austrian">Austrian</option>
+</select>
+
+<ul>
+  <li *ngFor="let r of filteredRestaurants">
+    <button
+      type="button"
+      (click)="openRestaurant(r.id)"
+      style="all: unset; cursor: pointer; color: blue; text-decoration: underline;"
+    >
+      {{ r.name }} 
+    </button>
+  </li>
+</ul>
+
+

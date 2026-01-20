@@ -1,0 +1,36 @@
+<h2>My Profile</h2>
+
+<button type="button" (click)="goBack()">← Back to Restaurants</button>
+
+<hr />
+
+<form>
+  <label>First name</label><br />
+  <input
+    [(ngModel)]="profile.firstname"
+    [ngModelOptions]="{ standalone: true }"
+  /><br /><br />
+
+  <label>Last name</label><br />
+  <input
+    [(ngModel)]="profile.lastname"
+    [ngModelOptions]="{ standalone: true }"
+  /><br /><br />
+
+  <label>Phone</label><br />
+  <input
+    [(ngModel)]="profile.phonenumber"
+    [ngModelOptions]="{ standalone: true }"
+  /><br /><br />
+
+  <label>Address</label><br />
+  <textarea
+    [(ngModel)]="profile.address"
+    [ngModelOptions]="{ standalone: true }"
+  ></textarea><br /><br />
+
+  <button type="button" (click)="save()">Save</button>
+</form>
+
+<p *ngIf="success" style="color: green;">{{ success }}</p>
+<p *ngIf="error" style="color: red;">{{ error }}</p>

@@ -1,0 +1,12 @@
+{
+  "database": {
+    "host": "localhost",
+    "user": "postgres",
+    "password": "password",
+    "db": "projectDB"
+  },
+  "auth": {
+    "jwt_key": "secret",
+    "expiration": "1h"
+  }
+}

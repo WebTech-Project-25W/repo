@@ -1,0 +1,8 @@
+<div class="restaurant-list">
+  <p>restaurant-list:</p>
+
+  @for ( restaurant of restaurantList; track restaurant.id ) {
+  <app-restaurant [restaurant]="restaurant"></app-restaurant>
+  }
+
+</div>

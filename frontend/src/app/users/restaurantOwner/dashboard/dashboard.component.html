@@ -1,0 +1,339 @@
+<div *ngIf="!restaurant" class="restaurant-select">
+  <h2>Select a restaurant</h2>
+
+  <div *ngIf="restaurants.length === 0">
+    <p>No approved restaurants yet.</p>
+  </div>
+
+  <button *ngFor="let r of restaurants" (click)="selectRestaurant(r)">
+    {{ r.name }}
+  </button>
+</div>
+<div class="owner-layout" *ngIf="restaurant">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>Owner Panel</h2>
+
+    <button
+      (click)="switchSection('menus')"
+      [class.active]="activeSection === 'menus'"
+    >
+      Menus
+    </button>
+    <button
+      (click)="switchSection('orders')"
+      [class.active]="activeSection === 'orders'"
+    >
+      Orders
+    </button>
+    <button
+      (click)="switchSection('profile')"
+      [class.active]="activeSection === 'profile'"
+    >
+      Profile
+    </button>
+    <button
+      (click)="switchSection('analytics')"
+      [class.active]="activeSection === 'analytics'"
+    >
+      Analytics
+    </button>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <h1 class="page-title">Restaurant Owner Dashboard</h1>
+
+    <!-- ===================== -->
+    <!-- MENUS -->
+    <!-- ===================== -->
+    <section *ngIf="activeSection === 'menus'">
+      <h2 class="section-title">Menus</h2>
+
+      <!-- ADD MENU -->
+      <div class="card add-menu-card">
+        <div class="form-row">
+          <input placeholder="Menu name" [(ngModel)]="newMenu.name" />
+          <input placeholder="Description" [(ngModel)]="newMenu.description" />
+          <button class="primary-btn" (click)="addMenu()">Add Menu</button>
+        </div>
+      </div>
+
+      <!-- MENU GRID -->
+      <div class="menu-grid">
+        <div *ngFor="let menu of menus" class="menu-card">
+          <!-- HEADER -->
+          <div class="menu-card-header">
+            <div>
+              <h3>{{ menu.name }}</h3>
+              <p class="muted">{{ menu.description }}</p>
+            </div>
+
+            <div class="actions">
+              <button class="toggle-btn" (click)="toggleMenu(menu.menuid)">
+                {{ expandedMenus[menu.menuid] ? "Hide Dishes" : "Show Dishes" }}
+              </button>
+              <button class="danger-btn" (click)="deleteMenu(menu.menuid)">
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- DISHES -->
+          <div *ngIf="expandedMenus[menu.menuid]" class="menu-dishes-box">
+            <!-- ADD DISH -->
+            <div class="form-row">
+              <input
+                placeholder="Dish name"
+                [(ngModel)]="newDish[menu.menuid].name"
+              />
+              <input
+                placeholder="Description"
+                [(ngModel)]="newDish[menu.menuid].description"
+              />
+              <input
+                type="number"
+                placeholder="Price"
+                [(ngModel)]="newDish[menu.menuid].price"
+              />
+              <input
+                placeholder="Photo URL (optional)"
+                [(ngModel)]="newDish[menu.menuid].photoLink"
+              />
+              <button class="secondary-btn" (click)="addDish(menu.menuid)">
+                Add Dish
+              </button>
+            </div>
+
+            <!-- DISH TABLE -->
+            <div class="table-wrapper">
+              <table *ngIf="dishes[menu.menuid]?.length">
+                <thead>
+                  <tr>
+                    <th>Dish</th>
+                    <th>Price</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dish of dishes[menu.menuid]">
+                    <!-- VIEW MODE -->
+                    <ng-container
+                      *ngIf="editingDishId !== dish.dishid; else editMode"
+                    >
+                      <td>
+                        <div class="dish-name">{{ dish.name }}</div>
+                        <div class="dish-description" *ngIf="dish.description">
+                          {{ dish.description }}
+                        </div>
+                      </td>
+                      <td>€{{ dish.price }}</td>
+                      <td class="right actions-cell">
+                        <button
+                          class="toggle-btn"
+                          (click)="startEditDish(dish)"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          class="danger-btn"
+                          (click)="deleteDish(menu.menuid, dish.dishid)"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <!-- EDIT MODE -->
+                    <ng-template #editMode>
+                      <td colspan="3">
+                        <div class="edit-dish-box">
+                          <div class="edit-fields">
+                            <input
+                              [(ngModel)]="editDish.name"
+                              placeholder="Dish name"
+                            />
+                            <input
+                              [(ngModel)]="editDish.description"
+                              placeholder="Description"
+                            />
+                            <input
+                              type="number"
+                              [(ngModel)]="editDish.price"
+                              placeholder="Price"
+                            />
+                          </div>
+
+                          <div class="edit-actions">
+                            <button
+                              class="secondary-btn"
+                              (click)="saveDish(menu.menuid)"
+                            >
+                              Save
+                            </button>
+                            <button
+                              class="toggle-btn"
+                              (click)="cancelEditDish()"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </ng-template>
+                  </tr>
+                </tbody>
+              </table>
+
+              <p *ngIf="dishes[menu.menuid]?.length === 0" class="muted">
+                No dishes in this menu.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- ORDERS -->
+    <!-- ===================== -->
+    <section *ngIf="activeSection === 'orders'">
+      <h2 class="section-title">Incoming Orders</h2>
+
+      <div class="card-grid">
+        <div *ngFor="let order of orders" class="order-card">
+          <div class="order-header">
+            <strong>Order #{{ order.orderid }}</strong>
+            <span class="status-badge {{ order.status }}">
+              {{ order.status }}
+            </span>
+          </div>
+
+          <p class="muted">Placed {{ order.createdat | date: "short" }}</p>
+
+          <div class="order-actions-bar">
+            <!-- PENDING -->
+            <button
+              *ngIf="order.status === 'pending'"
+              class="primary-btn"
+              (click)="updateOrderStatus(order.orderid, 'accepted')"
+            >
+              Accept
+            </button>
+
+            <button
+              *ngIf="order.status === 'pending'"
+              class="danger-btn"
+              (click)="updateOrderStatus(order.orderid, 'rejected')"
+            >
+              Reject
+            </button>
+
+            <!-- ACCEPTED -->
+            <button
+              *ngIf="order.status === 'accepted'"
+              class="secondary-btn"
+              (click)="updateOrderStatus(order.orderid, 'preparing')"
+            >
+              Preparing
+            </button>
+
+            <!-- PREPARING -->
+            <button
+              *ngIf="order.status === 'preparing'"
+              class="secondary-btn"
+              (click)="updateOrderStatus(order.orderid, 'ready')"
+            >
+              Ready
+            </button>
+
+            <!-- READY ✅ -->
+            <button
+              *ngIf="order.status === 'ready'"
+              class="secondary-btn"
+              (click)="updateOrderStatus(order.orderid, 'dispatched')"
+            >
+              Dispatched
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- PROFILE -->
+    <!-- ===================== -->
+    <section *ngIf="activeSection === 'profile'">
+      <h2 class="section-title">Restaurant Profile</h2>
+
+      <div class="card">
+        <div class="form-grid">
+          <label>Name<input [(ngModel)]="restaurant.name" /></label>
+          <label>Phone<input [(ngModel)]="restaurant.phonenumber" /></label>
+          <label
+            >Opening Hours<input [(ngModel)]="restaurant.openinghours"
+          /></label>
+          <label>
+            Delivery Zone
+            <select [(ngModel)]="restaurant.deliveryzone">
+              <option>Zone A</option>
+              <option>Zone B</option>
+              <option>Zone C</option>
+            </select>
+          </label>
+        </div>
+
+        <button class="primary-btn" (click)="saveSettings()">
+          Save Settings
+        </button>
+
+        <div *ngIf="savedRestaurant" class="saved-preview">
+          <h4>Current Saved Settings</h4>
+          <p><strong>Name:</strong> {{ savedRestaurant.name }}</p>
+          <p><strong>Phone:</strong> {{ savedRestaurant.phonenumber }}</p>
+          <p>
+            <strong>Opening Hours:</strong> {{ savedRestaurant.openinghours }}
+          </p>
+          <p>
+            <strong>Delivery Zone:</strong> {{ savedRestaurant.deliveryzone }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- ANALYTICS -->
+    <!-- ===================== -->
+    <section *ngIf="activeSection === 'analytics'">
+      <h2 class="section-title">Analytics</h2>
+
+      <div class="card stats-card">
+        <div>
+          <span class="stat-label">Orders Today</span>
+          <span class="stat-value">{{ analytics?.today }}</span>
+        </div>
+        <div>
+          <span class="stat-label">Orders This Week</span>
+          <span class="stat-value">{{ analytics?.thisWeek }}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <canvas id="topDishesChart"></canvas>
+      </div>
+
+      <div class="card">
+        <table *ngIf="topDishes.length > 0">
+          <tr>
+            <th>Dish</th>
+            <th>Orders</th>
+          </tr>
+          <tr *ngFor="let dish of topDishes">
+            <td>{{ dish.name }}</td>
+            <td>{{ dish.count }}</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
