@@ -8,7 +8,10 @@ router.use(authenticate);
 // =====================================================
 // GET my restaurant
 // =====================================================
-router.get("/restaurant", async (req, res) => {
+// =====================================================
+// GET my restaurants (plural) ✅ NEW
+// =====================================================
+router.get("/restaurants", async (req, res) => {
   const ownerUsername = req.user.email;
 
   try {
@@ -17,10 +20,55 @@ router.get("/restaurant", async (req, res) => {
       [ownerUsername],
     );
 
-    res.json({ restaurant: result.rows[0] || null });
+    res.json({ restaurants: result.rows });
+  } catch (err) {
+    console.error("GET /owner/restaurants ERROR:", err);
+    res.status(500).json({ message: "Failed to load restaurants" });
+  }
+});
+
+router.get("/restaurants", async (req, res) => {
+  const ownerUsername = req.user.email;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM restaurant
+      WHERE owneremail = $1
+      ORDER BY id
+      `,
+      [ownerUsername],
+    );
+
+    res.json({ restaurants: result.rows });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to load restaurant" });
+    res.status(500).json({ message: "Failed to load restaurants" });
+  }
+});
+
+// =====================================================
+// GET my approved restaurants (LIST)
+// =====================================================
+router.get("/restaurants", async (req, res) => {
+  const ownerUsername = req.user.email;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT id, name, openinghours, deliveryzone
+      FROM restaurant
+      WHERE owneremail = $1
+        AND approvalstatus = 'approved'
+      `,
+      [ownerUsername],
+    );
+
+    res.json({ restaurants: result.rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to load restaurants" });
   }
 });
 
@@ -44,8 +92,8 @@ router.post("/restaurant", async (req, res) => {
     await pool.query(
       `
       INSERT INTO restaurant
-      (owneremail, approvalstatus, address, postcode, phonenumber, name)
-      VALUES ($1, 'pending', $2, $3, $4, 'My Restaurant')
+      (owneremail, approvalstatus, address, postcode, phonenumber, name, openinghours, deliveryzone)
+      VALUES ($1, 'pending', $2, $3, $4, 'My Restaurant', '08:00 - 20:00', 'B')
       `,
       [ownerUsername, street, postcode, phoneNum],
     );
@@ -215,7 +263,7 @@ router.put("/orders/:orderID/status", async (req, res) => {
 // =====================================================
 router.put("/restaurant/settings", async (req, res) => {
   const owner = req.user.email;
-  const { restaurantID, name, phone } = req.body;
+  const { restaurantID, name, phone, openingHours, deliveryZone } = req.body;
 
   try {
     const r = await pool.query(
@@ -239,14 +287,16 @@ router.put("/restaurant/settings", async (req, res) => {
 
     const updated = await pool.query(
       `
-      UPDATE restaurant
-      SET
-        name = COALESCE($1, name),
-        phonenumber = COALESCE($2, phonenumber)
-      WHERE id = $3
-      RETURNING *
-      `,
-      [name, phone, id],
+  UPDATE restaurant
+  SET
+    name = COALESCE($1, name),
+    phonenumber = COALESCE($2, phonenumber),
+    openinghours = COALESCE($3, openinghours),
+    deliveryzone = COALESCE($4, deliveryzone)
+  WHERE id = $5
+  RETURNING *
+  `,
+      [name, phone, openingHours, deliveryZone, id],
     );
 
     res.json({
