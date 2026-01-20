@@ -161,8 +161,6 @@ router.get('/order-logs', async (req, res) => {
     query += ` AND r.name LIKE $${params.length}`;
   }
 
-  console.log(req.query);
-  console.log(customerEmail);
   if (customerEmail) {
     params.push(`%${customerEmail}%`);
     query += ` AND o.customerEmail LIKE $${params.length}`;
