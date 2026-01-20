@@ -45,15 +45,16 @@ router.post('/orders', async (req, res) => {
   const items = req.body.items;
 
   const customerEmail = req.user.email;
+  const status = 'pending';
 
   try {
     const orderResult = await pool.query(
       `
       INSERT INTO "Order" (customeremail, restaurantid, status)
-      VALUES ($1, $2, 'PLACED')
+      VALUES ($1, $2, $3)
       RETURNING orderid
       `,
-      [customerEmail, restaurantId]
+      [customerEmail, restaurantId, status]
     );
 
     const orderId = orderResult.rows[0].orderid;
@@ -72,6 +73,8 @@ router.post('/orders', async (req, res) => {
         ]
       );
     }
+
+    logOrder(orderId, status, customerEmail);
 
     res.json({ message: 'Order created', orderId });
   } catch (err) {
@@ -203,3 +206,9 @@ router.put('/profile', async (req, res) => {
 
 module.exports = router;
 
+async function logOrder(orderId, status, changedBy) {
+  const query = `
+    INSERT INTO OrderHistory (orderId, status, changedBy)
+    VALUES ($1, $2, $3)`;
+  await pool.query(query, [orderId, status, changedBy]);
+}
