@@ -3,11 +3,6 @@
   display: flex;
   min-height: 100vh;
   background: #f4f6f8;
-/* LAYOUT */
-.owner-layout {
-  display: flex;
-  min-height: 100vh;
-  background: #f4f6f8;
   font-family: Arial, sans-serif;
 }
 
@@ -35,10 +30,6 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* CONTENT */
-.content {
-  flex: 1;
-  padding: 24px;
 .sidebar button {
   width: 100%;
   background: transparent;
