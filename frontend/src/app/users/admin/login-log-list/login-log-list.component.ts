@@ -19,13 +19,16 @@ export class LoginLogListComponent {
   ) { }
 
   // for pagination
-  limit: number = 7;
+  limit: number = 5;
   currentPage: number = 0;
 
   // search filters
   searchEmail: string = '';
   searchStatus: string = '';
 
+  totalEntries: number = 0;
+  startIndex: number = 0;
+  endIndex: number = 0;
 
   ngOnInit(): void {
     this.loadLogs();
@@ -35,8 +38,12 @@ export class LoginLogListComponent {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getLoginLogs(this.searchEmail, this.searchStatus, this.limit, offset).subscribe({ // email and status can be passed through undefined
-      next: (data: LoginLog[]) => {
-        this.logs = data;
+      next: (resp: any) => {
+        this.logs = resp.data;
+        this.totalEntries = resp.metadata.totalEntries;
+        this.startIndex = resp.metadata.offset;
+        this.endIndex = resp.metadata.offset + this.logs.length;
+        console.log(resp);
       },
       error: (err) => {
         console.error('Error fetching login-logs: ', err);

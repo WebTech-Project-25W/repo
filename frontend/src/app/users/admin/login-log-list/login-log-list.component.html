@@ -60,9 +60,9 @@
         Previous
       </button>
       
-      <span>Page {{ currentPage + 1 }}</span>
+      <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
       
-      <button (click)="nextPage()" [disabled]="currentPage*limit > logs.length +1 ">
+      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">
         Next
       </button>
     </div>

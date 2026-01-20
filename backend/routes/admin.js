@@ -84,13 +84,13 @@ router.get('/login-logs', async(req, res) => {
   const { email, status, limit = 50, offset = 0 } = req.query;
 
   // Start with a base query
-  let query = `SELECT * FROM LogInHistory WHERE 1=1`;
+  let query = `SELECT *, COUNT(*) OVER() as totalEntries FROM LogInHistory WHERE 1=1`;
   const params = [];
 
   // Dynamically add filters
   if (email) {
-    params.push(email);
-    query += ` AND userEmail = $${params.length}`;
+    params.push(`%${email}%`);
+    query += ` AND userEmail LIKE $${params.length}`;
   }
 
   if (status) {
@@ -104,7 +104,21 @@ router.get('/login-logs', async(req, res) => {
 
   try {
     const results = await pool.query(query, params);
-    res.json(results.rows);
+
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.json({
+        metadata: {
+            totalEntries: totalEntries,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+        },
+        data: results.rows.map( row => {
+            const { totalEntries, ...data } = row;
+            return data;
+        })
+    });
+
   } catch (err) {
     res.status(500).send("Server Error");
   }
