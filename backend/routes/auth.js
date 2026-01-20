@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
     // handle no match
     const invalidMessage = "Invalid email or password.";
     if (results.rows.length === 0) {
-      logLogInAttempt(email, req.ip, 'Failure', req.headers["user-agent"]);
+      logLogInAttempt(email, req.ip, "Failure", req.headers["user-agent"]);
       return res.status(401).json({ message: invalidMessage });
     }
 
@@ -37,12 +37,12 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      logLogInAttempt(email, req.ip, 'Failure', req.headers["user-agent"]);
+      logLogInAttempt(email, req.ip, "Failure", req.headers["user-agent"]);
       return res.status(401).json({ message: invalidMessage });
     }
 
     // password match: form the token with userData
-    logLogInAttempt(email, req.ip, 'Success', req.headers["user-agent"]);
+    logLogInAttempt(email, req.ip, "Success", req.headers["user-agent"]);
 
     const payload = {
       email: user.email,
@@ -53,13 +53,13 @@ router.post("/login", async (req, res) => {
       expiresIn: cfg.auth.expiration,
     });
 
-    res.cookie('jwt', token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
       secure: false, // TODO !! change to true and use https !!
-      sameSite: 'lax',
+      sameSite: "lax",
       maxAge: parseToMSeconds(cfg.auth.expiration).toString(),
-      path: '/'
-    })
+      path: "/",
+    });
 
     res.status(200).json({
       message: "login successful",
@@ -164,14 +164,14 @@ module.exports = router;
 
 const parseToMSeconds = (timeStr) => {
   const unitMap = {
-    's': 1000,
-    'm': 60000,
-    'h': 3600000,
-    'd': 86400000
+    s: 1000,
+    m: 60000,
+    h: 3600000,
+    d: 86400000,
   };
 
   const match = timeStr.match(/^(\d+)([smhd])$/);
-  
+
   if (!match) {
     console.error("Failed to parse time string");
     return 0; // Or handle error for invalid format
@@ -183,11 +183,13 @@ const parseToMSeconds = (timeStr) => {
   return value * unitMap[unit];
 };
 
-
-// helper function 
+// helper function
 async function logLogInAttempt(email, ip, status, deviceInfo) {
   const query = `
     INSERT INTO LogInHistory (userEmail, ipAddress, status, userAgent)
     VALUES ($1, $2, $3, $4)`;
-  await pool.query(query, [email, ip, status, deviceInfo]);
+
+  const safeDeviceInfo = deviceInfo ? deviceInfo.substring(0, 100) : null;
+
+  await pool.query(query, [email, ip, status, safeDeviceInfo]);
 }

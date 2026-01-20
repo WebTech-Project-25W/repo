@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS Review;
 DROP VIEW IF EXISTS "View_User_Roles";
 
-
+DROP TABLE IF EXISTS OrderHistory;
 DROP TABLE IF EXISTS OrderItem;   
 DROP TABLE IF EXISTS "Order";
 DROP TABLE IF EXISTS Customer Cascade;
@@ -66,17 +66,23 @@ CREATE TABLE RestaurantOwner
 
 DROP TYPE IF EXISTS approval_status;
 CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved', 'suspended');
-CREATE TABLE Restaurant
+CREATE TABLE restaurant
 (
   id SERIAL PRIMARY KEY,
-  "name" varchar(100) NOT NULL,
-  ownerEmail varchar(100) REFERENCES public.RestaurantOwner(email),
+  name varchar(100) NOT NULL,
+  ownerEmail varchar(100),
   approvalStatus approval_status,
-  address varchar(100)  NOT NULL,
+  address varchar(100) NOT NULL,
   postcode varchar(100) NOT NULL,
   phoneNumber varchar(100) NOT NULL,
-  cuisine varchar(50)
+
+  cuisine varchar(50),
+  openingHours varchar(100),
+  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C'))
 );
+
+
+
 
 CREATE TABLE Review
 (
@@ -104,11 +110,13 @@ CREATE TABLE Dish (
     photoLink varchar(255)
 );
 
+DROP TYPE IF EXISTS order_status;
+CREATE TYPE order_status as ENUM('pending', 'accepted', 'rejected', 'preparing', 'ready', 'dispatched', 'delivered');
 CREATE TABLE "Order" (
     orderID SERIAL PRIMARY KEY,
     customerEmail varchar(100) REFERENCES public.Customer(email),
     restaurantID int REFERENCES public.Restaurant(id),
-    status varchar(50) DEFAULT 'pending',
+    status order_status DEFAULT 'pending',
     discountCodes varchar(50),
     deliveryAddress varchar(255),
     deliveryOptions varchar(100)
@@ -122,7 +130,14 @@ CREATE TABLE OrderItem (
     PRIMARY KEY (orderID, dishID)
 );
 
-
+CREATE TABLE OrderHistory
+(
+  id SERIAL PRIMARY KEY,
+  orderID int NOT NULL REFERENCES "Order"(orderID) ON DELETE CASCADE,
+  time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status order_status,
+  changedBY varchar(100) NOT NULL REFERENCES public.AppUser(email)
+);
 
 
 CREATE VIEW View_User_Roles AS

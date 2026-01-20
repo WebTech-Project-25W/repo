@@ -1,4 +1,15 @@
-<div class="owner-layout">
+<div *ngIf="!restaurant" class="restaurant-select">
+  <h2>Select a restaurant</h2>
+
+  <div *ngIf="restaurants.length === 0">
+    <p>No approved restaurants yet.</p>
+  </div>
+
+  <button *ngFor="let r of restaurants" (click)="selectRestaurant(r)">
+    {{ r.name }}
+  </button>
+</div>
+<div class="owner-layout" *ngIf="restaurant">
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <h2>Owner Panel</h2>
@@ -198,7 +209,7 @@
             </span>
           </div>
 
-          <p class="muted">Placed {{ order.createdat | date : "short" }}</p>
+          <p class="muted">Placed {{ order.createdat | date: "short" }}</p>
 
           <div class="order-actions-bar">
             <!-- PENDING -->

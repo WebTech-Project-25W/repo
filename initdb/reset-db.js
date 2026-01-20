@@ -15,7 +15,7 @@ async function resetDatabase() {
 
     const sql = fs.readFileSync(
       path.join(__dirname, "create_tables.sql"),
-      "utf8"
+      "utf8",
     );
 
     const seedData = require("./seedData.json");
@@ -31,12 +31,12 @@ async function resetDatabase() {
       user,
       roleTable,
       extraCols = "",
-      extraVals = []
+      extraVals = [],
     ) => {
       const hash = await bcrypt.hash(user.password, saltRounds);
       await client.query(
         "INSERT INTO AppUser (email, password, firstname, lastname) VALUES ($1, $2, $3, $4)",
-        [user.email, hash, user.firstname, user.lastname]
+        [user.email, hash, user.firstname, user.lastname],
       );
       const roleSql = `INSERT INTO ${roleTable} (email ${extraCols}) VALUES ($1 ${extraVals
         .map((_, i) => ", $" + (i + 2))
@@ -55,7 +55,7 @@ async function resetDatabase() {
         user,
         "Customer",
         ", blockedStatus, address, postcode, phoneNumber",
-        [user.status, user.address, user.postcode, user.phone]
+        [user.status, user.address, user.postcode, user.phone],
       );
     }
 
@@ -64,14 +64,9 @@ async function resetDatabase() {
     for (const log of seedData.loginHistory) {
       const result = await client.query(
         `INSERT INTO LogInHistory (userEmail, time, ipAddress, status, userAgent)
-        VALUES ($1, $2, $3, $4, $5)`, [
-          log.userEmail,
-          log.time,
-          log.ipAddress,
-          log.status,
-          log.userAgent
-        ]
-      )
+        VALUES ($1, $2, $3, $4, $5)`,
+        [log.userEmail, log.time, log.ipAddress, log.status, log.userAgent],
+      );
     }
 
     // Seed Restaurants & Track IDs
@@ -79,8 +74,10 @@ async function resetDatabase() {
     const restoIDs = [];
     for (const restaurant of seedData.restaurants) {
       const result = await client.query(
-        `INSERT INTO Restaurant (name, ownerEmail, approvalStatus, address, postcode, phoneNumber, cuisine) 
-                 VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+        `INSERT INTO Restaurant 
+   (name, ownerEmail, approvalStatus, address, postcode, phoneNumber, cuisine, openingHours, deliveryZone) 
+   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+   RETURNING id`,
         [
           restaurant.name,
           restaurant.owner,
@@ -88,9 +85,12 @@ async function resetDatabase() {
           restaurant.addr,
           restaurant.postcode,
           restaurant.phone,
-          restaurant.cuisine,
-        ]
+          restaurant.cuisine || null,
+          restaurant.openingHours || null,
+          restaurant.deliveryZone || null,
+        ],
       );
+
       restoIDs.push(result.rows[0].id);
     }
 
@@ -104,7 +104,7 @@ async function resetDatabase() {
           review.time,
           review.rating,
           review.desc,
-        ]
+        ],
       );
     }
 
@@ -113,7 +113,7 @@ async function resetDatabase() {
     for (const menu of seedData.menus) {
       const result = await client.query(
         "INSERT INTO Menu (restaurantID, name, description) VALUES ($1, $2, $3) RETURNING menuID",
-        [restoIDs[menu.restoID], menu.name, menu.desc]
+        [restoIDs[menu.restoID], menu.name, menu.desc],
       );
       menuIDs.push(result.rows[0].menuid);
     }
@@ -123,7 +123,7 @@ async function resetDatabase() {
     for (const dish of seedData.dishes) {
       const result = await client.query(
         "INSERT INTO Dish (menuID, name, description, price, photoLink) VALUES ($1, $2, $3, $4, $5) RETURNING dishID",
-        [menuIDs[dish.menuID], dish.name, dish.desc, dish.price, dish.link]
+        [menuIDs[dish.menuID], dish.name, dish.desc, dish.price, dish.link],
       );
       dishIDs.push(result.rows[0].dishid);
     }
@@ -133,15 +133,29 @@ async function resetDatabase() {
     for (const order of seedData.orders) {
       const result = await client.query(
         'INSERT INTO "Order" (customerEmail, restaurantID, status, deliveryAddress) VALUES ($1, $2, $3, $4) RETURNING orderID',
-        [order.customerEmail, restoIDs[order.restoID], order.status, order.addr]
+        [
+          order.customerEmail,
+          restoIDs[order.restoID],
+          order.status,
+          order.addr,
+        ],
       );
       const orderId = result.rows[0].orderid;
       for (const item of order.items) {
         await client.query(
           "INSERT INTO OrderItem (orderID, dishID, quantity, unitPrice) VALUES ($1, $2, $3, $4)",
-          [orderId, dishIDs[item.dishID], item.qty, item.price]
+          [orderId, dishIDs[item.dishID], item.qty, item.price],
         );
       }
+    }
+
+    // Seed OrderHistory
+    console.log("Seeing OrderHistory...");
+    for (const orderlog of seedData.orderHistory) {
+      const result = await client.query(
+        `INSERT INTO OrderHistory (orderID, time, status, changedBy)VALUES ($1, $2, $3, $4)`,
+        [orderlog.orderId, orderlog.time, orderlog.status, orderlog.changedBy]
+      );
     }
 
     await client.query("COMMIT");

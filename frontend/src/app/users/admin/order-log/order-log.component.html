@@ -1,0 +1,87 @@
+<div class="order-log-container">
+  <h2>Order History Logs</h2>
+
+  <div class="filter-bar">
+    <input type="number" name="orderIdSearch" [(ngModel)]="searchOrderId" placeholder="Order Id"
+      (keyup.enter)="applyFilters()">
+
+    <input type="text" name="emailSearch" [(ngModel)]="searchEmail" placeholder="Customer Email..."
+      (keyup.enter)="applyFilters()">
+
+    <input type="text" name="restaurantSearch" [(ngModel)]="searchRestaurant" placeholder="Restaurant Name..."
+      (keyup.enter)="applyFilters()">
+
+    <select [(ngModel)]="searchStatus">
+      <option value="">All Statuses</option>
+      <option value="pending">Pending</option>
+      <option value="accepted">Accepted</option>
+      <option value="preparing">Preparing</option>
+      <option value="ready">Ready</option>
+      <option value="dispatched">Dispatched</option>
+      <option value="delivered">Delivered</option>
+      <option value="rejected">Rejected</option>
+    </select>
+
+    <button (click)="applyFilters()" class="btn-search">Search</button>
+    <button (click)="clearFilters()" class="btn-clear">Clear</button>
+  </div>
+
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Order ID</th>
+        <th>Restaurant</th>
+        <th>Customer</th>
+        <th>Status Update</th>
+        <th>Changed By</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (log of logs; track log.history_id) {
+      <tr>
+        <td class="timestamp">{{ log.status_change_time | date:'short' }}</td>
+        <td><strong>#{{ log.orderid }}</strong></td>
+        <td>{{ log.restaurant_name }}</td>
+        <td>
+            <div class="email-text">{{ log.customeremail }}</div>
+            <small class="address-text">{{ log.deliveryaddress }}</small>
+        </td>
+        <td>
+          <span [class.status-pill]="true" [attr.data-status]="log.new_status">
+            {{ log.new_status }}
+          </span>
+        </td>
+        <td>{{ log.changedby }}</td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6" class="no-data">No order logs found for these filters.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination-controls">
+    <div class="limit-selector">
+      <label for="limit">Rows per page:</label>
+      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+        <option [ngValue]="50">50</option>
+      </select>
+    </div>
+
+    <div class="page-navigation">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+      
+      <span>
+        Page {{ currentPage + 1 }} | 
+        {{ totalEntries > 0 ? startIndex + 1 : 0 }}-{{ endIndex }} of {{ totalEntries }}
+      </span>
+      
+      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">Next</button>
+    </div>
+  </div>
+</div>

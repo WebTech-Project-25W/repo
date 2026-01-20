@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, numberAttribute } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
@@ -30,7 +30,20 @@ export class AdminService {
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
 
-    return this.http.get<LoginLog[]>(`${this.apiUrl}/login-logs`, { params });
+    return this.http.get<any>(`${this.apiUrl}/login-logs`, { params });
+  }
+
+  getOrderLogs(orderId?: number, email?: string, status?: string, restaurant?: string, limit?: number, offset?: number) {
+    let params = new HttpParams();
+
+    if (orderId  !== null && orderId !== undefined) { params = params.set('orderId', orderId.toString()); }
+    if (email) { params = params.set('customerEmail', email); }
+    if (status) { params = params.set('status', status); }
+    if (restaurant) { params = params.set('restaurant', restaurant); }
+    if (limit !== undefined) { params = params.set('limit', limit.toString()); }
+    if (offset !== undefined) { params = params.set('offset', offset.toString()); }
+ 
+    return this.http.get<any>(`${this.apiUrl}/order-logs`, { params });
   }
 
   updateApprovalStatus(restaurantId: number, newStatus: string) {
