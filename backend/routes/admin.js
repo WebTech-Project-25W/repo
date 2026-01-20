@@ -80,4 +80,48 @@ router.patch('/restaurants/:id/approval-status', async (req, res) => {
     }
 })
 
+router.get('/login-logs', async(req, res) => {
+  const { email, status, limit = 50, offset = 0 } = req.query;
+
+  // Start with a base query
+  let query = `SELECT *, COUNT(*) OVER() as totalEntries FROM LogInHistory WHERE 1=1`;
+  const params = [];
+
+  // Dynamically add filters
+  if (email) {
+    params.push(`%${email}%`);
+    query += ` AND userEmail LIKE $${params.length}`;
+  }
+
+  if (status) {
+    params.push(status);
+    query += ` AND status = $${params.length}`;
+  }
+
+  // Pagination and Ordering
+  query += ` ORDER BY time DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+  params.push(limit, offset);
+
+  try {
+    const results = await pool.query(query, params);
+
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.json({
+        metadata: {
+            totalEntries: totalEntries,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+        },
+        data: results.rows.map( row => {
+            const { totalEntries, ...data } = row;
+            return data;
+        })
+    });
+
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;

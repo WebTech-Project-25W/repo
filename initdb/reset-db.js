@@ -59,6 +59,21 @@ async function resetDatabase() {
       );
     }
 
+    // Seed logInHistory
+    console.log("Seeding LoginHistory...");
+    for (const log of seedData.loginHistory) {
+      const result = await client.query(
+        `INSERT INTO LogInHistory (userEmail, time, ipAddress, status, userAgent)
+        VALUES ($1, $2, $3, $4, $5)`, [
+          log.userEmail,
+          log.time,
+          log.ipAddress,
+          log.status,
+          log.userAgent
+        ]
+      )
+    }
+
     // Seed Restaurants & Track IDs
     console.log("Seeding Restaurants...");
     const restoIDs = [];
