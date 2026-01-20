@@ -8,14 +8,17 @@ const pool = require("../pool");
 router.get("/restaurants", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT
-        id,
-        name,
-        address,
-        postcode,
-        phonenumber
-      FROM restaurant
-      WHERE approvalstatus = 'approved'
+     SELECT
+  id,
+  name,
+  address,
+  postcode,
+  phonenumber,
+  openinghours,
+  deliveryzone
+FROM restaurant
+WHERE approvalstatus = 'approved'
+
     `);
 
     res.json({ restaurants: result.rows });
@@ -33,7 +36,13 @@ router.get("/restaurants/:restaurantID/menus", async (req, res) => {
 
   try {
     const menus = await pool.query(
-      `SELECT * FROM menu WHERE restaurantid = $1`,
+      `
+      SELECT m.*
+      FROM menu m
+      JOIN restaurant r ON r.id = m.restaurantid
+      WHERE m.restaurantid = $1
+      AND r.approvalstatus = 'approved'
+      `,
       [restaurantID],
     );
 
@@ -61,13 +70,17 @@ router.get("/restaurants/:restaurantID", async (req, res) => {
     const result = await pool.query(
       `
       SELECT
-        id,
-        name,
-        address,
-        postcode,
-        phonenumber
-      FROM restaurant
-      WHERE id = $1
+  id,
+  name,
+  address,
+  postcode,
+  phonenumber,
+  openinghours,
+  deliveryzone
+FROM restaurant
+WHERE id = $1
+AND approvalstatus = 'approved'
+
       `,
       [restaurantID],
     );
@@ -82,5 +95,6 @@ router.get("/restaurants/:restaurantID", async (req, res) => {
     res.status(500).json({ message: "Failed to load restaurant" });
   }
 });
+
 //..
 module.exports = router;
