@@ -1,18 +1,11 @@
 <div class="page" *ngIf="restaurant">
   <a
-  *ngIf="!isCustomerView"
-  routerLink="/restaurants"
-  class="back"
+  *ngIf="restaurant"
+  [routerLink]="isCustomerView ? '/customer/dashboard' : '/restaurants'"
+  class="back-button"
 >
-  ← Restaurants
-</a>
-
-<a
-  *ngIf="isCustomerView"
-  routerLink="/customer/dashboard"
-  class="back"
->
-  ← Restaurants
+  <span class="arrow">←</span>
+  <span>Restaurants</span>
 </a>
 
   <h1>{{ restaurant.name }}</h1>

@@ -185,4 +185,33 @@ h1 {
   overflow: visible;
 }
 
+/* ===== BACK BUTTON ===== */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+  margin-bottom: 16px;
+
+  border-radius: 999px;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #7c3aed; 
+
+  background: transparent;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.back-button:hover {
+  background: #f3e8ff;
+  transform: translateX(-2px);
+}
+
+.back-button .arrow {
+  font-size: 16px;
+  line-height: 1;
+}
 
