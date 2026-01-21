@@ -18,6 +18,9 @@ import { FormsModule } from '@angular/forms';
 export class CustomerDashboardComponent implements OnInit{
 activeSection: 'restaurants' | 'orders' | 'profile' = 'restaurants';
 restaurants: any[] = [];
+searchText: string = '';
+selectedCuisine = 'ALL';
+selectedEta: 'ALL' | 'UNDER_30' | '30_60' | 'OVER_60' = 'ALL';
 
 constructor(
   private http: HttpClient,
@@ -27,25 +30,32 @@ constructor(
 
 ngOnInit(): void {
   this.http
-  .get<any>('http://localhost:3000/public/restaurants')
-  .subscribe({
-    next: data => {
-      this.restaurants = data.restaurants ?? [];
-    },
-    error: err => {
-      console.error('Failed to load restaurants', err);
-      this.restaurants = [];
-    }
-  });
+    .get<any>('http://localhost:3000/public/restaurants')
+    .subscribe({
+      next: data => {
+        this.restaurants = (data.restaurants ?? []).map((r: any) => {
+          const eta = this.calculateEta(r);
+          return {
+            ...r,
+            etaMin: eta.etaMin,
+            etaMax: eta.etaMax,
+          };
+        });
+      },
+      error: err => {
+        console.error('Failed to load restaurants', err);
+        this.restaurants = [];
+      }
+    });
 }
+
+
 
 openRestaurant(restaurantId: number) {
   this.router.navigate(['/customer/restaurants', restaurantId]);
 }
-searchText: string = '';
-selectedCuisine = 'ALL';
 
-cuisines: string[] = [
+cuisine: string[] = [
     'ALL',
     'italian',
     'asian',
@@ -53,11 +63,7 @@ cuisines: string[] = [
   ];
 
 get filteredRestaurants() {
-  if (!Array.isArray(this.restaurants)) {
-    return [];
-  }
-
-  return this.restaurants.filter(r => {
+  return this.restaurants.filter((r) => {
     const matchesSearch =
       !this.searchText ||
       r.name.toLowerCase().includes(this.searchText.toLowerCase());
@@ -66,9 +72,31 @@ get filteredRestaurants() {
       this.selectedCuisine === 'ALL' ||
       r.cuisine?.toLowerCase() === this.selectedCuisine.toLowerCase();
 
-    return matchesSearch && matchesCuisine;
+    let matchesEta = true;
+    if (this.selectedEta !== 'ALL') {
+      if (this.selectedEta === 'UNDER_30') {
+        matchesEta = r.etaMax <= 30;
+      } else if (this.selectedEta === '30_60') {
+        matchesEta = r.etaMin >= 30 && r.etaMax <= 60;
+      } else if (this.selectedEta === 'OVER_60') {
+        matchesEta = r.etaMin >= 60;
+      }
+    }
+
+    console.log({
+      name: r.name,
+      cuisine: r.cuisine,
+      etaMin: r.etaMin,
+      etaMax: r.etaMax,
+      matchesSearch,
+      matchesCuisine,
+      matchesEta,
+    });
+
+    return matchesSearch && matchesCuisine && matchesEta;
   });
 }
+
 
 
 
@@ -79,4 +107,23 @@ goToOrders() {
 goToProfile() {
   this.router.navigate(['/customer/profile']);
 }
+private ZONE_TIME: Record<string, number> = {
+  A: 15,
+  B: 25,
+  C: 35,
+};
+
+private PREP_TIME = 15;
+
+private calculateEta(r: any) {
+  const zone = r.deliveryzone ?? 'B';
+  const zoneMin = this.ZONE_TIME[zone] ?? 25;
+
+  const base = this.PREP_TIME + zoneMin;
+  return {
+    etaMin: Math.max(base - 5, 10),
+    etaMax: base + 5,
+  };
+}
+
 }

@@ -7,38 +7,58 @@
     <!-- RESTAURANTS -->
     <section *ngIf="activeSection === 'restaurants'">
 
-      <div class="card">
-        <div class="form-row">
-          <input
-            type="text"
-            placeholder="Search restaurant"
-            [(ngModel)]="searchText"
-          />
+      <div class="search-wrapper">
+  <input
+    class="search-input"
+    type="text"
+    placeholder="Search by restaurant name or opening hours"
+    [(ngModel)]="searchText"
+  />
 
-          <select [(ngModel)]="selectedCuisine">
-          <option value="ALL">All</option>
-          <option value="asian">Asian</option>
-          <option value="italian">Italian</option>
-          <option value="austrian">Austrian</option>
-          </select>
+  <div class="filters">
+    <select class="filter-pill" [(ngModel)]="selectedCuisine">
+      <option value="ALL">All cuisines</option>
+      <option value="asian">Asian</option>
+      <option value="italian">Italian</option>
+      <option value="austrian">Austrian</option>
+    </select>
 
-        </div>
+    <select class="filter-pill" [(ngModel)]="selectedEta">
+      <option value="ALL">All hours</option>
+      <option value="UNDER_30">Under 30 min</option>
+      <option value="30_60">30–60 min</option>
+      <option value="OVER_60">60+ min</option>
+    </select>
+  </div>
+</div>
+
+
+        <div class="grid">
+  <a
+    class="card"
+    *ngFor="let r of filteredRestaurants"
+    [routerLink]="['/customer/restaurants', r.id]"
+  >
+    <div
+      class="image"
+      style="background-image: url('assets/images/my-rest.jpg')"
+    ></div>
+
+    <div class="content">
+      <div class="top">
+        <h3>{{ r.name }}</h3>
+        <span class="badge open">Open</span>
       </div>
 
-      <div class="card">
-        <ul>
-          <li *ngFor="let r of filteredRestaurants">
-      <a
-        [routerLink]="['/customer/restaurants', r.id]"
-        class="restaurant-link"
-      > 
-      {{ r.name }}
-       </a>
-      </li>
+      <p>{{ r.address }}</p>
 
+      <span class="mine">
+        ⏱ {{ r.etaMin }}–{{ r.etaMax }} min
+      </span>
+    </div>
+  </a>
+</div>
 
-        </ul>
-      </div>
+      
     </section>
   </main>
-</div>
