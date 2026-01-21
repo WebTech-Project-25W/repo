@@ -15,7 +15,8 @@ router.get("/restaurants", async (req, res) => {
   postcode,
   phonenumber,
   openinghours,
-  deliveryzone
+  deliveryzone,
+  cuisine
 FROM restaurant
 WHERE approvalstatus = 'approved'
 
