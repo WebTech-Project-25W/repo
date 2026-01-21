@@ -46,7 +46,7 @@ get isCustomer(): boolean {
 }
 
 increase(dish: any) {
-  const item = this.cart.find(i => i.dish.id === dish.id);
+  const item = this.cart.find(i => i.dish.dishid === dish.dishid);
 
   if (item) {
     item.quantity++;
@@ -59,17 +59,19 @@ increase(dish: any) {
 }
 
 decrease(dish: any) {
-  const item = this.cart.find(i => i.dish.id === dish.id);
+  const item = this.cart.find(i => i.dish.dishid === dish.dishid);
+
   if (!item) return;
 
   item.quantity--;
 
   if (item.quantity <= 0) {
-    this.cart = this.cart.filter(i => i.dish.id !== dish.id);
+   this.cart = this.cart.filter(i => i.dish.dishid !== dish.dishid);
   }
 }
 getQuantity(dish: any): number {
-  const item = this.cart.find(i => i.dish.id === dish.id);
+  const item = this.cart.find(i => i.dish.dishid === dish.dishid);
+
   return item ? item.quantity : 0;
 }
 
