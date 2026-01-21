@@ -75,3 +75,33 @@ p {
     padding: 28px;
   }
 }
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background-color: #f8fbff;
+  font-size: 16px;
+  outline: none;
+  appearance: none;
+}
+
+.form-input:focus {
+  border-color: #6366f1;
+  background-color: #ffffff;
+}
+
+select.form-input {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='%236b7280' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+select.form-input:has(option[value=""]:checked) {
+  color: #9ca3af; 
+}
+

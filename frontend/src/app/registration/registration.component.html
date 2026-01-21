@@ -18,12 +18,26 @@
     <label for="address-input">address</label>
     <input [(ngModel)]="address" name="address-input" id="address-input" type="text" required placeholder="address">
 
+    <label for="deliveryZone">delivery zone</label>
+    <select
+    id="deliveryZone"
+    name="deliveryZone"
+    [(ngModel)]="deliveryZone"
+    required
+    class="form-input"
+    >
+    <option value="" disabled selected>Select your zone</option>
+    <option value="A">Zone A</option>
+    <option value="B">Zone B</option>
+    <option value="C">Zone C</option>
+    </select>
+
+
     <label for="postcode-input">postcode</label>
     <input [(ngModel)]="postcode" name="postcode-input" id="postcode-input" type="text" required placeholder="postcode">
 
     <label for="phoneNumber-input">phone number</label>
     <input [(ngModel)]="phoneNumber" name="phoneNumber-input" id="phoneNumber-input" type="text" required placeholder="phone number">
-
 
     <button type="submit">Register</button>
   

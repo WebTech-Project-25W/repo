@@ -24,7 +24,8 @@ export class AuthService {
     lastName: string,
     address: string,
     postcode: string,
-    phoneNumber: string
+    phoneNumber: string,
+    deliveryZone: string
   ): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, {
       email: email,
@@ -34,6 +35,7 @@ export class AuthService {
       address: address,
       postcode: postcode,
       phoneNumber: phoneNumber,
+      deliveryZone: deliveryZone
     });
   }
 

@@ -18,6 +18,7 @@ export class RegistrationComponent {
   address = '';
   postcode = '';
   phoneNumber = '';
+  deliveryZone = '';
 
   constructor(
     private authService: AuthService,
@@ -32,7 +33,8 @@ export class RegistrationComponent {
       this.lastName,
       this.address,
       this.postcode,
-      this.phoneNumber
+      this.phoneNumber,
+      this.deliveryZone
     ).subscribe({
       next: (response) => {
         console.log('Registration successfull.', response);
