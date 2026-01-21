@@ -140,6 +140,21 @@ CREATE TABLE OrderHistory
   changedBY varchar(100) NOT NULL REFERENCES public.AppUser(email)
 );
 
+CREATE TABLE IF NOT EXISTS ratings (
+  id SERIAL PRIMARY KEY,
+  customerEmail VARCHAR(100) NOT NULL,
+  restaurantId INTEGER,
+  dishId INTEGER,
+  rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CHECK (
+    restaurantId IS NOT NULL
+    OR dishId IS NOT NULL
+  )
+);
+
+
+
 
 CREATE VIEW View_User_Roles AS
 SELECT 

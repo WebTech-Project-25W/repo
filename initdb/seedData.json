@@ -642,5 +642,49 @@
     { "orderId": 11, "status": "ready", "time": "2026-01-19T12:25:00Z", "changedBy": "RO2" },
     { "orderId": 11, "status": "dispatched", "time": "2026-01-19T12:30:00Z", "changedBy": "RO2" },
     { "orderId": 11, "status": "delivered", "time": "2026-01-19T12:45:00Z", "changedBy": "RO2" }
-  ]
+  ],
+
+  "ratings": [
+  {
+    "customerEmail": "Amy@abc.com",
+    "restaurantID": 0,
+    "rating": 5
+  },
+  {
+    "customerEmail": "Brian@bobble.co.uk",
+    "restaurantID": 1,
+    "rating": 4
+  },
+  {
+    "customerEmail": "Cam@cambridge.edu.uk",
+    "restaurantID": 0,
+    "rating": 3
+  },
+  {
+    "customerEmail": "Dan@deven.at",
+    "restaurantID": 2,
+    "rating": 4
+  },
+  {
+    "customerEmail": "Amy@abc.com",
+    "dishID": 0,
+    "rating": 5
+  },
+  {
+    "customerEmail": "Brian@bobble.co.uk",
+    "dishID": 1,
+    "rating": 4
+  },
+  {
+    "customerEmail": "Cam@cambridge.edu.uk",
+    "dishID": 2,
+    "rating": 5
+  },
+  {
+    "customerEmail": "Emily@Ely.fr",
+    "dishID": 0,
+    "rating": 3
+  }
+]
+
 }

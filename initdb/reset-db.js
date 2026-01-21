@@ -158,6 +158,39 @@ async function resetDatabase() {
       );
     }
 
+ // Seed Ratings
+console.log("Seeding Ratings...");
+
+for (const rating of seedData.ratings) {
+  if (rating.restaurantID !== undefined) {
+    await client.query(
+      `
+      INSERT INTO ratings (customerEmail, restaurantId, rating)
+      VALUES ($1, $2, $3)
+      `,
+      [
+        rating.customerEmail,
+        restoIDs[rating.restaurantID],
+        rating.rating
+      ]
+    );
+  }
+
+  if (rating.dishID !== undefined) {
+    await client.query(
+      `
+      INSERT INTO ratings (customerEmail, dishId, rating)
+      VALUES ($1, $2, $3)
+      `,
+      [
+        rating.customerEmail,
+        dishIDs[rating.dishID],
+        rating.rating
+      ]
+    );
+  }
+}
+
     await client.query("COMMIT");
     console.log("--- Database Reset & Seeded Successfully ---");
   } catch (err) {
