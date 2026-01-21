@@ -74,6 +74,8 @@ router.post("/login", async (req, res) => {
 
 // registration route
 router.post("/register", async (req, res) => {
+  console.log(req.body);
+
   const {
     email,
     password,
@@ -82,6 +84,7 @@ router.post("/register", async (req, res) => {
     address,
     postcode,
     phoneNumber,
+    deliveryZone
   } = req.body;
 
   if (!email || !password) {
@@ -105,10 +108,10 @@ router.post("/register", async (req, res) => {
     const userResults = await client.query(userQuery, userQueryParams);
 
     const customerQuery = `
-    INSERT INTO Customer (email, blockedStatus, address, postcode, phoneNumber)
-      VALUES ($1, 'not-blocked', $2, $3, $4);
+    INSERT INTO Customer (email, blockedStatus, address, postcode, phoneNumber, deliveryzone)
+      VALUES ($1, 'not-blocked', $2, $3, $4, $5)
   `;
-    const customerQueryParams = [email, address, postcode, phoneNumber];
+    const customerQueryParams = [email, address, postcode, phoneNumber, deliveryZone];
     await client.query(customerQuery, customerQueryParams);
 
     await client.query("COMMIT");

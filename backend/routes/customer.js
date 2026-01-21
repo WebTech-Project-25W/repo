@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../pool.js');
+const ETA_RULES = {
+  A: { A: 20, B: 30, C: 40 },
+  B: { A: 30, B: 20, C: 35 },
+  C: { A: 40, B: 35, C: 25 },
+};
+
 
 // GET /customer/restaurants
 router.get('/restaurants', async (req, res) => {
@@ -112,7 +118,7 @@ router.get('/orders', async (req, res) => {
   }
 });
 
-// GET /customer/orders/:id  (Order Details)
+// GET /customer/orders/:id  (Order Details + ETA info)
 router.get('/orders/:id', async (req, res) => {
   const customerEmail = req.user.email;
   const orderId = req.params.id;
@@ -124,22 +130,45 @@ router.get('/orders/:id', async (req, res) => {
         d.name,
         oi.quantity,
         oi.unitprice,
-        (oi.quantity * oi.unitprice) AS subtotal
+        (oi.quantity * oi.unitprice) AS subtotal,
+        r.deliveryzone AS restaurant_zone,
+        c.deliveryzone AS customer_zone
       FROM orderitem oi
       JOIN dish d ON oi.dishid = d.dishid
       JOIN "Order" o ON o.orderid = oi.orderid
+      JOIN restaurant r ON o.restaurantid = r.id
+      JOIN customer c ON o.customeremail = c.email
       WHERE o.orderid = $1
         AND o.customeremail = $2
       `,
       [orderId, customerEmail]
     );
 
-    res.json(result.rows);
+    if (result.rows.length === 0) {
+      return res.json({ items: [], eta: null });
+    }
+
+    const { restaurant_zone, customer_zone } = result.rows[0];
+
+    const baseEta =
+      ETA_RULES[customer_zone]?.[restaurant_zone] ?? 30;
+
+    res.json({
+      items: result.rows.map(r => ({
+        name: r.name,
+        quantity: r.quantity,
+        unitprice: r.unitprice,
+        subtotal: r.subtotal,
+      })),
+      eta: `${baseEta}–${baseEta + 10} min`,
+    });
   } catch (err) {
     console.error('Fetch order details error:', err);
     res.status(500).json({ error: 'Failed to fetch order details' });
   }
 });
+
+
 
 // GET /customer/profile
 router.get('/profile', async (req, res) => {

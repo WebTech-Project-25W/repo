@@ -9,6 +9,11 @@
   <div class="card">
     <h2 class="card-title">Order #{{ orderId }}</h2>
 
+    <div class="info-card" *ngIf="etaMin && etaMax">
+    <strong>Estimated delivery time</strong>
+    <p>🕒 {{ etaMin }} – {{ etaMax }} minutes</p>
+    </div>
+
     <p *ngIf="loading" class="muted">Loading order details…</p>
     <p *ngIf="!loading && error" class="error">{{ error }}</p>
 
