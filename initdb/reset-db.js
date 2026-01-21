@@ -54,8 +54,8 @@ async function resetDatabase() {
       await seedUser(
         user,
         "Customer",
-        ", blockedStatus, address, postcode, phoneNumber",
-        [user.status, user.address, user.postcode, user.phone],
+        ", blockedStatus, address, postcode, phoneNumber, deliveryZone",
+        [user.status, user.address, user.postcode, user.phone, user.deliveryZone],
       );
     }
 

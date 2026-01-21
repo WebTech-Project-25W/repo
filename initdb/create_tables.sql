@@ -51,7 +51,8 @@ CREATE TABLE Customer
   blockedStatus blocked_status,
   address varchar(100),
   postcode varchar(100),
-  phoneNumber varchar(100)
+  phoneNumber varchar(100),
+  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C'))
 );
 
 CREATE TABLE SiteManager

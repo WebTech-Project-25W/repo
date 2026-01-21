@@ -30,7 +30,8 @@
       "status": "not-blocked",
       "addr": "1 Florabella Villas, Chalfont St Giles",
       "postcode": "HP8 4PE",
-      "phone": "(01494) 048820"
+      "phone": "(01494) 048820",
+      "deliveryZone":"A"
     },
     {
       "email": "Brian@bobble.co.uk",
@@ -40,7 +41,8 @@
       "status": "not-blocked",
       "addr": "46 Beatrice Avenue, Saltash",
       "postcode": "PL12 4NG",
-      "phone": "(01752) 645533"
+      "phone": "(01752) 645533",
+      "deliveryZone":"B"
     },
     {
       "email": "Cam@cambridge.edu.uk",
@@ -50,7 +52,8 @@
       "status": "not-blocked",
       "addr": "The Conifers, Sodyllt Bank, Dudleston",
       "postcode": "SY12 9EJ",
-      "phone": "(01978) 664871"
+      "phone": "(01978) 664871",
+      "deliveryZone":"C"
     },
     {
       "email": "Dan@deven.at",
@@ -60,7 +63,8 @@
       "status": "warned",
       "addr": "Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham",
       "postcode": "B3 1RZ",
-      "phone": "(0121) 476 5706"
+      "phone": "(0121) 476 5706",
+      "deliveryZone":"B"
     },
     {
       "email": "Emily@Ely.fr",
@@ -70,7 +74,8 @@
       "status": "blocked",
       "addr": "14 Stour Road, Grays",
       "postcode": "RM16 4BS",
-      "phone": "(01375) 257756"
+      "phone": "(01375) 257756",
+      "deliveryZone":"A"
     }
   ],
   "loginHistory": [
