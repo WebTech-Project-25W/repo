@@ -538,49 +538,49 @@
       "link": "pasta.jpg"
     },
     {
-      "menuID": 4,
+      "menuID": 2,
       "name": "Chicken Teriyaki",
       "desc": "Grilled chicken with teriyaki sauce",
       "price": 11.5,
       "link": "teriyaki.jpg"
     },
     {
-      "menuID": 4,
+      "menuID": 2,
       "name": "Fried Rice",
       "desc": "Rice with egg and vegetables",
       "price": 8.5,
       "link": "friedrice.jpg"
     },
     {
-      "menuID": 5,
+      "menuID": 4,
       "name": "Quinoa Salad",
       "desc": "Quinoa with fresh vegetables",
       "price": 9,
       "link": "quinoa.jpg"
     },
     {
-      "menuID": 5,
+      "menuID": 4,
       "name": "Grilled Salmon Bowl",
       "desc": "Salmon with greens and rice",
       "price": 13.5,
       "link": "salmon.jpg"
     },
     {
-      "menuID": 5,
+      "menuID": 4,
       "name": "Avocado Toast",
       "desc": "Wholegrain toast with avocado",
       "price": 7.5,
       "link": "avocado.jpg"
     },
    {
-    "menuID": 6,
+    "menuID": 5,
     "name": "Spaghetti Bolognese",
     "desc": "Slow-cooked beef ragu with pasta",
     "price": 13.5,
     "link": "bolognese.jpg"
   },
   {
-    "menuID": 6,
+    "menuID": 5,
     "name": "Tiramisu",
     "desc": "Classic Italian coffee dessert",
     "price": 6.5,
@@ -588,14 +588,14 @@
   },
 
   {
-    "menuID": 7,
+    "menuID": 6,
     "name": "Chicken Teriyaki",
     "desc": "Grilled chicken with sweet soy glaze",
     "price": 11.5,
     "link": "teriyaki.jpg"
   },
   {
-    "menuID": 7,
+    "menuID": 6,
     "name": "Vegetable Dumplings",
     "desc": "Steamed dumplings with soy dip",
     "price": 7.0,
@@ -603,14 +603,14 @@
   },
 
   {
-    "menuID": 8,
+    "menuID": 7,
     "name": "Wiener Schnitzel",
     "desc": "Breaded veal served with lemon",
     "price": 18.0,
     "link": "schnitzel.jpg"
   },
   {
-    "menuID": 8,
+    "menuID": 7,
     "name": "Apple Strudel",
     "desc": "Warm pastry with apples and cinnamon",
     "price": 6.0,
@@ -618,14 +618,14 @@
   },
 
   {
-    "menuID": 9,
+    "menuID": 8,
     "name": "Margherita Pizza",
     "desc": "Tomato, mozzarella and basil",
     "price": 10.0,
     "link": "margherita.jpg"
   },
   {
-    "menuID": 9,
+    "menuID": 8,
     "name": "Lasagna",
     "desc": "Layered pasta with beef and cheese",
     "price": 12.5,
@@ -633,14 +633,14 @@
   },
 
   {
-    "menuID": 10,
+    "menuID": 9,
     "name": "Salmon Sushi Roll",
     "desc": "Fresh salmon with rice and seaweed",
     "price": 9.5,
     "link": "sushi.jpg"
   },
   {
-    "menuID": 10,
+    "menuID": 9,
     "name": "Miso Ramen",
     "desc": "Noodle soup with miso broth",
     "price": 12.0,
