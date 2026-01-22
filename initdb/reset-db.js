@@ -44,6 +44,10 @@ async function resetDatabase() {
       await client.query(roleSql, [user.email, ...extraVals]);
     };
 
+    // Clean Ratings
+    await client.query('TRUNCATE TABLE ratings RESTART IDENTITY CASCADE');
+
+
     // Seed Users
     console.log("Seeding Users...");
     for (const user of seedData.siteManagers)

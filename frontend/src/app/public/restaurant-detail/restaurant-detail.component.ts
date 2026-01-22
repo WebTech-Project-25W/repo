@@ -14,6 +14,11 @@ export class RestaurantDetailComponent implements OnInit {
   restaurant: any = null;
   menus: any[] = [];
   cart: { dish: any; quantity: number }[] = [];
+  averageRating: number = 0;
+  ratingCount: number = 0;
+  dishRatings: {
+    [dishId: number]: { average: number; count: number }
+  } = {};
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
 
@@ -30,9 +35,16 @@ export class RestaurantDetailComponent implements OnInit {
 
     // menus
     this.http
-      .get<any>(`http://localhost:3000/public/restaurants/${id}/menus`)
-      .subscribe((res) => (this.menus = res.menus));
-  }
+  .get<any>(`http://localhost:3000/public/restaurants/${id}/menus`)
+  .subscribe((res) => {
+    this.menus = res.menus;
+    this.loadAllDishRatings();
+  });
+
+    // restaurant rating
+    this.refreshRestaurantRating();
+
+    }
 
 get cartTotal(): number {
   return this.cart.reduce(
@@ -104,4 +116,85 @@ placeOrder() {
     }
   });
 }
+getRoundedRating(value: number): number {
+  return Math.floor(value || 0);
+}
+
+rateRestaurant(star: number) {
+  this.http.post<any>(
+    "http://localhost:3000/customer/ratings/restaurant",
+    {
+      restaurantId: this.restaurant.id,
+      rating: star,
+    }
+  ).subscribe({
+    next: (res) => {
+      this.averageRating = res.average;
+      this.ratingCount = res.count;
+    },
+    error: () => {
+      alert("Failed to submit rating");
+    }
+  });
+}
+
+refreshRestaurantRating() {
+  const id = this.route.snapshot.paramMap.get('id');
+
+  this.http
+    .get<any>(`http://localhost:3000/public/restaurants/${id}/ratings`)
+    .subscribe({
+      next: (res) => {
+        this.averageRating = res.average;
+        this.ratingCount = res.count;
+      },
+      error: (err) => {
+        console.error('Failed to load restaurant rating', err);
+      }
+    });
+}
+
+rateDish(dishId: number, star: number) {
+  this.http.post(
+    "http://localhost:3000/customer/ratings/dish",
+    {
+      dishId,
+      rating: star
+    }
+  ).subscribe({
+    next: () => {
+      this.refreshDishRating(dishId);
+    },
+    error: () => {
+      alert("Failed to submit dish rating");
+    }
+  });
+}
+
+
+refreshDishRating(dishId: number) {
+  this.http
+    .get<any>(`http://localhost:3000/public/dishes/${dishId}/ratings`)
+    .subscribe(res => {
+
+      const dish = this.menus
+        .flatMap(m => m.dishes)
+        .find(d => d.dishid === dishId);
+
+      if (dish) {
+        dish.averageRating = res.average;
+        dish.ratingCount = res.count;
+      }
+
+    });
+}
+
+loadAllDishRatings() {
+  this.menus.forEach((menu: any) => {
+    menu.dishes.forEach((dish: any) => {
+      this.refreshDishRating(dish.dishid);
+    });
+  });
+}
+
 }

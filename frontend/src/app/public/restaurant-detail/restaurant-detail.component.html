@@ -7,7 +7,7 @@
   <span class="arrow">←</span>
   <span>Restaurants</span>
 </a>
-
+ 
   <h1>{{ restaurant.name }}</h1>
 
   <!-- INFO CARD -->
@@ -15,6 +15,26 @@
     <div>📞 {{ restaurant.phonenumber }}</div>
     <div>🕒 {{ restaurant.openinghours }}</div>
     <div>📍 Zone {{ restaurant.deliveryzone }}</div>
+     <!-- RATING -->
+    <div class="rating">
+  <span class="stars">
+    <ng-container *ngFor="let star of [1,2,3,4,5]">
+      <span
+        class="star"
+        [class.filled]="star <= getRoundedRating(averageRating)"
+        [class.clickable]="isCustomerView"
+        (click)="rateRestaurant(star)"
+      >
+        ★
+      </span>
+    </ng-container>
+  </span>
+
+  <span class="rating-text">
+    {{ averageRating | number:'1.1-1' }} · {{ ratingCount }} ratings
+  </span>
+</div>
+
   </div>
 
   <!-- MENUS -->
@@ -29,15 +49,30 @@
       </div>
 
       <div class="dish-right">
-  <span class="price">{{ dish.price }} €</span>
 
-  <div class="qty-controls" *ngIf="isCustomer">
+    <div class="dish-rating">
+      <ng-container *ngFor="let star of [1,2,3,4,5]">
+        <span
+  class="star"
+  [class.filled]="star <= getRoundedRating(dish.averageRating || 0)"
+  (click)="rateDish(dish.dishid, star)"
+>
+  ★
+</span>
+
+      </ng-container>
+
+      <span class="rating-text">
+        {{ dish.averageRating || 0 }} · {{ dish.ratingCount || 0 }} ratings
+      </span>
+    </div>
+    <span class="price">{{ dish.price }} €</span>
+    <div class="qty-controls" *ngIf="isCustomer">
     <button (click)="decrease(dish)">−</button>
     <span>{{ getQuantity(dish) }}</span>
     <button (click)="increase(dish)">+</button>
-  </div>
-</div>
-
+    </div>
+    </div>
     </div>
   </div>
   <!-- CART (Customer only) -->
@@ -61,6 +96,5 @@
   <button class="place-order-btn" (click)="placeOrder()">
     Place Order
   </button>
-</div>
 </div>
 

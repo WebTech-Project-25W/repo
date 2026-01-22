@@ -140,6 +140,7 @@ CREATE TABLE OrderHistory
   changedBY varchar(100) NOT NULL REFERENCES public.AppUser(email)
 );
 
+DROP TABLE IF EXISTS ratings CASCADE;
 CREATE TABLE IF NOT EXISTS ratings (
   id SERIAL PRIMARY KEY,
   customerEmail VARCHAR(100) NOT NULL,
@@ -153,8 +154,13 @@ CREATE TABLE IF NOT EXISTS ratings (
   )
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS uniq_restaurant_rating
+ON ratings (customerEmail, restaurantId)
+WHERE restaurantId IS NOT NULL;
 
-
+CREATE UNIQUE INDEX IF NOT EXISTS uniq_dish_rating
+ON ratings (customerEmail, dishId)
+WHERE dishId IS NOT NULL;
 
 CREATE VIEW View_User_Roles AS
 SELECT 

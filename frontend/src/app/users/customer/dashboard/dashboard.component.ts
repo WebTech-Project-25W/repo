@@ -83,22 +83,9 @@ get filteredRestaurants() {
       }
     }
 
-    console.log({
-      name: r.name,
-      cuisine: r.cuisine,
-      etaMin: r.etaMin,
-      etaMax: r.etaMax,
-      matchesSearch,
-      matchesCuisine,
-      matchesEta,
-    });
-
     return matchesSearch && matchesCuisine && matchesEta;
   });
 }
-
-
-
 
 goToOrders() {
   this.router.navigate(['/customer/orders']);
@@ -124,6 +111,10 @@ private calculateEta(r: any) {
     etaMin: Math.max(base - 5, 10),
     etaMax: base + 5,
   };
+}
+
+getRoundedRating(value: number): number {
+  return Math.floor(value || 0);
 }
 
 }

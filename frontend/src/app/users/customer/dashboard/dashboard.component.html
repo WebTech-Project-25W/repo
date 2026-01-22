@@ -11,7 +11,7 @@
   <input
     class="search-input"
     type="text"
-    placeholder="Search by restaurant name or opening hours"
+    placeholder="Search restaurants"
     [(ngModel)]="searchText"
   />
 
@@ -33,12 +33,12 @@
 </div>
 
 
-        <div class="grid">
+<div class="grid">
   <a
     class="card"
     *ngFor="let r of filteredRestaurants"
     [routerLink]="['/customer/restaurants', r.id]"
-  >
+    >
     <div
       class="image"
       style="background-image: url('assets/images/my-rest.jpg')"
@@ -50,6 +50,22 @@
         <span class="badge open">Open</span>
       </div>
 
+<div class="rating" *ngIf="r.ratingCount !== undefined">
+  <span class="stars">
+    <ng-container *ngFor="let star of [1,2,3,4,5]">
+      <span
+        class="star"
+        [class.filled]="star <= getRoundedRating(r.averageRating)"
+      >
+        ★
+      </span>
+    </ng-container>
+  </span>
+
+  <span class="rating-text">
+    {{ r.averageRating | number:'1.1-1' }} ({{ r.ratingCount }})
+  </span>
+</div>
       <p>{{ r.address }}</p>
 
       <span class="mine">

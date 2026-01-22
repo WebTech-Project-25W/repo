@@ -403,3 +403,23 @@ select option {
   border-color: #3b82f6;
 }
 
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.star {
+  color: #ddd;
+  font-size: 14px;
+}
+
+.star.filled {
+  color: #f5a623;
+}
+
+.rating-text {
+  font-size: 13px;
+  color: #666;
+}

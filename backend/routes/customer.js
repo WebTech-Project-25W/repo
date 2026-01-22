@@ -168,8 +168,6 @@ router.get('/orders/:id', async (req, res) => {
   }
 });
 
-
-
 // GET /customer/profile
 router.get('/profile', async (req, res) => {
   const email = req.user.email;
@@ -238,6 +236,91 @@ router.put('/profile', async (req, res) => {
   }
 });
 
+// POST rating for a restaurant
+router.post("/ratings/restaurant", async (req, res) => {
+  const { restaurantId, rating } = req.body;
+  const customerEmail = req.user.email;
+
+  if (!restaurantId || !rating) {
+    return res.status(400).json({ error: "restaurantId and rating are required" });
+  }
+
+  try {
+    let statsQuery;
+    let statsParams;
+
+   await pool.query(
+  `
+  INSERT INTO ratings (customeremail, restaurantid, rating)
+  VALUES ($1, $2, $3)
+  ON CONFLICT (customeremail, restaurantid)
+  WHERE restaurantid IS NOT NULL
+  DO UPDATE
+  SET rating = EXCLUDED.rating
+  `,
+  [customerEmail, restaurantId, rating]
+);
+
+
+
+    statsQuery = `
+      SELECT
+        ROUND(AVG(rating)::numeric, 1) AS average,
+        COUNT(*) AS count
+      FROM ratings
+      WHERE restaurantId = $1
+    `;
+    statsParams = [restaurantId];
+
+    const stats = await pool.query(statsQuery, statsParams);
+
+    res.json({
+      average: Number(stats.rows[0].average) || 0,
+      count: Number(stats.rows[0].count) || 0,
+    });
+  } catch (err) {
+    console.error("Failed to save restaurant rating", err);
+    res.status(500).json({ error: "Failed to save restaurant rating" });
+  }
+});
+
+// POST rating for a dish
+router.post("/ratings/dish", async (req, res) => {
+  const { dishId, rating } = req.body;
+  const customerEmail = req.user.email;
+
+  if (!dishId || !rating) {
+    return res.status(400).json({ error: "dishId and rating required" });
+  }
+
+  try {
+    const existing = await pool.query(
+      `SELECT id FROM ratings
+       WHERE customeremail = $1 AND dishid = $2`,
+      [customerEmail, dishId]
+    );
+
+    if (existing.rowCount > 0) {
+      await pool.query(
+        `UPDATE ratings
+         SET rating = $3
+         WHERE customeremail = $1 AND dishid = $2`,
+        [customerEmail, dishId, rating]
+      );
+    } else {
+      await pool.query(
+        `INSERT INTO ratings (customeremail, dishid, rating)
+         VALUES ($1, $2, $3)`,
+        [customerEmail, dishId, rating]
+      );
+    }
+
+    res.json({ message: "Dish rating saved" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to save dish rating" });
+  }
+});
 
 
 module.exports = router;

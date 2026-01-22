@@ -215,4 +215,21 @@ h1 {
   font-size: 16px;
   line-height: 1;
 }
+/* ===== STAR (global) ===== */
+.star {
+  font-size: 18px;
+  color: #ddd;
+}
+
+.star.filled {
+  color: #f5b301;
+}
+
+.star.clickable {
+  cursor: pointer;
+}
+
+.star.clickable:hover {
+  transform: scale(1.1);
+}
 
