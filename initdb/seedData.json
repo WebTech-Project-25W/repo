@@ -359,7 +359,63 @@
       "openingHours": "08:00-20:00",
       "deliveryZone": "A",
       "cuisine": "Asian"
-    }
+    },
+    {
+      "name": "Bella Napoli",
+      "owner": "R02",
+      "status": "approved",
+      "addr": "18 King Street, Richmond",
+      "postcode": "TW10 6RS",
+      "phone": "(0208) 9487321",
+      "openingHours": "10:00-21:30",
+      "deliveryZone": "A",
+      "cuisine": "Italian"
+},
+{
+      "name": "Golden Bamboo",
+      "owner": "R03",
+      "status": "approved",
+      "addr": "72 High Road, Finchley",
+      "postcode": "N12 9QH",
+      "phone": "(020) 83467922",
+      "openingHours": "11:00-22:00",
+      "deliveryZone": "B",
+      "cuisine": "Asian"
+},
+{
+      "name": "Alpen Stube",
+      "owner": "R04",
+      "status": "approved",
+      "addr": "5 Market Square, St Albans",
+      "postcode": "AL1 3HT",
+      "phone": "(01727) 853410",
+      "openingHours": "09:00-20:00",
+      "deliveryZone": "C",
+      "cuisine": "Austrian"
+},
+{
+      "name": "Roma Express",
+      "owner": "R05",
+      "status": "approved",
+      "addr": "41 Station Road, Watford",
+      "postcode": "WD17 1JU",
+      "phone": "(01923) 224589",
+      "openingHours": "11:30-22:30",
+      "deliveryZone": "B",
+      "cuisine": "Italian"
+},
+{
+      "name": "Sakura Kitchen",
+      "owner": "R06",
+      "status": "approved",
+      "addr": "29 Cherry Tree Lane, Ealing",
+      "postcode": "W5 4QS",
+      "phone": "(020) 85671234",
+      "openingHours": "10:30-21:00",
+      "deliveryZone": "A",
+      "cuisine": "Asian"
+}
+
   ],
   "reviews": [
     {
@@ -396,20 +452,61 @@
       "rating": 4,
       "desc": "Very charming bistro.",
       "time": "2025-12-20 13:20:00+01"
-    }
+    },
+    {
+      "restoID": 5,
+      "email": "Amy@abc.com",
+      "rating": 5,
+      "desc": "Healthy meals that actually taste great. Will definitely order again.",
+      "time": "2025-12-23 12:30:00+01"
+    },
+    {
+      "restoID": 6,
+      "email": "Cam@cambridge.edu.uk",
+      "rating": 4,
+      "desc": "Authentic flavours and friendly service. A solid choice overall.",
+      "time": "2025-12-24 19:45:00+01"
+    },
+    {
+      "restoID": 7,
+      "email": "Dan@deven.at",
+      "rating": 3,
+      "desc": "Food was decent but delivery took longer than expected.",
+      "time": "2025-12-26 20:15:00+01"
+      },
+      {
+  "restoID": 8,
+  "email": "Amy@abc.com",
+  "rating": 4,
+  "desc": "Comfort food done right. Portions were generous and very filling.",
+  "time": "2025-12-22 18:10:00+01"
+},
+{
+  "restoID": 9,
+  "email": "Emily@Ely.fr",
+  "rating": 5,
+  "desc": "Fresh ingredients and well-balanced dishes. Loved every bite!",
+  "time": "2025-12-27 13:05:00+01"
+},
+{
+  "restoID": 10,
+  "email": "Brian@bobble.co.uk",
+  "rating": 5,
+  "desc": "Healthy meals that actually taste great. Will definitely order again.",
+  "time": "2025-12-23 12:30:00+01"
+}
   ],
   "menus": [
     { "restoID": 0, "name": "Resto1 Menu", "desc": "Traditional dishes" },
-
     { "restoID": 1, "name": "YumYum Main", "desc": "Asian favourites" },
-    { "restoID": 1, "name": "YumYum Dinner", "desc": "Evening specials" },
-
     { "restoID": 2, "name": "Eatery Classics", "desc": "Italian classics" },
-
     { "restoID": 3, "name": "ScranFud Menu", "desc": "Comfort food" },
-
     { "restoID": 4, "name": "Nutri Healthy", "desc": "Balanced meals" },
-    { "restoID": 4, "name": "Nutri Breakfast", "desc": "Morning bowls" }
+    { "restoID": 5, "name": "Bella Napoli Specials", "desc": "Authentic Italian flavours" },
+    { "restoID": 6, "name": "Golden Bamboo Menu", "desc": "Fresh Asian delights" },
+    { "restoID": 7, "name": "Alpen Stube Classics", "desc": "Traditional Austrian cuisine" },
+    { "restoID": 8, "name": "Roma Express Menu", "desc": "Italian street favourites" },
+    { "restoID": 9, "name": "Sakura Kitchen Menu", "desc": "Japanese & Asian fusion" }
   ],
   "dishes": [
     {
@@ -474,8 +571,83 @@
       "desc": "Wholegrain toast with avocado",
       "price": 7.5,
       "link": "avocado.jpg"
-    }
+    },
+   {
+    "menuID": 6,
+    "name": "Spaghetti Bolognese",
+    "desc": "Slow-cooked beef ragu with pasta",
+    "price": 13.5,
+    "link": "bolognese.jpg"
+  },
+  {
+    "menuID": 6,
+    "name": "Tiramisu",
+    "desc": "Classic Italian coffee dessert",
+    "price": 6.5,
+    "link": "tiramisu.jpg"
+  },
+
+  {
+    "menuID": 7,
+    "name": "Chicken Teriyaki",
+    "desc": "Grilled chicken with sweet soy glaze",
+    "price": 11.5,
+    "link": "teriyaki.jpg"
+  },
+  {
+    "menuID": 7,
+    "name": "Vegetable Dumplings",
+    "desc": "Steamed dumplings with soy dip",
+    "price": 7.0,
+    "link": "dumplings.jpg"
+  },
+
+  {
+    "menuID": 8,
+    "name": "Wiener Schnitzel",
+    "desc": "Breaded veal served with lemon",
+    "price": 18.0,
+    "link": "schnitzel.jpg"
+  },
+  {
+    "menuID": 8,
+    "name": "Apple Strudel",
+    "desc": "Warm pastry with apples and cinnamon",
+    "price": 6.0,
+    "link": "strudel.jpg"
+  },
+
+  {
+    "menuID": 9,
+    "name": "Margherita Pizza",
+    "desc": "Tomato, mozzarella and basil",
+    "price": 10.0,
+    "link": "margherita.jpg"
+  },
+  {
+    "menuID": 9,
+    "name": "Lasagna",
+    "desc": "Layered pasta with beef and cheese",
+    "price": 12.5,
+    "link": "lasagna.jpg"
+  },
+
+  {
+    "menuID": 10,
+    "name": "Salmon Sushi Roll",
+    "desc": "Fresh salmon with rice and seaweed",
+    "price": 9.5,
+    "link": "sushi.jpg"
+  },
+  {
+    "menuID": 10,
+    "name": "Miso Ramen",
+    "desc": "Noodle soup with miso broth",
+    "price": 12.0,
+    "link": "ramen.jpg"
+  }
   ],
+
   "orders": [
     {
       "customerEmail": "Amy@abc.com",
@@ -684,6 +856,57 @@
     "customerEmail": "Emily@Ely.fr",
     "dishID": 0,
     "rating": 3
+  },
+  {
+    "customerEmail": "Amy@abc.com",
+    "restaurantID": 5,
+    "rating": 5
+  },
+  {
+    "customerEmail": "Brian@bobble.co.uk",
+    "restaurantID": 6,
+    "rating": 4
+  },
+  {
+    "customerEmail": "Cam@cambridge.edu.uk",
+    "restaurantID": 7,
+    "rating": 3
+  },
+  {
+    "customerEmail": "Dan@deven.at",
+    "restaurantID": 8,
+    "rating": 4
+  },
+  {
+    "customerEmail": "Emily@Ely.fr",
+    "restaurantID": 9,
+    "rating": 5
+  },
+
+  {
+    "customerEmail": "Amy@abc.com",
+    "dishID": 5,
+    "rating": 5
+  },
+  {
+    "customerEmail": "Brian@bobble.co.uk",
+    "dishID": 6,
+    "rating": 4
+  },
+  {
+    "customerEmail": "Cam@cambridge.edu.uk",
+    "dishID": 7,
+    "rating": 5
+  },
+  {
+    "customerEmail": "Dan@deven.at",
+    "dishID": 8,
+    "rating": 3
+  },
+  {
+    "customerEmail": "Emily@Ely.fr",
+    "dishID": 9,
+    "rating": 4
   }
 ]
 
