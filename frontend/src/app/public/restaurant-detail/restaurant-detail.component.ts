@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-restaurant-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './restaurant-detail.component.html',
   styleUrls: ['./restaurant-detail.component.css'],
 })
@@ -19,6 +20,8 @@ export class RestaurantDetailComponent implements OnInit {
   dishRatings: {
     [dishId: number]: { average: number; count: number }
   } = {};
+  reviewText: string = '';
+  reviews: any[] = [];
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
 
@@ -31,8 +34,10 @@ export class RestaurantDetailComponent implements OnInit {
     // restaurant info
     this.http
       .get<any>(`http://localhost:3000/public/restaurants/${id}`)
-      .subscribe((res) => (this.restaurant = res.restaurant));
-
+      .subscribe((res) => {
+    this.restaurant = res.restaurant;
+    this.loadRestaurantReviews();
+    });
     // menus
     this.http
   .get<any>(`http://localhost:3000/public/restaurants/${id}/menus`)
@@ -40,10 +45,10 @@ export class RestaurantDetailComponent implements OnInit {
     this.menus = res.menus;
     this.loadAllDishRatings();
   });
-
     // restaurant rating
     this.refreshRestaurantRating();
 
+  
     }
 
 get cartTotal(): number {
@@ -171,7 +176,6 @@ rateDish(dishId: number, star: number) {
   });
 }
 
-
 refreshDishRating(dishId: number) {
   this.http
     .get<any>(`http://localhost:3000/public/dishes/${dishId}/ratings`)
@@ -194,6 +198,48 @@ loadAllDishRatings() {
     menu.dishes.forEach((dish: any) => {
       this.refreshDishRating(dish.dishid);
     });
+  });
+}
+
+submitReview() {
+  if (!this.restaurant?.id) {
+    alert('Restaurant not loaded yet');
+    return;
+  }
+  
+  
+  this.http.post(
+    'http://localhost:3000/customer/reviews',
+    {
+      restaurantId: this.restaurant.id,
+      rating: Math.round(this.averageRating || 0),
+      description: this.reviewText
+    }
+  ).subscribe({
+    next: () => {
+      this.reviewText = '';
+      this.loadRestaurantReviews();
+    },
+    error: () => {
+      alert('Failed to submit review');
+    }
+  });
+}
+
+loadRestaurantReviews() {
+  if (!this.restaurant?.id) {
+    return;
+  }
+
+  this.http.get<any>(
+    `http://localhost:3000/public/reviews/${this.restaurant.id}`
+  ).subscribe({
+    next: (res) => {
+      this.reviews = res.reviews;
+    },
+    error: () => {
+      console.error('Failed to load reviews');
+    }
   });
 }
 

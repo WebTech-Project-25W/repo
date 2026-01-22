@@ -30,12 +30,49 @@
     </ng-container>
   </span>
 
-  <span class="rating-text">
+    <span class="rating-text">
     {{ averageRating | number:'1.1-1' }} · {{ ratingCount }} ratings
-  </span>
+    </span>
+    </div>
+  </div>
+
+<div class="reviews-section" *ngIf="reviews.length > 0">
+  <h3>Reviews</h3>
+  
+  <!-- Write Review -->
+<div class="review-form-card" *ngIf="isCustomerView">
+  <h4>Write a review</h4>
+
+  <!-- textarea -->
+  <textarea
+    class="review-textarea"
+    placeholder="Share your experience (optional)"
+    [(ngModel)]="reviewText"
+    rows="3"
+  ></textarea>
+
+  <!-- submit -->
+  <button class="review-submit" (click)="submitReview()">
+    Submit review
+  </button>
 </div>
 
+  <div *ngFor="let review of reviews" class="review-item">
+    <div class="review-rating">
+      {{ review.rating }} ★
+    </div>
+
+    <div class="review-text">
+      {{ review.description }}
+    </div>
+
+    <div class="review-date">
+      {{ review.timestamp | date:'short' }}
+    </div>
   </div>
+</div>
+
+
 
   <!-- MENUS -->
   <div class="menu-card" *ngFor="let menu of menus">

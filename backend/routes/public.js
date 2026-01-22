@@ -160,6 +160,34 @@ router.get("/dishes/:dishId/ratings", async (req, res) => {
   }
 });
 
+// GET textual reviews for a restaurant
+router.get('/reviews/:restaurantId', async (req, res) => {
+  const { restaurantId } = req.params;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        reviewid,
+        customeremail,
+        rating,
+        description,
+        timestamp
+      FROM review
+      WHERE restaurantid = $1
+      ORDER BY timestamp DESC
+      `,
+      [restaurantId]
+    );
+
+    res.json({
+      reviews: result.rows,
+    });
+  } catch (err) {
+    console.error('Failed to load reviews', err);
+    res.status(500).json({ error: 'Failed to load reviews' });
+  }
+});
 
 //..
 module.exports = router;

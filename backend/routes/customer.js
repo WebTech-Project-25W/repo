@@ -322,6 +322,42 @@ router.post("/ratings/dish", async (req, res) => {
   }
 });
 
+// POST textual review
+router.post("/reviews", async (req, res) => {
+  const { restaurantId, rating, description } = req.body;
+  const customerEmail = req.user.email;
+
+  if (!restaurantId || !rating) {
+    return res.status(400).json({
+      error: "restaurantId and rating are required",
+    });
+  }
+
+  if (rating < 1 || rating > 5) {
+    return res.status(400).json({
+      error: "rating must be between 1 and 5",
+    });
+  }
+
+  const timestamp = new Date();
+
+  try {
+    await pool.query(
+      `
+      INSERT INTO review (restaurantid, customeremail, rating, description, timestamp)
+      VALUES ($1, $2, $3, $4, $5)
+      `,
+      [restaurantId, customerEmail, rating, description || null, timestamp]
+    );
+
+    res.json({ message: "Review saved successfully" });
+  } catch (err) {
+    console.error("Failed to save review error:", err);
+    res.status(500).json({ error: "Failed to save review" });
+  }
+});
+
+
 
 module.exports = router;
 
