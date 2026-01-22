@@ -29,6 +29,13 @@
       <option value="30_60">30–60 min</option>
       <option value="OVER_60">60+ min</option>
     </select>
+
+    <select class="filter-pill" [(ngModel)]="sortByRating">
+      <option [ngValue]="null">Sort by rating</option>
+      <option value="desc">Rating: High → Low</option>
+      <option value="asc">Rating: Low → High</option>
+    </select>
+
   </div>
 </div>
 

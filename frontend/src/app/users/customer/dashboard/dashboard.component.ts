@@ -21,6 +21,7 @@ restaurants: any[] = [];
 searchText: string = '';
 selectedCuisine = 'ALL';
 selectedEta: 'ALL' | 'UNDER_30' | '30_60' | 'OVER_60' = 'ALL';
+sortByRating: 'desc' | 'asc' | null = null;
 
 constructor(
   private http: HttpClient,
@@ -63,7 +64,7 @@ cuisine: string[] = [
   ];
 
 get filteredRestaurants() {
-  return this.restaurants.filter((r) => {
+  let result = this.restaurants.filter((r) => {
     const matchesSearch =
       !this.searchText ||
       r.name.toLowerCase().includes(this.searchText.toLowerCase());
@@ -73,19 +74,41 @@ get filteredRestaurants() {
       r.cuisine?.toLowerCase() === this.selectedCuisine.toLowerCase();
 
     let matchesEta = true;
-    if (this.selectedEta !== 'ALL') {
-      if (this.selectedEta === 'UNDER_30') {
-        matchesEta = r.etaMax <= 30;
-      } else if (this.selectedEta === '30_60') {
-        matchesEta = r.etaMin >= 30 && r.etaMax <= 60;
-      } else if (this.selectedEta === 'OVER_60') {
-        matchesEta = r.etaMin >= 60;
-      }
-    }
+
+if (this.selectedEta !== 'ALL') {
+  const min = r.etaMin;
+  const max = r.etaMax;
+
+  if (this.selectedEta === 'UNDER_30') {
+    matchesEta = min < 30;
+  } 
+  else if (this.selectedEta === '30_60') {
+
+    matchesEta = max > 30 && min < 60;
+  } 
+  else if (this.selectedEta === 'OVER_60') {
+    matchesEta = max > 60;
+  }
+}
+
 
     return matchesSearch && matchesCuisine && matchesEta;
   });
+
+  if (this.sortByRating) {
+    result = result.sort((a, b) => {
+      const aRating = a.averageRating ?? 0;
+      const bRating = b.averageRating ?? 0;
+
+      return this.sortByRating === 'desc'
+        ? bRating - aRating
+        : aRating - bRating;
+    });
+  }
+
+  return result;
 }
+
 
 goToOrders() {
   this.router.navigate(['/customer/orders']);
@@ -116,5 +139,21 @@ private calculateEta(r: any) {
 getRoundedRating(value: number): number {
   return Math.floor(value || 0);
 }
+
+sortRestaurantsByRating() {
+  if (!this.sortByRating) return;
+
+  this.restaurants = [...this.restaurants].sort((a, b) => {
+    const aRating = a.averageRating || 0;
+    const bRating = b.averageRating || 0;
+
+    if (this.sortByRating === 'desc') {
+      return bRating - aRating; 
+    }
+
+    return aRating - bRating;
+  });
+}
+
 
 }
