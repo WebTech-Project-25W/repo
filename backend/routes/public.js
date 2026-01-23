@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../pool");
+const { menuOrderMap } = require("./menuOrderStore");
 
 // =====================================================
 // GET all approved restaurants (PUBLIC)
@@ -38,33 +39,49 @@ router.get("/restaurants", async (req, res) => {
   }
 });
 
-
 // =====================================================
 // GET menus + dishes of a restaurant (PUBLIC)
 // =====================================================
 router.get("/restaurants/:restaurantID/menus", async (req, res) => {
-  const { restaurantID } = req.params;
+  const restaurantID = Number(req.params.restaurantID);
 
   try {
+    const ownerRes = await pool.query(
+      "SELECT owneremail FROM restaurant WHERE id = $1 AND approvalstatus = 'approved'",
+      [restaurantID],
+    );
+
     const menus = await pool.query(
       `
       SELECT m.*
       FROM menu m
-      JOIN restaurant r ON r.id = m.restaurantid
       WHERE m.restaurantid = $1
-      AND r.approvalstatus = 'approved'
       `,
       [restaurantID],
     );
 
-    for (let menu of menus.rows) {
-      const dishes = await pool.query(`SELECT * FROM dish WHERE menuid = $1`, [
+    let menuRows = menus.rows;
+
+    if (ownerRes.rows.length > 0) {
+      const ownerEmail = ownerRes.rows[0].owneremail;
+      const savedOrder = menuOrderMap[ownerEmail];
+
+      if (savedOrder) {
+        const map = new Map();
+        menuRows.forEach((m) => map.set(m.menuid, m));
+
+        menuRows = savedOrder.map((id) => map.get(id)).filter(Boolean);
+      }
+    }
+
+    for (let menu of menuRows) {
+      const dishes = await pool.query("SELECT * FROM dish WHERE menuid = $1", [
         menu.menuid,
       ]);
       menu.dishes = dishes.rows;
     }
 
-    res.json({ menus: menus.rows });
+    res.json({ menus: menuRows });
   } catch (err) {
     console.error("PUBLIC MENUS ERROR:", err);
     res.status(500).json({ message: "Failed to load menus" });
@@ -108,8 +125,7 @@ AND approvalstatus = 'approved'
 });
 
 // GET average rating for a restaurant
-router.get('/restaurants/:id/ratings', async (req, res) => {
-
+router.get("/restaurants/:id/ratings", async (req, res) => {
   const restaurantId = req.params.id;
 
   try {
@@ -121,16 +137,16 @@ router.get('/restaurants/:id/ratings', async (req, res) => {
       FROM ratings
       WHERE restaurantid = $1
       `,
-      [restaurantId]
+      [restaurantId],
     );
 
     res.json({
       average: result.rows[0].average || 0,
-      count: Number(result.rows[0].count)
+      count: Number(result.rows[0].count),
     });
   } catch (err) {
-    console.error('Failed to fetch restaurant ratings', err);
-    res.status(500).json({ error: 'Failed to fetch ratings' });
+    console.error("Failed to fetch restaurant ratings", err);
+    res.status(500).json({ error: "Failed to fetch ratings" });
   }
 });
 
@@ -147,7 +163,7 @@ router.get("/dishes/:dishId/ratings", async (req, res) => {
       FROM ratings
       WHERE dishId = $1
       `,
-      [dishId]
+      [dishId],
     );
 
     res.json({
@@ -161,7 +177,7 @@ router.get("/dishes/:dishId/ratings", async (req, res) => {
 });
 
 // GET textual reviews for a restaurant
-router.get('/reviews/:restaurantId', async (req, res) => {
+router.get("/reviews/:restaurantId", async (req, res) => {
   const { restaurantId } = req.params;
 
   try {
@@ -177,15 +193,15 @@ router.get('/reviews/:restaurantId', async (req, res) => {
       WHERE restaurantid = $1
       ORDER BY timestamp DESC
       `,
-      [restaurantId]
+      [restaurantId],
     );
 
     res.json({
       reviews: result.rows,
     });
   } catch (err) {
-    console.error('Failed to load reviews', err);
-    res.status(500).json({ error: 'Failed to load reviews' });
+    console.error("Failed to load reviews", err);
+    res.status(500).json({ error: "Failed to load reviews" });
   }
 });
 

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { OwnerService } from '../../../services/owner.service';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +11,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-owner-dashboard',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, DatePipe],
+  imports: [NgIf, NgFor, FormsModule, DatePipe, DragDropModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -20,6 +23,21 @@ export class OwnerDashboardComponent implements OnInit {
   dishes: { [menuID: number]: any[] } = {};
   expandedMenus: { [menuID: number]: boolean } = {};
   loading = true;
+
+  onMenuDrop(event: CdkDragDrop<any[]>) {
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex,
+    );
+
+    const orderedMenuIds = this.menus.map((m) => m.menuid);
+
+    this.ownerService.updateMenuOrder(orderedMenuIds).subscribe({
+      error: () => alert('Failed to save menu order'),
+    });
+  }
+
   // ==========================
   // ANALYTICS
   // ==========================

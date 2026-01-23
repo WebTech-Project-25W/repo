@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../pool");
 const authenticate = require("../middleware/authenticate");
+const { menuOrderMap } = require("./menuOrderStore");
 
 router.use(authenticate);
 
@@ -151,12 +152,38 @@ router.get("/menus", async (req, res) => {
       `,
       [ownerUsername],
     );
+    const savedOrder = menuOrderMap[ownerUsername];
+
+    if (savedOrder) {
+      const map = new Map();
+      result.rows.forEach((m) => map.set(m.menuid, m));
+
+      const orderedMenus = savedOrder.map((id) => map.get(id)).filter(Boolean);
+
+      return res.json({ menus: orderedMenus });
+    }
 
     res.json({ menus: result.rows });
   } catch (err) {
     console.error("GET MENUS ERROR:", err);
     res.status(500).json({ message: "Failed to load menus" });
   }
+});
+
+// =====================================================
+// SAVE menu order (NO DB CHANGE)
+// =====================================================
+router.put("/menus/reorder", (req, res) => {
+  const ownerEmail = req.user.email;
+  const { menuIds } = req.body;
+
+  if (!Array.isArray(menuIds)) {
+    return res.status(400).json({ message: "Invalid menu order" });
+  }
+
+  menuOrderMap[ownerEmail] = menuIds;
+
+  res.json({ message: "Menu order saved" });
 });
 
 // =====================================================

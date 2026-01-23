@@ -15,6 +15,12 @@ export class OwnerService {
   // ===============================
   // MENUS
   // ===============================
+  updateMenuOrder(menuIds: number[]) {
+    return this.http.put(`${this.baseUrl}/menus/reorder`, {
+      menuIds,
+    });
+  }
+
   getMenus(): Observable<any> {
     return this.http.get(`${this.baseUrl}/menus`);
   }

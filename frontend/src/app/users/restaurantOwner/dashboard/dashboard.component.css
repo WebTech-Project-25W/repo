@@ -344,3 +344,36 @@ td {
 .restaurant-select button:active {
   transform: translateY(0);
 }
+/* ===== MENU DRAG UX ===== */
+
+.menu-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* drag handle */
+.drag-handle {
+  cursor: grab;
+  margin-right: 14px;
+  font-size: 20px;
+  user-select: none;
+  color: #666;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* placeholder shown while dragging */
+.cdk-drag-placeholder {
+  height: 80px;
+  background: #f1f7ff;
+  border: 2px dashed #1976d2;
+  border-radius: 8px;
+}
+
+/* smooth animation */
+.cdk-drag-animating {
+  transition: transform 200ms ease;
+}

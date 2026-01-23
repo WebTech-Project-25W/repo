@@ -60,10 +60,17 @@
       </div>
 
       <!-- MENU GRID -->
-      <div class="menu-grid">
-        <div *ngFor="let menu of menus" class="menu-card">
+      <div
+        class="menu-grid"
+        cdkDropList
+        [cdkDropListData]="menus"
+        (cdkDropListDropped)="onMenuDrop($event)"
+      >
+        <div *ngFor="let menu of menus" class="menu-card" cdkDrag>
           <!-- HEADER -->
           <div class="menu-card-header">
+            <div class="drag-handle" cdkDragHandle title="Drag menu">☰</div>
+
             <div>
               <h3>{{ menu.name }}</h3>
               <p class="muted">{{ menu.description }}</p>
