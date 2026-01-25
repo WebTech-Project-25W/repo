@@ -294,3 +294,54 @@ h1 {
 .review-submit:hover {
   opacity: 0.9;
 }
+
+.voucher {
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.voucher-row {
+  display: flex;
+  gap: 8px;
+}
+
+.voucher-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.voucher-input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.voucher-apply-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.voucher-apply-btn:hover {
+  opacity: 0.9;
+}
+
+.voucher-message {
+  font-size: 13px;
+}
+
+.voucher-message.success {
+  color: #2e7d32;
+}
+
+.voucher-message.error {
+  color: #c62828;
+}

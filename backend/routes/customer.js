@@ -357,6 +357,60 @@ router.post("/reviews", async (req, res) => {
   }
 });
 
+// POST voucher
+router.post("/voucher", async (req, res) => {
+  const { code, orderTotal } = req.body;
+
+  if (!code || !orderTotal || orderTotal <= 0) {
+    return res.status(400).json({
+      valid: false,
+      message: "Invalid request data"
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      "SELECT discount_percent, is_active FROM vouchers WHERE code = $1",
+      [code]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({
+        valid: false,
+        message: "Voucher not found"
+      });
+    }
+
+    const voucher = result.rows[0];
+
+    if (!voucher.is_active) {
+      return res.json({
+        valid: false,
+        message: "Voucher is inactive"
+      });
+    }
+
+    const discountAmount =
+      (orderTotal * voucher.discount_percent) / 100;
+
+    const finalTotal =
+      Math.max(orderTotal - discountAmount, 0);
+
+    res.json({
+      valid: true,
+      discountPercent: voucher.discount_percent,
+      discountAmount: Number(discountAmount.toFixed(2)),
+      finalTotal: Number(finalTotal.toFixed(2))
+    });
+
+  } catch (err) {
+    console.error("Voucher validation error:", err);
+    res.status(500).json({
+      valid: false,
+      message: "Server error while validating voucher"
+    });
+  }
+});
 
 
 module.exports = router;

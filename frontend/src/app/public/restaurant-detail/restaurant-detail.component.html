@@ -126,10 +126,56 @@
 
   <hr />
 
-  <div class="cart-total">
-    <strong>Total: </strong>
-    <strong>{{ cartTotal }} €</strong>
+  <!-- Voucher -->
+<div class="voucher">
+  <div class="voucher-row">
+    <input
+      class="voucher-input"
+      type="text"
+      placeholder="Voucher code"
+      [(ngModel)]="voucherCode"
+    />
+    <button
+      class="voucher-apply-btn"
+      (click)="applyVoucher()"
+    >
+      Apply
+    </button>
   </div>
+
+  <p
+    *ngIf="voucherMessage"
+    class="voucher-message"
+    [ngClass]="{
+      success: discountAmount > 0,
+      error: discountAmount === 0
+    }"
+  >
+    {{ voucherMessage }}
+  </p>
+</div>
+
+
+
+  <div class="cart-total">
+  <div>
+    <strong>Subtotal: </strong>
+    <span>{{ cartTotal }} €</span>
+  </div>
+
+  <div *ngIf="discountAmount > 0">
+    <strong>Discount:</strong>
+    <span>-{{ discountAmount }} €</span>
+  </div>
+
+  <div>
+    <strong>Total:</strong>
+    <span>
+      {{ finalTotal !== null ? finalTotal : cartTotal }} €
+    </span>
+  </div>
+</div>
+
   <button class="place-order-btn" (click)="placeOrder()">
     Place Order
   </button>

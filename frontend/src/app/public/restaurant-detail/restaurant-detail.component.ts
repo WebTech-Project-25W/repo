@@ -22,6 +22,11 @@ export class RestaurantDetailComponent implements OnInit {
   } = {};
   reviewText: string = '';
   reviews: any[] = [];
+  voucherCode: string = '';
+  discountAmount: number = 0;
+  finalTotal: number | null = null;
+  voucherMessage: string = '';
+
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
 
@@ -97,12 +102,22 @@ remove(item: any) {
 }
 
 placeOrder() {
+
+  const originalTotal = this.cartTotal;
+
+  const finalTotal =
+    this.finalTotal !== null ? this.finalTotal : originalTotal;
+
+  const discountRatio =
+    originalTotal > 0 ? finalTotal / originalTotal : 1;
+
   const payload = {
     restaurantId: this.restaurant.id,
     items: this.cart.map(c => ({
-      dishId: c.dish.dishid, 
+      dishId: c.dish.dishid,
       quantity: c.quantity,
-      price: c.dish.price
+
+      price: +(c.dish.price * discountRatio).toFixed(2)
     }))
   };
 
@@ -113,7 +128,12 @@ placeOrder() {
     next: res => {
       alert('Order placed successfully');
       console.log('Order created', res);
+
       this.cart = [];
+      this.finalTotal = null;
+      this.discountAmount = 0;
+      this.voucherCode = '';
+      this.voucherMessage = '';
     },
     error: err => {
       console.error('Order failed', err);
@@ -121,6 +141,8 @@ placeOrder() {
     }
   });
 }
+
+
 getRoundedRating(value: number): number {
   return Math.floor(value || 0);
 }
@@ -242,5 +264,33 @@ loadRestaurantReviews() {
     }
   });
 }
+
+applyVoucher() {
+  if (!this.voucherCode) return;
+
+  this.http.post<any>(
+    'http://localhost:3000/customer/voucher',
+    {
+      code: this.voucherCode,
+      orderTotal: this.cartTotal
+    }
+  ).subscribe({
+    next: (res) => {
+      if (res.valid) {
+        this.discountAmount = res.discountAmount;
+        this.finalTotal = res.finalTotal;
+        this.voucherMessage = `Voucher applied: -${res.discountAmount} €`;
+      } else {
+        this.discountAmount = 0;
+        this.finalTotal = null;
+        this.voucherMessage = res.message;
+      }
+    },
+    error: () => {
+      this.voucherMessage = 'Voucher validation failed';
+    }
+  });
+}
+
 
 }
