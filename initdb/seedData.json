@@ -454,42 +454,42 @@
       "time": "2025-12-20 13:20:00+01"
     },
     {
-      "restoID": 5,
+      "restoID": 4,
       "email": "Amy@abc.com",
       "rating": 5,
       "desc": "Healthy meals that actually taste great. Will definitely order again.",
       "time": "2025-12-23 12:30:00+01"
     },
     {
-      "restoID": 6,
+      "restoID": 5,
       "email": "Cam@cambridge.edu.uk",
       "rating": 4,
       "desc": "Authentic flavours and friendly service. A solid choice overall.",
       "time": "2025-12-24 19:45:00+01"
     },
     {
-      "restoID": 7,
+      "restoID": 6,
       "email": "Dan@deven.at",
       "rating": 3,
       "desc": "Food was decent but delivery took longer than expected.",
       "time": "2025-12-26 20:15:00+01"
       },
       {
-  "restoID": 8,
+  "restoID": 7,
   "email": "Amy@abc.com",
   "rating": 4,
   "desc": "Comfort food done right. Portions were generous and very filling.",
   "time": "2025-12-22 18:10:00+01"
 },
 {
-  "restoID": 9,
+  "restoID": 8,
   "email": "Emily@Ely.fr",
   "rating": 5,
   "desc": "Fresh ingredients and well-balanced dishes. Loved every bite!",
   "time": "2025-12-27 13:05:00+01"
 },
 {
-  "restoID": 10,
+  "restoID": 9,
   "email": "Brian@bobble.co.uk",
   "rating": 5,
   "desc": "Healthy meals that actually taste great. Will definitely order again.",
@@ -859,30 +859,34 @@
   },
   {
     "customerEmail": "Amy@abc.com",
-    "restaurantID": 5,
+    "restaurantID": 4,
     "rating": 5
   },
   {
     "customerEmail": "Brian@bobble.co.uk",
-    "restaurantID": 6,
+    "restaurantID": 5,
     "rating": 4
   },
   {
     "customerEmail": "Cam@cambridge.edu.uk",
-    "restaurantID": 7,
+    "restaurantID": 6,
     "rating": 3
   },
   {
     "customerEmail": "Dan@deven.at",
-    "restaurantID": 8,
+    "restaurantID": 7,
     "rating": 4
   },
   {
     "customerEmail": "Emily@Ely.fr",
+    "restaurantID": 8,
+    "rating": 5
+  },
+{
+    "customerEmail": "Cam@cambridge.edu.uk",
     "restaurantID": 9,
     "rating": 5
   },
-
   {
     "customerEmail": "Amy@abc.com",
     "dishID": 5,
@@ -907,6 +911,34 @@
     "customerEmail": "Emily@Ely.fr",
     "dishID": 9,
     "rating": 4
+  }
+  ],
+  
+  "vouchers": [
+  {
+    "code": "FOOD10",
+    "discountPercent": 10,
+    "isActive": true
+  },
+  {
+    "code": "WELCOME15",
+    "discountPercent": 15,
+    "isActive": true
+  },
+  {
+    "code": "STUDENT20",
+    "discountPercent": 20,
+    "isActive": true
+  },
+  {
+    "code": "WEEKEND5",
+    "discountPercent": 5,
+    "isActive": true
+  },
+  {
+    "code": "EXPIRED25",
+    "discountPercent": 25,
+    "isActive": false
   }
 ]
 

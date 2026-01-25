@@ -195,6 +195,18 @@ for (const rating of seedData.ratings) {
   }
 }
 
+// Seed Vouchers
+for (const voucher of seedData.vouchers) {
+  await client.query(
+    "INSERT INTO vouchers (code, discount_percent, is_active) VALUES ($1, $2, $3)",
+    [
+      voucher.code,
+      voucher.discountPercent,
+      voucher.isActive
+    ]
+  );
+}
+
     await client.query("COMMIT");
     console.log("--- Database Reset & Seeded Successfully ---");
   } catch (err) {

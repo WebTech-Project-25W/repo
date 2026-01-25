@@ -177,7 +177,12 @@ LEFT JOIN SiteManager s ON u.email = s.email
 LEFT JOIN RestaurantOwner r ON u.email = r.email
 LEFT JOIN Customer c ON u.email = c.email;
 
-
+CREATE TABLE vouchers (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    discount_percent INTEGER NOT NULL CHECK (discount_percent > 0 AND discount_percent <= 100),
+    is_active BOOLEAN NOT NULL DEFAULT true
+);
 
 
 -- INSERT INTO AppUser (email, password, firstname, lastname)
