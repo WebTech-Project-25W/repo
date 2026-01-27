@@ -11,6 +11,8 @@ import { RestaurantDetailComponent } from './public/restaurant-detail/restaurant
 
 import { AdminGuard } from './guards/admin.guard';
 import { OwnerGuard } from './guards/owner.guard';
+import { CustomerGuard } from './guards/customer.guard';
+
 import { HomeComponent } from './public/home/home.component';
 
 import { CustomerLayoutComponent } from './users/customer/layout/customer-layout/customer-layout.component';
@@ -85,7 +87,8 @@ export const routes: Routes = [
       redirectTo: 'dashboard',
       pathMatch: 'full'
     }
-  ]
+  ],
+  canActivate: [CustomerGuard]
 },
 
 
