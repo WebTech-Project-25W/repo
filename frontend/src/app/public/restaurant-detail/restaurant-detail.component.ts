@@ -26,6 +26,7 @@ export class RestaurantDetailComponent implements OnInit {
   discountAmount: number = 0;
   finalTotal: number | null = null;
   voucherMessage: string = '';
+  readonly CART_KEY = 'offline_cart';
 
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
@@ -33,6 +34,7 @@ export class RestaurantDetailComponent implements OnInit {
   isCustomerView = false;
 
   ngOnInit(): void {
+    this.restoreCart();
     this.isCustomerView = this.router.url.startsWith('/customer');
     const id = this.route.snapshot.paramMap.get('id');
 
@@ -77,6 +79,7 @@ increase(dish: any) {
       dish: dish, 
       quantity: 1
     });
+    this.saveCart();
   }
 }
 
@@ -90,7 +93,9 @@ decrease(dish: any) {
   if (item.quantity <= 0) {
    this.cart = this.cart.filter(i => i.dish.dishid !== dish.dishid);
   }
+  this.saveCart();
 }
+
 getQuantity(dish: any): number {
   const item = this.cart.find(i => i.dish.dishid === dish.dishid);
 
@@ -99,6 +104,7 @@ getQuantity(dish: any): number {
 
 remove(item: any) {
   this.cart = this.cart.filter(i => i.dish.id !== item.dish.id);
+  this.saveCart();
 }
 
 placeOrder() {
@@ -127,9 +133,9 @@ placeOrder() {
   ).subscribe({
     next: res => {
       alert('Order placed successfully');
-      console.log('Order created', res);
 
       this.cart = [];
+      localStorage.removeItem('offline_cart');
       this.finalTotal = null;
       this.discountAmount = 0;
       this.voucherCode = '';
@@ -292,5 +298,15 @@ applyVoucher() {
   });
 }
 
+saveCart() {
+  localStorage.setItem('offline_cart', JSON.stringify(this.cart));
+}
+
+restoreCart() {
+  const saved = localStorage.getItem('offline_cart');
+  if (saved) {
+    this.cart = JSON.parse(saved);
+  }
+}
 
 }
