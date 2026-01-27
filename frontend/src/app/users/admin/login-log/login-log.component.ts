@@ -5,13 +5,13 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-login-log-list',
+  selector: 'app-login-log',
   standalone: true,
   imports: [DatePipe, FormsModule],
-  templateUrl: './login-log-list.component.html',
-  styleUrl: './login-log-list.component.css'
+  templateUrl: './login-log.component.html',
+  styleUrl: './login-log.component.css'
 })
-export class LoginLogListComponent {
+export class LoginLogComponent {
   logs: LoginLog[] = [];
 
   constructor(
