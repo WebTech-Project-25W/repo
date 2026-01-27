@@ -52,7 +52,8 @@ CREATE TABLE Customer
   address varchar(100),
   postcode varchar(100),
   phoneNumber varchar(100),
-  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C'))
+  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C')),
+  points INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE SiteManager
@@ -177,6 +178,7 @@ LEFT JOIN SiteManager s ON u.email = s.email
 LEFT JOIN RestaurantOwner r ON u.email = r.email
 LEFT JOIN Customer c ON u.email = c.email;
 
+DROP TABLE IF EXISTS vouchers CASCADE;
 CREATE TABLE vouchers (
     id SERIAL PRIMARY KEY,
     code VARCHAR(50) NOT NULL UNIQUE,
@@ -184,6 +186,15 @@ CREATE TABLE vouchers (
     is_active BOOLEAN NOT NULL DEFAULT true
 );
 
+CREATE TABLE LoyaltyRedemption (
+  id SERIAL PRIMARY KEY,
+  customerEmail VARCHAR(100)
+    REFERENCES Customer(email)
+    ON DELETE CASCADE,
+  voucherCode VARCHAR(50) NOT NULL,
+  pointsSpent INTEGER NOT NULL,
+  redeemedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 -- INSERT INTO AppUser (email, password, firstname, lastname)
 -- VALUES 

@@ -62,4 +62,64 @@
     <p><strong>Address:</strong> {{ savedProfile.address }}</p>
   </div>
 
+  <!-- ===== Loyalty ===== -->
+<h2 style="margin-top: 32px;">Loyalty</h2>
+
+<div class="saved-info">
+  <p>
+    <strong>Loyalty points:</strong>
+    {{ savedProfile.points }}
+  </p>
+  <p style="color: #666; font-size: 14px; margin-top: 4px;">
+  You earn 1 loyalty point for every €10 spent.
+  </p>
+  <p style="color: #666; font-size: 14px; margin-top: 4px;">
+  💡 Weekend promotion: orders placed on Saturday and Sunday earn <strong>double points</strong>!!!
+</p>
+</div>
+
+<h3>Loyalty Rewards</h3>
+
+<div class="redeem-actions">
+  <button
+    class="redeem-btn"
+    *ngIf="savedProfile.points >= 5"
+    (click)="redeem('FOOD5')"
+  >
+    Redeem 5% voucher
+    <span>– 5 points</span>
+  </button>
+
+  <button
+    class="redeem-btn"
+    *ngIf="savedProfile.points >= 10"
+    (click)="redeem('FOOD10')"
+  >
+    Redeem 10% voucher
+    <span>– 10 points</span>
+  </button>
+</div>
+
+
+<p *ngIf="redeemedVoucher" class="redeem-success">
+  You received voucher code:
+  <strong>{{ redeemedVoucher }}</strong>
+</p>
+
+
+
+<h3>Reward History</h3>
+
+<ul *ngIf="rewardHistory.length > 0">
+  <li *ngFor="let r of rewardHistory">
+    Redeemed {{ r.vouchercode }}
+    ({{ r.pointsspent }} points)
+    on {{ r.redeemedat | date:'short' }}
+  </li>
+</ul>
+
+<p *ngIf="rewardHistory.length === 0">
+  No rewards redeemed yet.
+</p>
+
 </div>

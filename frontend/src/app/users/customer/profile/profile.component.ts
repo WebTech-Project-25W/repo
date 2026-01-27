@@ -17,19 +17,24 @@ export class ProfileComponent implements OnInit {
     firstname: '',
     lastname: '',
     phonenumber: '',
-    address: ''
+    address: '',
+    points: 0
   };
 
   savedProfile = {
     firstname: '',
     lastname: '',
     phonenumber: '',
-    address: ''
+    address: '',
+    points: 0
   };
 
   loading = false;
   error = '';
   success = '';
+
+  redeemedVoucher = '';
+  rewardHistory: any[] = [];
 
   constructor(
     private http: HttpClient,
@@ -38,6 +43,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProfile();
+    this.loadRewardHistory();
+
   }
 
 loadProfile() {
@@ -52,7 +59,8 @@ loadProfile() {
         firstname: data.profile.firstName,
         lastname: data.profile.lastName,
         phonenumber: data.profile.phone,
-        address: data.profile.address
+        address: data.profile.address,
+        points: data.profile.points
       };
 
       this.savedProfile = { ...this.profile };
@@ -66,29 +74,57 @@ loadProfile() {
   });
 }
 
-
-
-  save() {
+save() {
   this.success = '';
   this.error = '';
 
-  this.http
-    .put('http://localhost:3000/customer/profile', this.profile, {
-      withCredentials: true
-    })
-    .subscribe({
-      next: () => {
-        alert('Profile updated successfully!');
-        this.loadProfile();
-      },
-      error: () => {
-        alert('Failed to update profile. Please try again.');
-      }
-    });
+  const payload = {
+    firstname: this.profile.firstname,
+    lastname: this.profile.lastname,
+    phonenumber: this.profile.phonenumber,
+    address: this.profile.address
+  };
+
+  this.http.put(
+    'http://localhost:3000/customer/profile',
+    payload,
+    { withCredentials: true }
+  ).subscribe({
+    next: () => {
+      alert('Profile updated successfully!');
+      this.loadProfile(); 
+    },
+    error: () => {
+      alert('Failed to update profile. Please try again.');
+    }
+  });
 }
 
+redeem(code: string) {
+  this.http.post<any>(
+    'http://localhost:3000/customer/loyalty/redeem',
+    { voucherCode: code },
+    { withCredentials: true }
+  ).subscribe({
+    next: res => {
+      this.redeemedVoucher = res.voucherCode;
+      this.loadProfile();
+      this.loadRewardHistory(); 
+    },
+    error: err => {
+      alert(err.error?.error || 'Redeem failed');
+    }
+  });
+}
 
-  goBack(): void {
-    this.router.navigate(['/customer/dashboard']);
-  }
+loadRewardHistory() {
+  this.http.get<any[]>(
+    'http://localhost:3000/customer/loyalty/history',
+    { withCredentials: true }
+  ).subscribe({
+    next: data => this.rewardHistory = data,
+    error: err => console.error(err)
+  });
+}
+
 }

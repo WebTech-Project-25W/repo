@@ -46,12 +46,16 @@ router.get('/restaurants/:id/menu', async (req, res) => {
 
 // POST /customer/orders
 router.post('/orders', async (req, res) => {
-
   const restaurantId = req.body.restaurantId;
   const items = req.body.items;
 
   const customerEmail = req.user.email;
   const status = 'pending';
+
+  const orderTotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   try {
     const orderResult = await pool.query(
@@ -80,9 +84,31 @@ router.post('/orders', async (req, res) => {
       );
     }
 
+    let pointsEarned = Math.floor(orderTotal / 10);
+
+    const today = new Date();
+    const isWeekend = today.getDay() === 0 || today.getDay() === 6;
+    if (isWeekend) {
+      pointsEarned *= 2;
+    }
+
+    await pool.query(
+      `
+      UPDATE customer
+      SET points = points + $1
+      WHERE email = $2
+      `,
+      [pointsEarned, customerEmail]
+    );
+
     logOrder(orderId, status, customerEmail);
 
-    res.json({ message: 'Order created', orderId });
+    res.json({
+      message: 'Order created',
+      orderId,
+      pointsEarned
+    });
+
   } catch (err) {
     console.error('Order creation error:', err.message);
     res.status(500).json({ error: err.message });
@@ -180,7 +206,8 @@ router.get('/profile', async (req, res) => {
         u.firstname,
         u.lastname,
         c.address,
-        c.phonenumber
+        c.phonenumber,
+        c.points
       FROM appuser u
       LEFT JOIN customer c ON c.email = u.email
       WHERE u.email = $1
@@ -193,7 +220,8 @@ router.get('/profile', async (req, res) => {
     firstName: result.rows[0]?.firstname || '',
     lastName: result.rows[0]?.lastname || '',
     phone: result.rows[0]?.phonenumber || '',
-    address: result.rows[0]?.address || ''
+    address: result.rows[0]?.address || '',
+    points: result.rows[0]?.points ?? 0
   }
 });
     } catch (err) {
@@ -201,7 +229,6 @@ router.get('/profile', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
-
 
 // PUT /customer/profile
 router.put('/profile', async (req, res) => {
@@ -412,6 +439,89 @@ router.post("/voucher", async (req, res) => {
   }
 });
 
+// POST /customer/loyalty/redeem
+router.post('/loyalty/redeem', async (req, res) => {
+  const customerEmail = req.user.email;
+  const { voucherCode } = req.body;
+
+  let pointsCost;
+  if (voucherCode === 'FOOD5') {
+    pointsCost = 5;
+  } else if (voucherCode === 'FOOD10') {
+    pointsCost = 10;
+  } else {
+    return res.status(400).json({ error: 'Invalid reward' });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const result = await client.query(
+      'SELECT points FROM Customer WHERE email = $1 FOR UPDATE',
+      [customerEmail]
+    );
+
+    const currentPoints = result.rows[0].points;
+
+    if (currentPoints < pointsCost) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Not enough points' });
+    }
+
+    await client.query(
+      'UPDATE Customer SET points = points - $1 WHERE email = $2',
+      [pointsCost, customerEmail]
+    );
+
+    await client.query(
+      `INSERT INTO LoyaltyRedemption
+       (customerEmail, voucherCode, pointsSpent)
+       VALUES ($1, $2, $3)`,
+      [customerEmail, voucherCode, pointsCost]
+    );
+
+    await client.query('COMMIT');
+
+    res.json({
+      message: 'Reward redeemed successfully',
+      voucherCode
+    });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Redeem error:', err.message);
+    res.status(500).json({ error: 'Redeem failed' });
+  } finally {
+    client.release();
+  }
+});
+
+// GET /customer/loyalty/history
+router.get('/loyalty/history', async (req, res) => {
+  const customerEmail = req.user.email;
+
+  try {
+    const { rows } = await pool.query(
+      `
+      SELECT
+        voucherCode,
+        pointsSpent,
+        redeemedAt
+      FROM LoyaltyRedemption
+      WHERE customerEmail = $1
+      ORDER BY redeemedAt DESC
+      `,
+      [customerEmail]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error('Fetch loyalty history error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch loyalty history' });
+  }
+});
 
 module.exports = router;
 
