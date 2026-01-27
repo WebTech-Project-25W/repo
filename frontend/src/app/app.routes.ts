@@ -32,8 +32,29 @@ export const routes: Routes = [
 
   // 👨‍💼 SITE MANAGER (ADMIN)
   {
-    path: 'admin/dashboard',
+    path: 'admin',
     component: AdminDashboardComponent,
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./users/admin/dashboard/dashboard.component')
+            .then(m => m.AdminDashboardComponent)
+      },
+      {
+        path: 'order-log',
+        loadComponent: () =>
+          import('./users/admin/order-log/order-log.component')
+            .then(m => m.OrderLogComponent)
+      },
+      {
+        path: 'login-log',
+        loadComponent: () =>
+          import('./users/admin/login-log/login-log.component')
+            .then(m => m.LoginLogComponent)
+      },
+
+    ],
     canActivate: [AdminGuard],
   },
 
