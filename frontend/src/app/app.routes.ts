@@ -53,6 +53,18 @@ export const routes: Routes = [
           import('./users/admin/login-log/login-log.component')
             .then(m => m.LoginLogComponent)
       },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./users/admin/user-list/user-list.component')
+            .then(m => m.UserListComponent)
+      },    
+      {
+        path: 'restaurants',
+        loadComponent: () =>
+          import('./users/admin/restaurant-list/restaurant-list.component')
+            .then(m => m.RestaurantListComponent)
+      },           
 
     ],
     canActivate: [AdminGuard],
