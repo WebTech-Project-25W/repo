@@ -18,8 +18,22 @@ export class AdminService {
     return this.http.get<User[]>(`${this.apiUrl}/users`);
   }
 
-  getRestaurants() {
-    return this.http.get<Restaurant[]>(`${this.apiUrl}/restaurants`);
+  getRestaurants(restaurantId?: number, name?: string, owner?: string, status?: string, address?: string, phoneNum?: string, postcode?: string, cuisine?: string, deliveryzone?: string, limit?: number, offset?: number) {
+    let params = new HttpParams();
+
+    if (restaurantId !== undefined) { params = params.set('id', restaurantId); }
+    if (name) { params = params.set('name', name); }
+    if (owner) { params = params.set('owner', owner); }
+    if (status) { params = params.set('status', status); }
+    if (address) { params = params.set('address', address); }
+    if (phoneNum) { params = params.set('phoneNum', phoneNum); }
+    if (postcode) { params = params.set('postcode', postcode); }
+    if (cuisine) { params = params.set('cuisine', cuisine); }
+    if (deliveryzone) { params = params.set('deliveryZone', deliveryzone); }
+    if (limit !== undefined) { params = params.set('limit', limit.toString()); }
+    if (offset !== undefined) { params = params.set('offset', offset.toString()); }
+
+    return this.http.get<any>(`${this.apiUrl}/restaurants`, { params });
   }
 
   getLoginLogs(email?: string, status?: string, limit?: number, offset?: number) {
@@ -36,13 +50,13 @@ export class AdminService {
   getOrderLogs(orderId?: number, email?: string, status?: string, restaurant?: string, limit?: number, offset?: number) {
     let params = new HttpParams();
 
-    if (orderId  !== null && orderId !== undefined) { params = params.set('orderId', orderId.toString()); }
+    if (orderId !== null && orderId !== undefined) { params = params.set('orderId', orderId.toString()); }
     if (email) { params = params.set('customerEmail', email); }
     if (status) { params = params.set('status', status); }
     if (restaurant) { params = params.set('restaurant', restaurant); }
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
- 
+
     return this.http.get<any>(`${this.apiUrl}/order-logs`, { params });
   }
 

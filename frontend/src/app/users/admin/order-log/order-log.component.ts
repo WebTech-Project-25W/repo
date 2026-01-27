@@ -43,7 +43,6 @@ export class OrderLogComponent implements OnInit {
   loadLogs(): void {
     const offset = this.currentPage * this.limit;
 
-    // Note: Ensure getOrderLogs exists in your AdminService
     this.adminService.getOrderLogs(
       this.searchOrderId,
       this.searchEmail, 

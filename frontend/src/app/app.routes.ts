@@ -62,8 +62,8 @@ export const routes: Routes = [
       {
         path: 'restaurants',
         loadComponent: () =>
-          import('./users/admin/restaurant-list/restaurant-list.component')
-            .then(m => m.RestaurantListComponent)
+          import('./users/admin/restaurants/restaurants.component')
+            .then(m => m.RestaurantsComponent)
       },           
 
     ],
