@@ -40,16 +40,10 @@ export class AuthService {
   }
 
   resetPassword(newPassword: string): Observable<any> {
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
 
     return this.http.post(
       `${this.apiUrl}/reset-password`,
-      { password: newPassword },
-      { headers }
+      { password: newPassword }
     );
   }
 }

@@ -3,9 +3,9 @@ import { inject  } from '@angular/core';
 
 export const AdminGuard = () => {
   const router= inject(Router);
-  const token = localStorage.getItem('role');
+  const role = localStorage.getItem('role');
 
-  if (token && token === 'SiteManager') {
+  if (role && role === 'SiteManager') {
     return true
   }
 

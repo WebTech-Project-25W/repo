@@ -23,8 +23,7 @@
       this.authService.login(this.email, this.password).subscribe({
         next: (response) => {
           console.log('Login successful!', response);
-          localStorage.setItem('token', response.token); // Store the response including role and token
-          localStorage.setItem('role', response.role); // Store the response including role and token
+          localStorage.setItem('role', response.role); // Store the role
 
           const role = response.role;
           

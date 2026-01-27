@@ -3,9 +3,9 @@ import { inject  } from '@angular/core';
 
 export const CustomerGuard = () => {
   const router= inject(Router);
-  const token = localStorage.getItem('role');
+  const role = localStorage.getItem('role');
 
-  if (token && token === 'Customer') {
+  if (role && role === 'Customer') {
     return true
   }
 
