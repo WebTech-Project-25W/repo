@@ -22,6 +22,8 @@ searchText: string = '';
 selectedCuisine = 'ALL';
 selectedEta: 'ALL' | 'UNDER_30' | '30_60' | 'OVER_60' = 'ALL';
 sortByRating: 'desc' | 'asc' | null = null;
+recommendations: any[] = [];
+hasRecommendations = false;
 
 constructor(
   private http: HttpClient,
@@ -30,6 +32,7 @@ constructor(
 
 
 ngOnInit(): void {
+  this.loadRecommendations();
   this.http
     .get<any>('http://localhost:3000/public/restaurants')
     .subscribe({
@@ -123,8 +126,11 @@ private ZONE_TIME: Record<string, number> = {
   C: 35,
 };
 
-private PREP_TIME = 15;
+goToRestaurant(restaurantId: number) {
+  this.router.navigate(['/customer/restaurants', restaurantId]);
+}
 
+private PREP_TIME = 15;
 private calculateEta(r: any) {
   const zone = r.deliveryzone ?? 'B';
   const zoneMin = this.ZONE_TIME[zone] ?? 25;
@@ -155,5 +161,20 @@ sortRestaurantsByRating() {
   });
 }
 
+loadRecommendations() {
+  this.http.get<any>(
+    'http://localhost:3000/customer/recommendations',
+    { withCredentials: true }
+  ).subscribe({
+    next: res => {
+      this.recommendations = res.items;
+      this.hasRecommendations = this.recommendations.length > 0;
+    },
+    error: err => {
+      console.error('Failed to load recommendations', err);
+      this.hasRecommendations = false;
+    }
+  });
+}
 
 }

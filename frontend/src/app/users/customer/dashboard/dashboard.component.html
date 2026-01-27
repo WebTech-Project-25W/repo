@@ -39,6 +39,29 @@
   </div>
 </div>
 
+<div class="recommend-section" *ngIf="hasRecommendations">
+  <h2 class="recommend-title">
+    Recommended for you
+    <span class="recommend-subtitle">
+      Based on your previous orders
+    </span>
+  </h2>
+
+  <div class="recommend-list">
+    <div
+      class="recommend-card"
+      *ngFor="let dish of recommendations"
+      (click)="goToRestaurant(dish.restaurantid)"
+    >
+      <div class="recommend-name">{{ dish.name }}</div>
+      <div class="recommend-meta">
+        €{{ dish.price }} · {{ dish.restaurantname }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <div class="grid">
   <a

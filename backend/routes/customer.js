@@ -523,6 +523,44 @@ router.get('/loyalty/history', async (req, res) => {
   }
 });
 
+// GET /customer/recommendations
+router.get('/recommendations', async (req, res) => {
+  const customerEmail = req.user.email;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        d.dishid,
+        d.name,
+        d.price,
+        r.id   AS restaurantid,
+        r.name AS restaurantname,
+        SUM(oi.quantity) AS ordercount
+      FROM "Order" o
+      JOIN orderitem oi ON oi.orderid = o.orderid
+      JOIN dish d ON d.dishid = oi.dishid
+      JOIN restaurant r ON r.id = o.restaurantid
+      WHERE o.customeremail = $1
+      GROUP BY d.dishid, d.name, d.price, r.id, r.name
+      ORDER BY ordercount DESC
+      LIMIT 3
+      `,
+      [customerEmail]
+    );
+
+    res.json({
+      type: 'dish',
+      items: result.rows
+    });
+  } catch (err) {
+    console.error('Fetch recommendations error:', err);
+    res.status(500).json({ error: 'Failed to fetch recommendations' });
+  }
+});
+
+
+
 module.exports = router;
 
 async function logOrder(orderId, status, changedBy) {

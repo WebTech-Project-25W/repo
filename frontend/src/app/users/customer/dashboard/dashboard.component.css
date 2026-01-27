@@ -423,3 +423,53 @@ select option {
   font-size: 13px;
   color: #666;
 }
+
+.recommend-section {
+  margin: 24px 0 32px;
+}
+
+.recommend-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.recommend-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  color: #777;
+  margin-left: 8px;
+}
+
+.recommend-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.recommend-card {
+  min-width: 220px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recommend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.recommend-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.recommend-meta {
+  font-size: 13px;
+  color: #666;
+}
