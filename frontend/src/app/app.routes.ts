@@ -34,8 +34,54 @@ export const routes: Routes = [
 
   // 👨‍💼 SITE MANAGER (ADMIN)
   {
-    path: 'admin/dashboard',
+    path: 'admin',
     component: AdminDashboardComponent,
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./users/admin/overview/overview.component')
+            .then(m => m.OverviewComponent)
+      },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./users/admin/overview/overview.component')
+            .then(m => m.OverviewComponent)
+      },
+      {
+        path: 'order-log',
+        loadComponent: () =>
+          import('./users/admin/order-log/order-log.component')
+            .then(m => m.OrderLogComponent)
+      },
+      {
+        path: 'login-log',
+        loadComponent: () =>
+          import('./users/admin/login-log/login-log.component')
+            .then(m => m.LoginLogComponent)
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./users/admin/usersdisplay/users/users.component')
+            .then(m => m.UsersComponent)
+      },
+      {
+        path: 'restaurants',
+        loadComponent: () =>
+          import('./users/admin/restaurants/restaurants.component')
+            .then(m => m.RestaurantsComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./users/admin/profile/profile.component')
+            .then(m => m.ProfileComponent)
+      },
+
+
+    ],
     canActivate: [AdminGuard],
   },
 
@@ -48,39 +94,39 @@ export const routes: Routes = [
 
   // 👤 CUSTOMER (OTHER TEAMMATE / OPTIONAL)
   {
-  path: 'customer',
-  component: CustomerLayoutComponent,
-  children: [
-    {
-      path: 'dashboard',
-      loadComponent: () =>
-        import('./users/customer/dashboard/dashboard.component')
-          .then(m => m.CustomerDashboardComponent)
-    },
-    {
-      path: 'orders',
-      loadComponent: () =>
-        import('./users/customer/orders/orders.component')
-          .then(m => m.OrdersComponent)
-    },
-    {
-      path: 'profile',
-      loadComponent: () =>
-        import('./users/customer/profile/profile.component')
-          .then(m => m.ProfileComponent)
-    },
-    {
-     path: 'restaurants/:id',
+    path: 'customer',
+    component: CustomerLayoutComponent,
+    children: [
+      {
+        path: 'dashboard',
         loadComponent: () =>
-        import('./public/restaurant-detail/restaurant-detail.component')
-      .then(m => m.RestaurantDetailComponent)
-    },
-    {
-     path: 'orders/:orderId',
+          import('./users/customer/dashboard/dashboard.component')
+            .then(m => m.CustomerDashboardComponent)
+      },
+      {
+        path: 'orders',
         loadComponent: () =>
-        import('./users/customer/orders/order-details/order-details.component')
-      .then(m => m.OrderDetailsComponent)
-    },
+          import('./users/customer/orders/orders.component')
+            .then(m => m.OrdersComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./users/customer/profile/profile.component')
+            .then(m => m.ProfileComponent)
+      },
+      {
+        path: 'restaurants/:id',
+        loadComponent: () =>
+          import('./public/restaurant-detail/restaurant-detail.component')
+            .then(m => m.RestaurantDetailComponent)
+      },
+      {
+        path: 'orders/:orderId',
+        loadComponent: () =>
+          import('./users/customer/orders/order-details/order-details.component')
+            .then(m => m.OrderDetailsComponent)
+      },
 
     {
       path: '',

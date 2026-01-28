@@ -1,0 +1,107 @@
+<div class="restaurants-container">
+  <h2>Restaurants</h2>
+
+  <div class="filter-bar">
+    <input type="number" name="searchId" [(ngModel)]="searchRestaurantId" placeholder="Search by id..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchName" [(ngModel)]="searchName" placeholder="Search by name..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchOwner" [(ngModel)]="searchOwner" placeholder="Search by owner..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchAddress" [(ngModel)]="searchAddress" placeholder="Search by address..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchPostcode" [(ngModel)]="searchPostcode" placeholder="Search by postcode..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchPhoneNum" [(ngModel)]="searchPhoneNum" placeholder="Search by phone num..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchCuisine" [(ngModel)]="searchCuisine" placeholder="Search by cuisine..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="deliveryzone" [(ngModel)]="searchDeliveryZone" placeholder="Search by deliveryzone..."
+      (keyup.enter)="applyFilters()">
+
+    <select [(ngModel)]="searchStatus">
+      <option value="">All statuses</option>
+      <option value="pending">pending</option>
+      <option value="approved">approved</option>
+      <option value="rejected">rejected</option>
+      <option value="suspended">suspended</option>
+    </select>
+
+    <button (click)="applyFilters()" class="btn-search">Search</button>
+    <button (click)="clearFilters()" class="btn-clear">Clear</button>
+  </div>
+
+  <table class="restaurant-table">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>owner email</th>
+        <th>address</th>
+        <th>postcode</th>
+        <th>phone number</th>
+        <th>cuisine</th>
+        <th>delivery zone</th>
+        <th>status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (restaurant of restaurants; track restaurant.id) {
+      <tr>
+        <td>{{ restaurant.id }}</td>
+        <td>{{ restaurant.name }}</td>
+        <td>{{ restaurant.owneremail }}</td>
+        <td>{{ restaurant.address }}</td>
+        <td>{{ restaurant.postcode }}</td>
+        <td>{{ restaurant.phonenumber }}</td>
+        <td>{{ restaurant.cuisine }}</td>
+        <td>{{ restaurant.deliveryzone }}</td>
+        <td>
+          <select *ngIf="!restaurant.isUpdating" [class.status-pill]="true"
+            [attr.data-status]="restaurant.approvalstatus" [ngModel]="restaurant.approvalstatus"
+            (change)="onStatusChange($event, restaurant)">
+
+            <!-- <option value="pending">Pending</option> -->
+             <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'pending')" value="pending">Pending</option>
+            <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'approved')" value="approved">Approved</option>
+            <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'rejected')" value="rejected">Rejected</option>
+            <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'suspended')"value="suspended">Suspended</option>
+          </select>
+
+          <span *ngIf="restaurant.isUpdating" class="status-pill loading-label">
+            <span class="spinner"></span> Updating.
+          </span>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="8" class="no-data">No restaurants found.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="pagination-controls">
+    <div class="limit-selector">
+      <label for="limit">Rows per page:</label>
+      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+        <option [ngValue]="50">50</option>
+        <option [ngValue]="100">100</option>
+      </select>
+    </div>
+    <div class="page-navigation">
+
+      <button (click)="previousPage()" [disabled]="currentPage === 0">
+        Previous
+      </button>
+
+      <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
+
+      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">
+        Next
+      </button>
+    </div>
+  </div>
+</div>

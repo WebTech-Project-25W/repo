@@ -1,0 +1,56 @@
+<div class="overview-container">
+  <h2>Overview</h2>
+
+  <div class="key-statistics-container">
+    <h3>Key statistics</h3>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Orders</span>
+
+        @if (isLoadingStats) {
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+        } @else {
+        <span class="stat-value">{{ totalOrders }}</span>
+        }
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Total Revenue</span>
+
+        @if (isLoadingStats) {
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+        } @else {
+        <span class="stat-value">{{ revenue ?? 0 | currency:'EUR':'symbol':'1.0' }}</span>
+        }
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Total Logins</span>
+        @if (isLoadingStats) {
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+        } @else {
+        <span class="stat-value">{{ totalLogins }}</span>
+        }
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Meals Delivered</span>
+        @if (isLoadingStats) {
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+        } @else {
+        <span class="stat-value">{{ totalMealsDelivered }}</span>
+        }
+      </div>
+      
+    </div>
+  </div>
+</div>

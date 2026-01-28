@@ -3,84 +3,280 @@ const router = express.Router();
 const pool = require('../pool.js');
 
 router.get('/users', async (req, res) => {
-    try {
-        const query = {
-            text: 'SELECT * FROM AppUser ORDER BY email',
-            values: []
-        };
+  const { role, limit = 50, offset = 0 } = req.query;
 
-        const results = await pool.query(query);
+  try {
+    // validate role input
+    const allowedRoles = ['customer', 'restaurantowner', 'sitemanager'];
+    const table = role.toLowerCase();
 
-        if (results.rows.length <= 0) {
-            return res.status(404).json({ error: "Nothing found" });
-        }
-
-        res.status(200).json(results.rows);
-    } catch (error) {
-        console.error("Error while fetching users:", error.message);
-        res.status(500).json({ error: "Error while fetching users: " + error.message });
+    if (!allowedRoles.includes(table)) {
+      return res.status(400).json({ error: "Invalid role provided" });
     }
+
+    const query = {
+      // template literal is risky, but the input is being screened before being accepeted
+      text: `SELECT u.email, u.firstname, u.lastname, COUNT(*) OVER() as totalEntries
+        FROM appuser u JOIN ${role} r on u.email = r.email
+        WHERE 1=1`,
+      values: []
+    };
+
+    const keys = ['email', 'firstName', 'lastName'];
+    // dynamic filters
+    for (const key of keys) {
+      const value = req.query[key];
+      if (value) {
+        query.values.push(`%${value}%`);
+        query.text += ` AND u.${key} ILIKE $${query.values.length}`;
+      }
+    }
+
+    query.text += ` ORDER BY email DESC LIMIT $${query.values.length + 1} OFFSET $${query.values.length + 2}`;
+    query.values.push(limit, offset);
+
+
+    const results = await pool.query(query);
+
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.status(200).json({
+      metadata: {
+        totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: results.rows.map(row => {
+        const { totalentries, ...data } = row;
+        return data;
+      })
+    })
+
+  } catch (error) {
+    console.error("Error while fetching users:", error.message);
+    res.status(500).json({ error: "Error while fetching users: " + error.message });
+  }
+});
+
+router.get('/customers', async (req, res) => {
+  const {
+    email, firstName, lastName, status,
+    postcode, deliveryZone, limit = 50, offset = 0
+  } = req.query;
+
+  // JOIN AppUser and Customer
+  // totalEntries is calculated over the filtered results
+  let query = `
+    SELECT 
+      u.email, u.firstname, u.lastname, 
+      c.blockedstatus as status, c.address, 
+      c.postcode, c.phonenumber as phone, c.deliveryzone, c.points,
+      COUNT(*) OVER() as totalEntries
+    FROM AppUser u
+    JOIN Customer c ON u.email = c.email
+    WHERE 1=1`;
+
+  const params = [];
+
+  // Dynamic Filters
+  if (email) {
+    params.push(`%${email}%`);
+    query += ` AND u.email ILIKE $${params.length}`;
+  }
+  if (firstName) {
+    params.push(`%${firstName}%`);
+    query += ` AND u.firstname ILIKE $${params.length}`;
+  }
+  if (lastName) {
+    params.push(`%${lastName}%`);
+    query += ` AND u.lastname ILIKE $${params.length}`;
+  }
+  if (status) {
+    params.push(status); // Matches ENUM 'not-blocked', 'warned', 'blocked'
+    query += ` AND c.blockedstatus = $${params.length}`;
+  }
+  if (postcode) {
+    params.push(`%${postcode}%`);
+    query += ` AND c.postcode ILIKE $${params.length}`;
+  }
+  if (deliveryZone) {
+    params.push(deliveryZone); // Matches 'A', 'B', or 'C'
+    query += ` AND c.deliveryzone ILIKE $${params.length}`;
+  }
+
+  // Pagination
+  query += ` ORDER BY u.email ASC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+  params.push(limit, offset);
+
+  try {
+    const results = await pool.query(query, params);
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.status(200).json({
+      metadata: {
+        totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: results.rows.map(row => {
+        const { totalentries, ...data } = row;
+        return data;
+      })
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.patch('/customers/:email/blocked-status', async (req, res) => {
+  const customerEmail = req.params.email;
+  const updatedBlockedStatus = req.body.blockedStatus;
+
+  try {
+    const query = {
+      text: `UPDATE Customer 
+             SET blockedStatus = $1 
+             WHERE email = $2
+             RETURNING email, blockedStatus as status`,
+      values: [updatedBlockedStatus, customerEmail]
+    };
+
+    const results = await pool.query(query);
+
+    if (results.rows.length <= 0) {
+      return res.status(409).json({
+        error: `Could not update status. Either the user "${customerEmail}" doesn't exist, or the transition from the current state to "${updatedBlockedStatus}" is not permitted.`
+      });
+    }
+
+    res.status(200).json(results.rows[0]);
+
+  } catch (error) {
+    console.error(`Error while updating blocked status for: "${customerEmail}"`, error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 router.get('/restaurants', async (req, res) => {
-    try {
-        const query = {
-            text: 'SELECT * FROM restaurant ORDER BY id',
-            values: []
-        };
+  const { id, name, owner, status, address, phoneNum, postcode, cuisine, deliveryZone, limit = 50, offset = 0 } = req.query;
 
-        const results = await pool.query(query);
+  // Start with a base query
+  let query = `SELECT *, COUNT(*) OVER() as totalEntries FROM restaurant WHERE 1=1`;
+  const params = [];
 
-        if (results.rows.length <= 0) {
-            return res.status(404).json({ error: "Nothing found" });
-        }
+  // Dynamically add filters
+  if (id) {
+    params.push(`%${id}%`);
+    query += ` AND id = $${params.length}`;
+  }
 
-        res.status(200).json(results.rows);
-    } catch (error) {
-        console.error("Error while fetching restaurants:", error.message);
-        res.status(500).json({ error: "Error while fetching restaurants: " + error.message });
-    }
+  if (name) {
+    params.push(`%${name}%`);
+    query += ` AND name ILIKE $${params.length}`;
+  }
+
+
+  if (owner) {
+    params.push(`%${owner}%`);
+    query += ` AND owneremail ILIKE $${params.length}`;
+  }
+
+  if (status) {
+    params.push(status);
+    query += ` AND approvalstatus = $${params.length}`;
+  }
+
+  if (address) {
+    params.push(`%${address}%`);
+    query += ` AND address ILIKE $${params.length}`;
+  }
+
+  if (phoneNum) {
+    params.push(`%${phoneNum}%`);
+    query += ` AND phonenumber ILIKE $${params.length}`;
+  }
+
+  if (postcode) {
+    params.push(`%${postcode}%`);
+    query += ` AND postcode ILIKE $${params.length}`;
+  }
+
+  if (cuisine) {
+    params.push(`%${cuisine}%`);
+    query += ` AND cuisine ILIKE $${params.length}`;
+  }
+
+  if (deliveryZone) {
+    params.push(`%${deliveryZone}%`);
+    query += ` AND deliveryzone IlIKE $${params.length}`;
+  }
+
+  // Pagination and Ordering
+  query += ` ORDER BY id DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+  params.push(limit, offset);
+
+  try {
+    const results = await pool.query(query, params);
+
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.json({
+      metadata: {
+        totalEntries: totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: results.rows.map(row => {
+        const { totalEntries, ...data } = row;
+        return data;
+      })
+    });
+
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
 });
 
 router.patch('/restaurants/:id/approval-status', async (req, res) => {
-    const restaurantId = req.params.id; 
-    const updatedApprovalStatus = req.body.approvalStatus;
+  const restaurantId = req.params.id;
+  const updatedApprovalStatus = req.body.approvalStatus;
 
-    let permitedFromApprovalStatus = [];
-    switch(updatedApprovalStatus) {
-        case 'approved':
-            permitedFromApprovalStatus.push('suspended');
-        case 'rejected':
-            permitedFromApprovalStatus.push('pending');
-            break;
-        case 'suspended':
-            permitedFromApprovalStatus.push('approved');
-            break;
-        default:
-    }
+  let permitedFromApprovalStatus = [];
+  switch (updatedApprovalStatus) {
+    case 'approved':
+      permitedFromApprovalStatus.push('suspended');
+    case 'rejected':
+      permitedFromApprovalStatus.push('pending');
+      break;
+    case 'suspended':
+      permitedFromApprovalStatus.push('approved');
+      break;
+    default:
+  }
 
-    try {
-        const query = {
-            text: `UPDATE restaurant SET approvalstatus = $1
+  try {
+    const query = {
+      text: `UPDATE restaurant SET approvalstatus = $1
             WHERE "id" = $2 AND approvalstatus = ANY($3)
             RETURNING "id", approvalstatus`,
-            values: [updatedApprovalStatus, restaurantId, permitedFromApprovalStatus]
-        };
+      values: [updatedApprovalStatus, restaurantId, permitedFromApprovalStatus]
+    };
 
-        const results = await pool.query(query);
+    const results = await pool.query(query);
 
-        if (results.rows.length <= 0) {
-            return res.status(409).json({ error: `No restaurants with id "${restaurantId}" and valid approval status.` });
-        }
-
-        res.status(200).json(results.rows[0]);
-    } catch (error) {
-        console.error(`Error while approving restaurant with id: "${restaurantId}"`, error.message);
-        res.status(500).json({ error: `Error while approving restaurant with id: "${restaurantId}"` + error.message });
+    if (results.rows.length <= 0) {
+      return res.status(409).json({ error: `No restaurants with id "${restaurantId}" and valid approval status.` });
     }
+
+    res.status(200).json(results.rows[0]);
+  } catch (error) {
+    console.error(`Error while approving restaurant with id: "${restaurantId}"`, error.message);
+    res.status(500).json({ error: `Error while approving restaurant with id: "${restaurantId}"` + error.message });
+  }
 })
 
-router.get('/login-logs', async(req, res) => {
+router.get('/login-logs', async (req, res) => {
   const { email, status, limit = 50, offset = 0 } = req.query;
 
   // Start with a base query
@@ -108,15 +304,15 @@ router.get('/login-logs', async(req, res) => {
     const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
 
     res.json({
-        metadata: {
-            totalEntries: totalEntries,
-            limit: parseInt(limit),
-            offset: parseInt(offset),
-        },
-        data: results.rows.map( row => {
-            const { totalEntries, ...data } = row;
-            return data;
-        })
+      metadata: {
+        totalEntries: totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: results.rows.map(row => {
+        const { totalEntries, ...data } = row;
+        return data;
+      })
     });
 
   } catch (err) {
@@ -192,4 +388,79 @@ router.get('/order-logs', async (req, res) => {
   }
 });
 
+router.get('/key-stats', async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        (SELECT COUNT(*) FROM "Order") as "totalOrders",
+        (SELECT SUM(unitPrice * quantity) FROM OrderItem) as "revenueCents",
+        (SELECT COUNT(*) FROM LogInHistory WHERE status = 'Success') as "totalLogins",
+        (SELECT SUM(quantity) FROM OrderItem oi 
+         JOIN "Order" o ON oi.orderID = o.orderID 
+         WHERE o.status = 'delivered') as "totalMealsDelivered"
+    `;
+    const results = await pool.query(query);
+    res.json(results.rows[0]); // Returns { totalOrders: X, revenueCents: Y, ... }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /admin/profile
+router.get('/profile', async (req, res) => {
+  const email = req.user.email;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        u.email,
+        u.firstname,
+        u.lastname
+      FROM appuser u
+      LEFT JOIN sitemanager a ON a.email = u.email
+      WHERE u.email = $1
+      `,
+      [email]
+    );
+
+    res.json({
+      profile: {
+        firstName: result.rows[0]?.firstname || '',
+        lastName: result.rows[0]?.lastname || '',
+      }
+    });
+  } catch (err) {
+    console.error('Error fetching admin profile:', err);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+
+router.put('/profile', async (req, res) => {
+  const email = req.user.email;
+  const { firstname, lastname } = req.body;
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE appuser
+      SET firstname = $1,
+          lastname = $2
+      WHERE email = $3
+      RETURNING firstname, lastname
+      `,
+      [firstname, lastname, email]
+    );
+
+    res.json({ 
+      profile: {
+        firstName: result.rows[0]?.firstname || '',
+        lastName: result.rows[0]?.lastname || '',
+      },
+      message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
 module.exports = router;
