@@ -9,6 +9,24 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  getUsers(role: string, searchFilters: any, limit: number, offset: number) {
+    let params = new HttpParams();
+
+    params = params.set('role', role);
+    // params = params.set('searchFilters', JSON.stringify(searchFilters));
+
+    for (const key in searchFilters) {
+      const value = searchFilters[key];
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, value.toString());
+      }
+    }
+
+    if (limit !== undefined) { params = params.set('limit', limit.toString()); }
+    if (offset !== undefined) { params = params.set('offset', offset.toString()); }
+
+    return this.http.get<any>(`${this.apiUrl}/users`, { params });
+  }
 
   getCustomers(
     email?: string,
@@ -34,7 +52,7 @@ export class AdminService {
 
     return this.http.get<any>(`${this.apiUrl}/customers`, { params });
   }
-  
+
   updateBlockedStatus(userEmail: number, newStatus: string) {
     return this.http.patch(
       `${this.apiUrl}/customers/${userEmail}/blocked-status`,

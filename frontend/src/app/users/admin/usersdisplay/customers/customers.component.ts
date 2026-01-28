@@ -19,7 +19,7 @@ export class CustomersComponent implements OnInit {
   currentPage: number = 0;
   totalEntries: number = 0;
 
-  // Search filters (matching your provided JSON structure)
+  // Search filters
   searchEmail: string = '';
   searchFirstName: string = '';
   searchLastName: string = '';
