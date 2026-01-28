@@ -97,8 +97,6 @@ router.patch('/customers/:email/blocked-status', async (req, res) => {
   const customerEmail = req.params.email;
   const updatedBlockedStatus = req.body.blockedStatus;
 
-  console.log(updatedBlockedStatus);
-
   try {
     const query = {
       text: `UPDATE Customer 
