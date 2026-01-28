@@ -108,4 +108,8 @@ export class AdminService {
       { "approvalStatus": newStatus }
     );
   }
+
+  getKeyStats() {
+    return this.http.get<any>(`${this.apiUrl}/key-stats`);
+  }
 }
