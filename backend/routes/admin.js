@@ -22,6 +22,108 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.get('/customers', async (req, res) => {
+  const { 
+    email, firstName, lastName, status, 
+    postcode, deliveryZone, limit = 50, offset = 0 
+  } = req.query;
+
+  // JOIN AppUser and Customer
+  // totalEntries is calculated over the filtered results
+  let query = `
+    SELECT 
+      u.email, u.firstname, u.lastname, 
+      c.blockedstatus as status, c.address as addr, 
+      c.postcode, c.phonenumber as phone, c.deliveryzone, c.points,
+      COUNT(*) OVER() as totalEntries
+    FROM AppUser u
+    JOIN Customer c ON u.email = c.email
+    WHERE 1=1`;
+
+  const params = [];
+
+  // Dynamic Filters
+  if (email) {
+    params.push(`%${email}%`);
+    query += ` AND u.email ILIKE $${params.length}`;
+  }
+  if (firstName) {
+    params.push(`%${firstName}%`);
+    query += ` AND u.firstname ILIKE $${params.length}`;
+  }
+  if (lastName) {
+    params.push(`%${lastName}%`);
+    query += ` AND u.lastname ILIKE $${params.length}`;
+  }
+  if (status) {
+    params.push(status); // Matches ENUM 'not-blocked', 'warned', 'blocked'
+    query += ` AND c.blockedstatus = $${params.length}`;
+  }
+  if (postcode) {
+    params.push(`%${postcode}%`);
+    query += ` AND c.postcode ILIKE $${params.length}`;
+  }
+  if (deliveryZone) {
+    params.push(deliveryZone); // Matches 'A', 'B', or 'C'
+    query += ` AND c.deliveryzone = $${params.length}`;
+  }
+
+  // Pagination
+  query += ` ORDER BY u.email ASC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+  params.push(limit, offset);
+
+  try {
+    const results = await pool.query(query, params);
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.json({
+      metadata: {
+        totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: results.rows.map(row => {
+        const { totalentries, ...data } = row;
+        return data;
+      })
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.patch('/customers/:email/blocked-status', async (req, res) => {
+  const customerEmail = req.params.email;
+  const updatedBlockedStatus = req.body.blockedStatus;
+
+  console.log(updatedBlockedStatus);
+
+  try {
+    const query = {
+      text: `UPDATE Customer 
+             SET blockedStatus = $1 
+             WHERE email = $2
+             RETURNING email, blockedStatus as status`,
+      values: [updatedBlockedStatus, customerEmail]
+    };
+
+    const results = await pool.query(query);
+
+    if (results.rows.length <= 0) {
+      return res.status(409).json({ 
+        error: `Could not update status. Either the user "${customerEmail}" doesn't exist, or the transition from the current state to "${updatedBlockedStatus}" is not permitted.` 
+      });
+    }
+
+    res.status(200).json(results.rows[0]);
+    
+  } catch (error) {
+    console.error(`Error while updating blocked status for: "${customerEmail}"`, error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.get('/restaurants', async (req, res) => {
   const { id, name, owner, status, address, phoneNum, postcode, cuisine, deliveryZone, limit = 50, offset = 0 } = req.query;
 

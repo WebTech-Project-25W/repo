@@ -1,9 +1,5 @@
-import { Injectable, numberAttribute } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User } from '../model/user';
-import { Restaurant } from '../model/restaurant';
-import { LoginLog } from '../model/LoginLog';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +10,36 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
 
-  getUsers() {
-    return this.http.get<User[]>(`${this.apiUrl}/users`);
+  getCustomers(
+    email?: string,
+    firstName?: string,
+    lastName?: string,
+    status?: string,
+    postcode?: string,
+    deliveryzone?: string,
+    limit?: number,
+    offset?: number
+  ) {
+    let params = new HttpParams();
+
+    if (email) { params = params.set('email', email); }
+    if (firstName) { params = params.set('firstName', firstName); }
+    if (lastName) { params = params.set('lastName', lastName); }
+    if (status) { params = params.set('status', status); }
+    if (postcode) { params = params.set('postcode', postcode); }
+    if (deliveryzone) { params = params.set('deliveryZone', deliveryzone); }
+
+    if (limit !== undefined) { params = params.set('limit', limit.toString()); }
+    if (offset !== undefined) { params = params.set('offset', offset.toString()); }
+
+    return this.http.get<any>(`${this.apiUrl}/customers`, { params });
+  }
+  
+  updateBlockedStatus(userEmail: number, newStatus: string) {
+    return this.http.patch(
+      `${this.apiUrl}/customers/${userEmail}/blocked-status`,
+      { "blockedStatus": newStatus }
+    );
   }
 
   getRestaurants(restaurantId?: number, name?: string, owner?: string, status?: string, address?: string, phoneNum?: string, postcode?: string, cuisine?: string, deliveryzone?: string, limit?: number, offset?: number) {
