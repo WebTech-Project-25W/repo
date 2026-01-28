@@ -2,10 +2,10 @@ import { User } from "./user";
 
 export class customer extends User {
   status?: string;
-  addr?: string;
+  address?: string;
   postcode?: string;
   phone?: string;
-  deliveryZone?: string;
+  deliveryzone?: string;
 
   isUpdating?: boolean;
 }

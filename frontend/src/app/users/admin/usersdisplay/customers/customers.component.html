@@ -43,9 +43,9 @@
         <td>{{ customer.firstname }}</td>
         <td>{{ customer.lastname }}</td>
         <td>{{ customer.phone }}</td>
-        <td>{{ customer.addr }}</td>
+        <td>{{ customer.address }}</td>
         <td>{{ customer.postcode }}</td>
-        <td>{{ customer.deliveryZone }}</td>
+        <td>{{ customer.deliveryzone }}</td>
         <td>
           <select *ngIf="!customer.isUpdating" [class.status-pill]="true"
             [attr.data-status]="customer.status" [ngModel]="customer.status"

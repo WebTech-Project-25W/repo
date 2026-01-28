@@ -33,7 +33,7 @@ router.get('/customers', async (req, res) => {
   let query = `
     SELECT 
       u.email, u.firstname, u.lastname, 
-      c.blockedstatus as status, c.address as addr, 
+      c.blockedstatus as status, c.address, 
       c.postcode, c.phonenumber as phone, c.deliveryzone, c.points,
       COUNT(*) OVER() as totalEntries
     FROM AppUser u
@@ -65,7 +65,7 @@ router.get('/customers', async (req, res) => {
   }
   if (deliveryZone) {
     params.push(deliveryZone); // Matches 'A', 'B', or 'C'
-    query += ` AND c.deliveryzone = $${params.length}`;
+    query += ` AND c.deliveryzone ILIKE $${params.length}`;
   }
 
   // Pagination
