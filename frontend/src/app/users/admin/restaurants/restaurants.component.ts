@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './restaurants.component.html',
   styleUrl: './restaurants.component.css'
 })
@@ -92,6 +93,26 @@ export class RestaurantsComponent {
   onLimitChange(): void {
     this.currentPage = 0;
     this.loadRestaurants();
+  }
+
+  onStatusChange(event: any, restaurant: any) {
+    
+    const oldValue = restaurant.approvalstatus;
+    const newValue = event.target.value;
+    restaurant.isUpdating = true;
+
+    this.adminService.updateApprovalStatus(restaurant.id, newValue) 
+      .subscribe({
+        next: (response: any) => {
+          restaurant.approvalstatus = response.approvalstatus;
+          restaurant.isUpdating = false;
+        },
+        error: (err) => {
+          event.target.value = oldValue;
+          restaurant.isUpdating = false;
+          alert('failed to update status of restaurant: ' + restaurant.id);
+        }
+      })
   }
 
   nextPage(): void {

@@ -6,4 +6,6 @@ export class Restaurant{
   addr!: string;
   postcode!: string;
   phonenumber!: string;
+
+  isUpdating!: boolean;
 }

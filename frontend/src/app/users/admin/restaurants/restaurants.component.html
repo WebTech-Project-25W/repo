@@ -57,8 +57,18 @@
         <td>{{ restaurant.cuisine }}</td>
         <td>{{ restaurant.deliveryzone }}</td>
         <td>
-          <span [class.status-pill]="true" [attr.data-status]="restaurant.approvalstatus">
-            {{ restaurant.approvalstatus }}
+          <select *ngIf="!restaurant.isUpdating" [class.status-pill]="true"
+            [attr.data-status]="restaurant.approvalstatus" [ngModel]="restaurant.approvalstatus"
+            (change)="onStatusChange($event, restaurant)">
+
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="suspended">Suspended</option>
+          </select>
+
+          <span *ngIf="restaurant.isUpdating" class="status-pill loading-label">
+            <span class="spinner"></span> Updating.
           </span>
         </td>
       </tr>

@@ -59,7 +59,31 @@
 /* Color Mapping for ENUM Values */
 .status-pill[data-status="pending"]    { background: #fff3cd; color: #856404; } /* Yellow */
 .status-pill[data-status="approved"]  { background: #198754; color: #ffffff; } /* Solid Green */
+.status-pill[data-status="suspended"]  { background: #e0cffc; color: #6610f2; } /* Purple */
 .status-pill[data-status="rejected"]   { background: #f8d7da; color: #842029; } /* Red */
+
+.status-pill.loading-label { 
+  background: #e2e3e5; 
+  color: #41464b;
+  display: inline-flex;    
+  align-items: center;     
+  gap: 6px;                
+  border: 1px solid #ced4da; 
+}
+
+/* The Spinner inside the pill */
+.spinner {
+  width: 12px;            
+  height: 12px;
+  border: 2px solid rgba(65, 70, 75, 0.3); 
+  border-top-color: #41464b;               
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 /* Filter Bar Styles */
 .filter-bar {
