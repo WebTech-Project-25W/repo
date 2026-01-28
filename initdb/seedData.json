@@ -3,23 +3,47 @@
     {
       "email": "admin",
       "password": "admin",
-      "firstname": null,
-      "lastname": null
+      "firstname": "Henry",
+      "lastname": "Hoover"
     }
   ],
   "restaurantOwners": [
     {
       "email": "RO1",
       "password": "passRO1",
-      "firstname": null,
-      "lastname": null
+      "firstname": "David",
+      "lastname": "Smith"
     },
     {
       "email": "RO2",
       "password": "passRO2",
-      "firstname": null,
-      "lastname": null
-    }
+      "firstname": "Sam",
+      "lastname": "Pilkington"
+    },
+    {
+    "email": "d.smith@gastropub-group.co.uk",
+    "password": "passRO1",
+    "firstname": "David",
+    "lastname": "Smith"
+  },
+  {
+    "email": "sarah.jenkins@thegrillhouse.com",
+    "password": "passRO2",
+    "firstname": "Sarah",
+    "lastname": "Jenkins"
+  },
+  {
+    "email": "m.chen@oriental-bistro.net",
+    "password": "passRO3",
+    "firstname": "Marcus",
+    "lastname": "Chen"
+  },
+  {
+    "email": "elena.rodriguez@tapas-vibe.es",
+    "password": "passRO4",
+    "firstname": "Elena",
+    "lastname": "Rodriguez"
+  }
   ],
   "customers": [
     {
@@ -373,7 +397,7 @@
 },
 {
       "name": "Golden Bamboo",
-      "owner": "R03",
+      "owner": "d.smith@gastropub-group.co.uk",
       "status": "approved",
       "addr": "72 High Road, Finchley",
       "postcode": "N12 9QH",
@@ -384,7 +408,7 @@
 },
 {
       "name": "Alpen Stube",
-      "owner": "R04",
+      "owner": "sarah.jenkins@thegrillhouse.com",
       "status": "approved",
       "addr": "5 Market Square, St Albans",
       "postcode": "AL1 3HT",
@@ -395,7 +419,7 @@
 },
 {
       "name": "Roma Express",
-      "owner": "R05",
+      "owner": "m.chen@oriental-bistro.net",
       "status": "approved",
       "addr": "41 Station Road, Watford",
       "postcode": "WD17 1JU",
@@ -406,7 +430,7 @@
 },
 {
       "name": "Sakura Kitchen",
-      "owner": "R06",
+      "owner": "elena.rodriguez@tapas-vibe.es",
       "status": "approved",
       "addr": "29 Cherry Tree Lane, Ealing",
       "postcode": "W5 4QS",
