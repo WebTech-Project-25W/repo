@@ -71,6 +71,13 @@ export const routes: Routes = [
           import('./users/admin/restaurants/restaurants.component')
             .then(m => m.RestaurantsComponent)
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./users/admin/profile/profile.component')
+            .then(m => m.ProfileComponent)
+      },
+
 
     ],
     canActivate: [AdminGuard],

@@ -112,4 +112,17 @@ export class AdminService {
   getKeyStats() {
     return this.http.get<any>(`${this.apiUrl}/key-stats`);
   }
+
+  getProfile() {
+    return this.http.get<any>(`${this.apiUrl}/profile`)
+  }
+
+  updateProfile(firstName?: string, lastName?: string) {
+    const body = {
+      firstname: firstName,
+      lastname: lastName
+    };
+
+    return this.http.put<any>(`${this.apiUrl}/profile`, body)
+  }
 }
