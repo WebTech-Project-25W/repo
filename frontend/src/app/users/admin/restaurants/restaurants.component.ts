@@ -115,6 +115,28 @@ export class RestaurantsComponent {
       })
   }
 
+  isTransitionAllowed(currentStatus: string, targetStatus: string): boolean {
+  // Always allow keeping the current status
+  if (currentStatus === targetStatus) return true;
+
+  switch (currentStatus) {
+    case 'pending':
+      // From pending, you can only go to approved or rejected
+      return ['approved', 'rejected'].includes(targetStatus);
+    case 'approved':
+      // From approved, you can only suspend
+      return targetStatus === 'suspended';
+    case 'suspended':
+      // From suspended, you can only go back to approved
+      return targetStatus === 'approved';
+    case 'rejected':
+      // rejected is a final state
+      return false; 
+    default:
+      return false;
+  }
+}
+
   nextPage(): void {
     // Prevent navigating past the last page
     if (this.endIndex < this.totalEntries) {

@@ -61,10 +61,11 @@
             [attr.data-status]="restaurant.approvalstatus" [ngModel]="restaurant.approvalstatus"
             (change)="onStatusChange($event, restaurant)">
 
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-            <option value="suspended">Suspended</option>
+            <!-- <option value="pending">Pending</option> -->
+             <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'pending')" value="pending">Pending</option>
+            <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'approved')" value="approved">Approved</option>
+            <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'rejected')" value="rejected">Rejected</option>
+            <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'suspended')"value="suspended">Suspended</option>
           </select>
 
           <span *ngIf="restaurant.isUpdating" class="status-pill loading-label">
