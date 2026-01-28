@@ -22,26 +22,6 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// router.get('/restaurants', async (req, res) => {
-//     try {
-//         const query = {
-//             text: 'SELECT * FROM restaurant ORDER BY id',
-//             values: []
-//         };
-
-//         const results = await pool.query(query);
-
-//         if (results.rows.length <= 0) {
-//             return res.status(404).json({ error: "Nothing found" });
-//         }
-
-//         res.status(200).json(results.rows);
-//     } catch (error) {
-//         console.error("Error while fetching restaurants:", error.message);
-//         res.status(500).json({ error: "Error while fetching restaurants: " + error.message });
-//     }
-// });
-
 router.get('/restaurants', async (req, res) => {
   const { id, name, owner, status, address, phoneNum, postcode, cuisine, deliveryZone, limit = 50, offset = 0 } = req.query;
 
