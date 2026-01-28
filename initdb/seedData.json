@@ -28,7 +28,7 @@
       "firstname": "Amy",
       "lastname": "Peterson",
       "status": "not-blocked",
-      "addr": "1 Florabella Villas, Chalfont St Giles",
+      "address": "1 Florabella Villas, Chalfont St Giles",
       "postcode": "HP8 4PE",
       "phone": "(01494) 048820",
       "deliveryZone":"A"
@@ -39,7 +39,7 @@
       "firstname": "Brian",
       "lastname": "Benderson",
       "status": "not-blocked",
-      "addr": "46 Beatrice Avenue, Saltash",
+      "address": "46 Beatrice Avenue, Saltash",
       "postcode": "PL12 4NG",
       "phone": "(01752) 645533",
       "deliveryZone":"B"
@@ -50,7 +50,7 @@
       "firstname": "Cameron",
       "lastname": "Charleston",
       "status": "not-blocked",
-      "addr": "The Conifers, Sodyllt Bank, Dudleston",
+      "address": "The Conifers, Sodyllt Bank, Dudleston",
       "postcode": "SY12 9EJ",
       "phone": "(01978) 664871",
       "deliveryZone":"C"
@@ -61,7 +61,7 @@
       "firstname": "Daniel",
       "lastname": "Dealy",
       "status": "warned",
-      "addr": "Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham",
+      "address": "Apartment 7, The Colmore, 36 - 37 Cox Street, Birmingham",
       "postcode": "B3 1RZ",
       "phone": "(0121) 476 5706",
       "deliveryZone":"B"
@@ -72,7 +72,7 @@
       "firstname": "Emily",
       "lastname": "Ellington",
       "status": "blocked",
-      "addr": "14 Stour Road, Grays",
+      "address": "14 Stour Road, Grays",
       "postcode": "RM16 4BS",
       "phone": "(01375) 257756",
       "deliveryZone":"A"
