@@ -186,14 +186,14 @@ CREATE TABLE vouchers (
     is_active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE LoyaltyRedemption (
-  id SERIAL PRIMARY KEY,
-  customerEmail VARCHAR(100)
-    REFERENCES Customer(email)
-    ON DELETE CASCADE,
-  voucherCode VARCHAR(50) NOT NULL,
-  pointsSpent INTEGER NOT NULL,
-  redeemedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS LoyaltyRedemption (
+    id SERIAL PRIMARY KEY,
+    customerEmail VARCHAR(100)
+        REFERENCES Customer(email)
+        ON DELETE CASCADE,
+    voucherCode VARCHAR(50) NOT NULL,
+    pointsSpent INTEGER NOT NULL,
+    redeemedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- INSERT INTO AppUser (email, password, firstname, lastname)
