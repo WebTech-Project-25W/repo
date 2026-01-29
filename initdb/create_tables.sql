@@ -186,6 +186,7 @@ CREATE TABLE vouchers (
     is_active BOOLEAN NOT NULL DEFAULT true
 );
 
+DROP TABLE IF EXISTS LoyaltyRedemption;
 CREATE TABLE LoyaltyRedemption (
   id SERIAL PRIMARY KEY,
   customerEmail VARCHAR(100)
