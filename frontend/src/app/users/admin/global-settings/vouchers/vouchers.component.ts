@@ -21,8 +21,12 @@ export class VouchersComponent {
   // Search filters
   searchId?: number;
   searchCode: string = '';
-  // searchLastName: string = '';
+  searchDiscountMin?: number;
+  searchDiscountMax?: number;
+  searchIsActive?: boolean;
   //search range
+
+  previousDiscountValue?: number;
 
   constructor(private adminService: AdminService) { }
 
@@ -45,7 +49,10 @@ export class VouchersComponent {
     this.adminService.getVouchers(
       {
         id: this.searchId,
-        code: this.searchCode
+        code: this.searchCode,
+        discountMin: this.searchDiscountMin,
+        discountMax: this.searchDiscountMax,
+        isActive: this.searchIsActive
       },
       this.limit,
       offset
@@ -58,6 +65,41 @@ export class VouchersComponent {
         console.error('Error fetching vouchers:', err);
       }
     });
+  }
+
+  savePreviousDiscountValue(value?: number) {
+    this.previousDiscountValue = value;
+  }
+
+  checkAndApplyFilters(minMax: string, value?: number): void {
+    if (value == undefined) {
+      this.clearFilters();
+      return;
+    }
+    if (!value || isNaN(value) || value > 100 || value < 0) {
+      console.error('invalid discount filter value');
+      return;
+    }
+
+    if (minMax === 'min') {
+      if (this.searchDiscountMax) {
+        if (value > this.searchDiscountMax) {
+          alert("Min cannot be greater than Max. Reverting...");
+          this.searchDiscountMin = this.previousDiscountValue;
+          return
+        }
+      }
+    }
+    else if (minMax === 'max') {
+      if (this.searchDiscountMin) {
+        if (value < this.searchDiscountMin) {
+          alert("Max cannot be lesser than Min. Reverting...");
+          this.searchDiscountMax = this.previousDiscountValue;
+          return
+        }
+      }
+    }
+    this.applyFilters();
   }
 
   applyFilters(): void {

@@ -6,7 +6,20 @@
       (keyup.enter)="applyFilters()">
     <input type="text" name="searchCode" [(ngModel)]="searchCode" placeholder="Search by voucher code..."
       (keyup.enter)="applyFilters()">
+    <input type="number" min="0" max="100" name="searchDiscountMin" [(ngModel)]="searchDiscountMin"
+      placeholder="Min" 
+      (change)="checkAndApplyFilters('min', searchDiscountMin)"
+      (focus)="savePreviousDiscountValue(searchDiscountMin)">
+    <input type="number" min="0" max="100" name="searchDiscountMax" [(ngModel)]="searchDiscountMax"
+      placeholder="Max" 
+      (change)="checkAndApplyFilters('max', searchDiscountMax)"
+      (focus)="savePreviousDiscountValue(searchDiscountMax)">
 
+    <select [(ngModel)]="searchIsActive">
+      <option value="">      </option>
+      <option value="true">Active</option>
+      <option value="false">Inactive</option>
+    </select>
     <button (click)="applyFilters()" class="btn-search">Search</button>
     <button (click)="clearFilters()" class="btn-clear">Clear</button>
   </div>

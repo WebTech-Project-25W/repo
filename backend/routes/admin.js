@@ -407,7 +407,7 @@ router.get('/key-stats', async (req, res) => {
 });
 
 router.get('/vouchers', async (req, res) => {
-  const { role, limit = 50, offset = 0 } = req.query;
+  const { limit = 50, offset = 0 } = req.query;
 
   try {
     const query = {
@@ -418,9 +418,9 @@ router.get('/vouchers', async (req, res) => {
       values: []
     };
 
-    // const keys = ['email', 'firstName', 'lastName'];
     // dynamic filters
-    const { id, code, discount_percent, is_active }  = req.query;
+    const { id, code, discountMin, discountMax, isActive } = req.query;
+    console.log(req.query);
 
     if (id) {
       query.values.push(id);
@@ -431,7 +431,21 @@ router.get('/vouchers', async (req, res) => {
       query.values.push(`%${code}%`);
       query.text += ` AND code ILIKE $${query.values.length}`;
     }
-    // further search filters
+
+    if (discountMin) {
+      query.values.push(discountMin);
+      query.text += ` AND discount_percent >= $${query.values.length}`;
+    }
+
+    if (discountMax) {
+      query.values.push(discountMax);
+      query.text += ` AND discount_percent <= $${query.values.length}`;
+    }
+
+    if (isActive) {
+      query.values.push(isActive);
+      query.text += ` AND is_active = $${query.values.length}`;
+    }
 
     query.text += ` ORDER BY id DESC LIMIT $${query.values.length + 1} OFFSET $${query.values.length + 2}`;
     query.values.push(limit, offset);
@@ -506,12 +520,13 @@ router.put('/profile', async (req, res) => {
       [firstname, lastname, email]
     );
 
-    res.json({ 
+    res.json({
       profile: {
         firstName: result.rows[0]?.firstname || '',
         lastName: result.rows[0]?.lastname || '',
       },
-      message: 'Profile updated successfully' });
+      message: 'Profile updated successfully'
+    });
   } catch (err) {
     console.error('Update profile error:', err);
     res.status(500).json({ error: 'Failed to update profile' });
