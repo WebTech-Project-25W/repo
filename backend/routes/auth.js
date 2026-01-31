@@ -19,9 +19,9 @@ router.post("/login", async (req, res) => {
 
   try {
     const query = `
-    SELECT email, password, role 
-    FROM View_User_Roles
-    WHERE email = $1`;
+    SELECT r.email, r.password, r.role, c.blockedStatus
+    FROM View_User_Roles r LEFT JOIN customer c ON r.email = c.email
+    WHERE r.email = $1`;
     const results = await pool.query(query, [email]);
 
     // handle no match
@@ -39,6 +39,13 @@ router.post("/login", async (req, res) => {
     if (!isMatch) {
       logLogInAttempt(email, req.ip, "Failure", req.headers["user-agent"]);
       return res.status(401).json({ message: invalidMessage });
+    }
+
+    //check if user is blocked
+    const blockedStatus = user.blockedstatus;
+    if (blockedStatus && blockedStatus === 'blocked') {
+      logLogInAttempt(email, req.ip, "Failure", req.headers["user-agent"]);
+      return res.status(403).json({ error: "account_blocked" });
     }
 
     // password match: form the token with userData
