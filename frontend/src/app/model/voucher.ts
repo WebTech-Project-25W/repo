@@ -3,4 +3,6 @@ export class Voucher {
   code!: string;
   discount_percent!: number;
   is_active!: boolean;
+
+  isBeingEdited?: boolean;
 }

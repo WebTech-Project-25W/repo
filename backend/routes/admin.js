@@ -420,7 +420,6 @@ router.get('/vouchers', async (req, res) => {
 
     // dynamic filters
     const { id, code, discountMin, discountMax, isActive } = req.query;
-    console.log(req.query);
 
     if (id) {
       query.values.push(id);
@@ -470,6 +469,42 @@ router.get('/vouchers', async (req, res) => {
   } catch (error) {
     console.error("Error while vouchers users:", error.message);
     res.status(500).json({ error: "Error while vouchers users: " + error.message });
+  }
+});
+
+router.put('/voucher/:id', async (req, res) => {
+  const voucherId = req.params.id;
+  const updatedData = req.body;
+
+  // check that discount is valid
+  if (updatedData.discount < 0 || updatedData.discount > 100) {
+    return res.status(400).json({ message: "Discount percentage invalid"});
+  }
+
+  try {
+    const query = {
+      text: `UPDATE vouchers SET
+        code = $1,
+        discount_percent = $2,
+        is_active = $3
+        WHERE id = $4
+        RETURNING id, code, discount_percent, is_active`,
+      values: [updatedData.code, updatedData.discount, updatedData.isActive, voucherId]
+    };
+
+    const result = await pool.query(query);
+
+    if (result.rows[0] === 0) {
+      return res.status(404).json({ message: "Voucher not found" });
+    }
+
+    res.status(200).json({
+      message: "Voucher updated successfully",
+      voucher: result.rows[0]
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

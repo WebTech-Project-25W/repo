@@ -67,6 +67,30 @@ export class VouchersComponent {
     });
   }
 
+  editVoucher(voucher: Voucher) {
+    voucher.isBeingEdited = true
+  }
+
+  cancelEdit(voucher: Voucher) {
+    voucher.isBeingEdited = false;
+  }
+
+  saveVoucher(voucher: Voucher, code: string, discount: number, isActive: boolean) {
+    // put to update voucher
+    this.adminService.putVoucher(voucher.id, code, discount, isActive)
+      .subscribe({
+        next: (resp: any) => {
+          Object.assign(voucher, resp.voucher);
+          voucher.isBeingEdited = false;
+      },
+        error: (err: any) => {
+          voucher.isBeingEdited = false;
+          alert(err.error.message);
+          console.error('Error saving voucher: ', voucher.id);
+      }
+    })
+  }
+
   savePreviousDiscountValue(value?: number) {
     this.previousDiscountValue = value;
   }

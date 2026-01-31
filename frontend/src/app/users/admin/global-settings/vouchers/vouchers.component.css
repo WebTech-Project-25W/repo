@@ -27,6 +27,17 @@
   vertical-align: middle;
 }
 
+.add-voucher-button-container,
+.edit-voucher-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-voucher-button {
+  margin: 4px
+}
+
 /* Filter Bar Styles */
 .filter-bar {
   display: flex;

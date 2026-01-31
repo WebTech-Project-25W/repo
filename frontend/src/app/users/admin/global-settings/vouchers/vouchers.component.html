@@ -6,17 +6,13 @@
       (keyup.enter)="applyFilters()">
     <input type="text" name="searchCode" [(ngModel)]="searchCode" placeholder="Search by voucher code..."
       (keyup.enter)="applyFilters()">
-    <input type="number" min="0" max="100" name="searchDiscountMin" [(ngModel)]="searchDiscountMin"
-      placeholder="Min" 
-      (change)="checkAndApplyFilters('min', searchDiscountMin)"
-      (focus)="savePreviousDiscountValue(searchDiscountMin)">
-    <input type="number" min="0" max="100" name="searchDiscountMax" [(ngModel)]="searchDiscountMax"
-      placeholder="Max" 
-      (change)="checkAndApplyFilters('max', searchDiscountMax)"
-      (focus)="savePreviousDiscountValue(searchDiscountMax)">
+    <input type="number" min="0" max="100" name="searchDiscountMin" [(ngModel)]="searchDiscountMin" placeholder="Min"
+      (change)="checkAndApplyFilters('min', searchDiscountMin)" (focus)="savePreviousDiscountValue(searchDiscountMin)">
+    <input type="number" min="0" max="100" name="searchDiscountMax" [(ngModel)]="searchDiscountMax" placeholder="Max"
+      (change)="checkAndApplyFilters('max', searchDiscountMax)" (focus)="savePreviousDiscountValue(searchDiscountMax)">
 
     <select [(ngModel)]="searchIsActive">
-      <option value="">      </option>
+      <option value=""> </option>
       <option value="true">Active</option>
       <option value="false">Inactive</option>
     </select>
@@ -31,15 +27,32 @@
         <th>Voucher Code</th>
         <th>Discount Percent</th>
         <th>Active</th>
+        <th>
+          <div class="add-voucher-button-container"><button class="add-voucher-button">Add Voucher</button></div>
+        </th>
       </tr>
     </thead>
     <tbody>
       @for (voucher of vouchers; track voucher.id) {
       <tr>
-        <td>{{ voucher.id }}</td>
+        <td> {{ voucher.id }} </td>
+
+        @if (voucher.isBeingEdited) {
+        <td><input [ngModel]="voucher.code" class="edit-input" #codeInput></td>
+        <td><input type="number" [ngModel]="voucher.discount_percent" class="edit-input" #discountInput></td>
+        <td><input type="checkbox" [ngModel]="voucher.is_active" #activeInput></td>
+        <td><div class="edit-voucher-button-container">
+          <button (click)="saveVoucher(voucher, codeInput.value, +discountInput.value, !!activeInput.value)">Save</button>
+          <button (click)="cancelEdit(voucher)">Cancel</button>
+        </div></td>
+
+        } @else {
         <td>{{ voucher.code }}</td>
-        <td>{{ voucher.discount_percent}}</td>
-        <td>{{ voucher.is_active}}</td>
+        <td>{{ voucher.discount_percent }}%</td>
+        <td> {{ voucher.is_active ? 'Active' : 'Inactive' }} </td>
+        <button (click)="editVoucher(voucher)">Edit</button>
+        }
+
       </tr>
       } @empty {
       <tr>
