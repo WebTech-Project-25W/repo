@@ -113,6 +113,22 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/key-stats`);
   }
 
+  getVouchers(searchFilters: any, limit: number, offset: number) {
+    let params = new HttpParams();
+
+    for (const key in searchFilters) {
+      const value = searchFilters[key];
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, value.toString());
+      }
+    }
+
+    if (limit !== undefined) { params = params.set('limit', limit.toString()); }
+    if (offset !== undefined) { params = params.set('offset', offset.toString()); }
+
+    return this.http.get<any>(`${this.apiUrl}/vouchers`, { params });
+  }
+
   getProfile() {
     return this.http.get<any>(`${this.apiUrl}/profile`)
   }

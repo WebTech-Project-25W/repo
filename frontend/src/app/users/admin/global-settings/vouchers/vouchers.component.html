@@ -1,0 +1,59 @@
+<div class="vouchers-container">
+  <h2>Vouchers</h2>
+
+  <div class="filter-bar">
+    <input type="text" name="searchId" [(ngModel)]="searchId" placeholder="Search by id..."
+      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchCode" [(ngModel)]="searchCode" placeholder="Search by voucher code..."
+      (keyup.enter)="applyFilters()">
+
+    <button (click)="applyFilters()" class="btn-search">Search</button>
+    <button (click)="clearFilters()" class="btn-clear">Clear</button>
+  </div>
+
+  <table class="vouchers-table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Voucher Code</th>
+        <th>Discount Percent</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (voucher of vouchers; track voucher.id) {
+      <tr>
+        <td>{{ voucher.id }}</td>
+        <td>{{ voucher.code }}</td>
+        <td>{{ voucher.discount_percent}}</td>
+        <td>{{ voucher.is_active}}</td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="4" class="no-data">No vouchers found.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination-controls">
+    <div class="limit-selector">
+      <label for="limit">Rows per page:</label>
+      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+        <option [ngValue]="50">50</option>
+      </select>
+    </div>
+    <div class="page-navigation">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">
+        Previous
+      </button>
+      <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
+      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
