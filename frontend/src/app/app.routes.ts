@@ -74,6 +74,12 @@ export const routes: Routes = [
             .then(m => m.RestaurantsComponent)
       },
       {
+        path: 'global-settings',
+        loadComponent: () =>
+          import('./users/admin/global-settings/global-settings/global-settings.component')
+            .then(m => m.GlobalSettingsComponent)
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./users/admin/profile/profile.component')
