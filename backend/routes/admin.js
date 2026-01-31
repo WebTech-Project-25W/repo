@@ -406,6 +406,60 @@ router.get('/key-stats', async (req, res) => {
   }
 });
 
+router.get('/vouchers', async (req, res) => {
+  const { role, limit = 50, offset = 0 } = req.query;
+
+  try {
+    const query = {
+      // note plural table name 'vouchers' not consistent with rest of db
+      text: `SELECT *, COUNT(*) OVER() as totalEntries
+        FROM vouchers
+        WHERE 1=1`,
+      values: []
+    };
+
+    // const keys = ['email', 'firstName', 'lastName'];
+    // dynamic filters
+    const { id, code, discount_percent, is_active }  = req.query;
+
+    if (id) {
+      query.values.push(id);
+      query.text += ` AND id = $${query.values.length}`;
+    }
+
+    if (code) {
+      query.values.push(`%${code}%`);
+      query.text += ` AND code ILIKE $${query.values.length}`;
+    }
+    // further search filters
+
+    query.text += ` ORDER BY id DESC LIMIT $${query.values.length + 1} OFFSET $${query.values.length + 2}`;
+    query.values.push(limit, offset);
+
+
+    const results = await pool.query(query);
+
+    const totalEntries = results.rows.length > 0 ? parseInt(results.rows[0].totalentries) : 0;
+
+    res.status(200).json({
+      metadata: {
+        totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: results.rows.map(row => {
+        const { totalentries, ...data } = row;
+        return data;
+      })
+    })
+
+  } catch (error) {
+    console.error("Error while vouchers users:", error.message);
+    res.status(500).json({ error: "Error while vouchers users: " + error.message });
+  }
+});
+
+
 // GET /admin/profile
 router.get('/profile', async (req, res) => {
   const email = req.user.email;
