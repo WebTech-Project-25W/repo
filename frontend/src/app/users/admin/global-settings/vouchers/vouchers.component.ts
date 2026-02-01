@@ -31,7 +31,6 @@ export class VouchersComponent {
   //search range
 
   previousDiscountValue?: number;
-
   constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
@@ -98,38 +97,45 @@ export class VouchersComponent {
       })
   }
 
+  restrictSearchRange(event: any, field: 'min' | 'max'): void {
+    let value = event.target.value;
+
+    if (value === '') {
+      if (field === 'min') this.searchDiscountMin = undefined;
+      if (field === 'max') this.searchDiscountMax = undefined;
+      return;
+    }
+
+    value = Number(value);
+    value = Math.max(0, Math.min(value, 100));
+
+    if (field === 'min') {
+      this.searchDiscountMin = value;
+    } else {
+      this.searchDiscountMax = value;
+    }
+
+    event.target.value = value;
+  }
+
   savePreviousDiscountValue(value?: number) {
+    console.log(value);
     this.previousDiscountValue = value;
   }
 
-  checkAndApplyFilters(minMax: string, value?: number): void {
-    if (value == undefined) {
-      this.clearFilters();
+  checkAndApplyFilters(field: 'min' | 'max'): void {
+    if (this.searchDiscountMax && this.searchDiscountMin && this.searchDiscountMax < this.searchDiscountMin) {
+      if (field === 'min') {
+        this.searchDiscountMin = this.previousDiscountValue;
+        alert("Min discount can not be greater than max discount.");
+      } else {
+        this.searchDiscountMax = this.previousDiscountValue;
+        alert("Max discount can not be smaller than min discount.");
+      }
       return;
     }
-    if (!value || isNaN(value) || value > 100 || value < 0) {
-      console.error('invalid discount filter value');
-      return;
-    }
-
-    if (minMax === 'min') {
-      if (this.searchDiscountMax) {
-        if (value > this.searchDiscountMax) {
-          alert("Min cannot be greater than Max. Reverting...");
-          this.searchDiscountMin = this.previousDiscountValue;
-          return
-        }
-      }
-    }
-    else if (minMax === 'max') {
-      if (this.searchDiscountMin) {
-        if (value < this.searchDiscountMin) {
-          alert("Max cannot be lesser than Min. Reverting...");
-          this.searchDiscountMax = this.previousDiscountValue;
-          return
-        }
-      }
-    }
+    // save value of field 
+    this.previousDiscountValue = field === 'min'? this.searchDiscountMin: this.searchDiscountMax ;
     this.applyFilters();
   }
 
@@ -141,6 +147,8 @@ export class VouchersComponent {
   clearFilters(): void {
     this.searchId = undefined;
     this.searchCode = '';
+    this.searchDiscountMax = undefined;
+    this.searchDiscountMin = undefined;
     this.applyFilters();
   }
 
@@ -168,19 +176,19 @@ export class VouchersComponent {
   }
 
   submitNewVoucher() {
-    throw new Error('Method not implemented.');
+    console.log(this.newVoucher);
   }
 
   closeOverlay() {
-    this.newVoucher = { code: '', discount_percent: 0, is_active: true };
+    this.newVoucher = { code: '', discount: 0, is_active: true };
     this.showAddOverlay = false;
   }
 
   onDiscountChange(event: any) {
-    const value = this.newVoucher.discount_percent;
+    const value = this.newVoucher.discount;
     const boundedValue = Math.max(0, Math.min(value, 100));
 
-    this.newVoucher.discount_percent = boundedValue;
+    this.newVoucher.discount = boundedValue;
 
     if (event.target.value !== boundedValue.toString()) {
       event.target.value = boundedValue;

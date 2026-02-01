@@ -6,10 +6,16 @@
       (keyup.enter)="applyFilters()">
     <input type="text" name="searchCode" [(ngModel)]="searchCode" placeholder="Search by voucher code..."
       (keyup.enter)="applyFilters()">
-    <input type="number" min="0" max="100" name="searchDiscountMin" [(ngModel)]="searchDiscountMin" placeholder="Min"
-      (change)="checkAndApplyFilters('min', searchDiscountMin)" (focus)="savePreviousDiscountValue(searchDiscountMin)">
-    <input type="number" min="0" max="100" name="searchDiscountMax" [(ngModel)]="searchDiscountMax" placeholder="Max"
-      (change)="checkAndApplyFilters('max', searchDiscountMax)" (focus)="savePreviousDiscountValue(searchDiscountMax)">
+    <input type="number" min="0" max="100" name="searchDiscountMin" 
+      [(ngModel)]="searchDiscountMin" placeholder="Min"
+      (input)="restrictSearchRange($event, 'min')" 
+      (keyup.enter)="checkAndApplyFilters('min')"
+      (focus)="savePreviousDiscountValue(searchDiscountMin)">
+    <input type="number" min="0" max="100" name="searchDiscountMax" 
+      [(ngModel)]="searchDiscountMax" placeholder="Max"
+      (input)="restrictSearchRange($event, 'max')"
+      (keyup.enter)="checkAndApplyFilters('max')"
+      (focus)="savePreviousDiscountValue(searchDiscountMax)">
 
     <select [(ngModel)]="searchIsActive">
       <option value=""> </option>
@@ -85,7 +91,7 @@
         <div class="form-group">
           <label>Discount (%)</label>
           <input type="number" 
-          [(ngModel)]="newVoucher.discount_percent"
+          [(ngModel)]="newVoucher.discount"
           (input)="onDiscountChange($event)"
           min="0" max="100" >
         </div>
