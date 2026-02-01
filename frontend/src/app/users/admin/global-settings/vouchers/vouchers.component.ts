@@ -15,7 +15,7 @@ export class VouchersComponent {
 
   // for adding a new voucher
   showAddOverlay: boolean = false;
-  newVoucher = { code: '', discount_percent: 0, is_active: true };
+  newVoucher = { code: '', discount: 0, is_active: true };
 
   // Pagination config
   limit: number = 5;

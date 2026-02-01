@@ -41,8 +41,8 @@
 
         @if (voucher.isBeingEdited) {
         <td><input [ngModel]="voucher.code" class="edit-input" #codeInput></td>
-        <td><input type="number" [ngModel]="voucher.discount_percent" class="edit-input" #discountInput></td>
-        <td><input type="checkbox" [ngModel]="voucher.is_active" #activeInput></td>
+        <td><input type="number" [ngModel]="voucher.discount" class="edit-input" #discountInput></td>
+        <td><input type="checkbox" [ngModel]="voucher.isActive" #activeInput></td>
         <td><div class="edit-voucher-button-container">
           @if (voucher.isSaving) {
             <div class="spinner-container">
@@ -56,8 +56,8 @@
 
         } @else {
         <td>{{ voucher.code }}</td>
-        <td>{{ voucher.discount_percent }}%</td>
-        <td> {{ voucher.is_active ? 'Active' : 'Inactive' }} </td>
+        <td>{{ voucher.discount }}%</td>
+        <td> {{ voucher.isActive ? 'Active' : 'Inactive' }} </td>
         <td><div class="edit-voucher-button-container">
           <button (click)="editVoucher(voucher)">Edit</button>
         </div></td>

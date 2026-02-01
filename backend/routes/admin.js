@@ -412,7 +412,7 @@ router.get('/vouchers', async (req, res) => {
   try {
     const query = {
       // note plural table name 'vouchers' not consistent with rest of db
-      text: `SELECT *, COUNT(*) OVER() as totalEntries
+      text: `SELECT id, code, discount_percent as discount, is_active as "isActive", COUNT(*) OVER() as totalEntries
         FROM vouchers
         WHERE 1=1`,
       values: []
