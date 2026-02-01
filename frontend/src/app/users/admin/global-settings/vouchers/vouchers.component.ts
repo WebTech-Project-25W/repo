@@ -172,6 +172,7 @@ export class VouchersComponent {
     this.searchCode = '';
     this.searchDiscountMax = undefined;
     this.searchDiscountMin = undefined;
+    this.searchIsActive = undefined;
     this.applyFilters();
   }
 
