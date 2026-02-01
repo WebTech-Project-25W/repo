@@ -147,6 +147,10 @@ export class AdminService {
     return this.http.post<any>(`${this.apiUrl}/voucher`, body);
   }
 
+  deleteVoucher(id: number) {
+    return this.http.delete<any>(`${this.apiUrl}/voucher/${id}`);
+  }
+
   getProfile() {
     return this.http.get<any>(`${this.apiUrl}/profile`)
   }

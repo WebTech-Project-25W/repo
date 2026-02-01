@@ -84,8 +84,6 @@ export class VouchersComponent {
     this.adminService.putVoucher(voucher.id, code, discount, isActive)
       .subscribe({
         next: (resp: any) => {
-          console.log(resp.voucher);
-          console.log(voucher);
           Object.assign(voucher, resp.voucher);
           voucher.isBeingEdited = false;
           voucher.isSaving = false;
@@ -97,6 +95,29 @@ export class VouchersComponent {
           console.error('Error saving voucher: ', voucher.id);
         }
       })
+  }
+
+  deleteVoucher(voucher: Voucher) {
+    if (confirm("Are you sure you want to delete this voucher")) {
+      console.log("deleteing");
+      this.adminService.deleteVoucher(voucher.id)
+        .subscribe({
+          next: (resp: any) => {
+            console.log("voucher deleted succusfully");
+            const updatedVouchers = this.vouchers.filter(v => v.id !== Number(resp.deletedId))
+            this.vouchers = [...updatedVouchers];
+            this.totalEntries--;
+
+            // handling deleting the last voucher on a page
+            if (this.vouchers.length === 0 && this.currentPage > 0) {
+              this.previousPage();
+            }
+          },
+          error: (err: any) => {
+
+          }
+        })
+    }
   }
 
   restrictSearchRange(event: any, field: 'min' | 'max'): void {
@@ -179,7 +200,7 @@ export class VouchersComponent {
 
   submitNewVoucher() {
     const { code, discount, isActive } = this.newVoucher;
-    
+
     this.adminService.addVoucher(code, discount, isActive)
       .subscribe({
         next: (resp: any) => {

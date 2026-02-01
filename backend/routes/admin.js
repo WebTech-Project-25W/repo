@@ -406,6 +406,9 @@ router.get('/key-stats', async (req, res) => {
   }
 });
 
+// // // // // // // //
+//    VOUCHERS       // 
+// // // // // // // //
 router.get('/vouchers', async (req, res) => {
   const { limit = 50, offset = 0 } = req.query;
 
@@ -546,6 +549,43 @@ router.post('/voucher', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+// DELETE /api/voucher/:id
+router.delete('/voucher/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // 1. Validation: Ensure the ID is a valid number
+  if (!id || isNaN(Number(id))) {
+    return res.status(400).json({ message: 'A valid Voucher ID is required.' });
+  }
+
+  try {
+    // 2. SQL Query
+    // We use "RETURNING *" to verify if a row was actually deleted
+    const query = {
+      text: 'DELETE FROM vouchers WHERE id = $1 RETURNING id',
+      values: [id]
+    };
+
+    const result = await pool.query(query);
+
+    // 3. Check if any row was found and deleted
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Voucher not found.' });
+    }
+
+    // 4. Send success response
+    res.status(200).json({
+      message: 'Voucher deleted successfully',
+      deletedId: id
+    });
+
+  } catch (err) {
+    console.error('Error deleting voucher:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 
 // GET /admin/profile

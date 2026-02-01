@@ -27,14 +27,19 @@
   vertical-align: middle;
 }
 
-.add-voucher-button-container,
-.edit-voucher-button-container {
+.voucher-button-container {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-.edit-voucher-button {
+.delete-voucher-button {
+  background-color: darkred;
+  color: white;
+}
+
+.voucher-button-container > button {
   margin: 4px
 }
 
