@@ -8,12 +8,12 @@
       (keyup.enter)="applyFilters()">
     <input type="number" min="0" max="100" name="searchDiscountMin" 
       [(ngModel)]="searchDiscountMin" placeholder="Min"
-      (input)="restrictSearchRange($event, 'min')" 
+      (input)="restrictRange($event, null, 'min')" 
       (keyup.enter)="checkAndApplyFilters('min')"
       (focus)="savePreviousDiscountValue(searchDiscountMin)">
     <input type="number" min="0" max="100" name="searchDiscountMax" 
       [(ngModel)]="searchDiscountMax" placeholder="Max"
-      (input)="restrictSearchRange($event, 'max')"
+      (input)="restrictRange($event, null, 'max')"
       (keyup.enter)="checkAndApplyFilters('max')"
       (focus)="savePreviousDiscountValue(searchDiscountMax)">
 
@@ -46,9 +46,20 @@
         <td> {{ voucher.id }} </td>
 
         @if (voucher.isBeingEdited) {
-        <td><input [ngModel]="voucher.code" class="edit-input" #codeInput></td>
-        <td><input type="number" [ngModel]="voucher.discount" class="edit-input" #discountInput></td>
-        <td><input type="checkbox" [ngModel]="voucher.isActive" #activeInput></td>
+        <td><input 
+          [ngModel]="voucher.code" 
+          (keyup.enter)="saveVoucher(voucher, codeInput.value, +discountInput.value, activeInput.checked)"
+          class="edit-input" #codeInput>
+        </td>
+        <td><input type="number" 
+          (keyup.enter)="saveVoucher(voucher, codeInput.value, +discountInput.value, activeInput.checked)"
+          [ngModel]="voucher.discount" class="edit-input" #discountInput
+          (input)="restrictRange($event, voucher, 'discount')">
+        </td>
+        <td><input type="checkbox" 
+          [ngModel]="voucher.isActive" 
+          (keyup.enter)="saveVoucher(voucher, codeInput.value, +discountInput.value, activeInput.checked)"
+          #activeInput></td>
         <td><div class="voucher-button-container">
           @if (voucher.isSaving) {
             <div class="spinner-container">
@@ -96,7 +107,7 @@
           <label>Discount (%)</label>
           <input type="number" 
           [(ngModel)]="newVoucher.discount"
-          (input)="onDiscountChange($event)"
+          (input)="restrictRange($event, newVoucher, 'discount')"
           min="0" max="100" >
         </div>
 

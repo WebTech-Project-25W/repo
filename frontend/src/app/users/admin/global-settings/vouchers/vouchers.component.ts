@@ -120,29 +120,29 @@ export class VouchersComponent {
     }
   }
 
-  restrictSearchRange(event: any, field: 'min' | 'max'): void {
+  restrictRange(event: any, obj?: any, key?: string): void {
     let value = event.target.value;
 
     if (value === '') {
-      if (field === 'min') this.searchDiscountMin = undefined;
-      if (field === 'max') this.searchDiscountMax = undefined;
+      if (obj && key) obj[key] = 0;
       return;
     }
 
-    value = Number(value);
-    value = Math.max(0, Math.min(value, 100));
+    value = Math.max(0, Math.min(Number(value), 100));
 
-    if (field === 'min') {
-      this.searchDiscountMin = value;
+    if (obj && key) {
+      // Used for 'newVoucher' or 'voucher' in table
+      obj[key] = value;
     } else {
-      this.searchDiscountMax = value;
+      // Fallback for search filters (field is passed via 'key' if no obj)
+      if (key === 'min') this.searchDiscountMin = value;
+      if (key === 'max') this.searchDiscountMax = value;
     }
 
     event.target.value = value;
   }
 
   savePreviousDiscountValue(value?: number) {
-    console.log(value);
     this.previousDiscountValue = value;
   }
 
