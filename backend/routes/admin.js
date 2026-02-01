@@ -481,7 +481,7 @@ router.put('/voucher/:id', async (req, res) => {
 
   // check that discount is valid
   if (updatedData.discount < 0 || updatedData.discount > 100) {
-    return res.status(400).json({ message: "Discount percentage invalid"});
+    return res.status(400).json({ message: "Discount percentage invalid" });
   }
 
   try {
@@ -505,9 +505,14 @@ router.put('/voucher/:id', async (req, res) => {
       message: "Voucher updated successfully",
       voucher: result.rows[0]
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+  } catch (err) {
+    console.error(err);
+
+    if (err.code === '23505') {
+      return res.status(409).json({ message: 'Voucher code already exists.' });
+    }
+
+    res.status(500).json({ err: "Internal Server Error" });
   }
 });
 
@@ -540,7 +545,7 @@ router.post('/voucher', async (req, res) => {
 
   } catch (err) {
     console.error('Error inserting voucher:', err);
-    
+
     // Handle Unique Constraint Violation (e.g., duplicate voucher code)
     if (err.code === '23505') {
       return res.status(409).json({ message: 'Voucher code already exists.' });
