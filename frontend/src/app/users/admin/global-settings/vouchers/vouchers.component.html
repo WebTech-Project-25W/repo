@@ -42,7 +42,7 @@
         <td><input type="number" [ngModel]="voucher.discount_percent" class="edit-input" #discountInput></td>
         <td><input type="checkbox" [ngModel]="voucher.is_active" #activeInput></td>
         <td><div class="edit-voucher-button-container">
-          <button (click)="saveVoucher(voucher, codeInput.value, +discountInput.value, !!activeInput.value)">Save</button>
+          <button (click)="saveVoucher(voucher, codeInput.value, +discountInput.value, activeInput.checked)">Save</button>
           <button (click)="cancelEdit(voucher)">Cancel</button>
         </div></td>
 
@@ -50,7 +50,9 @@
         <td>{{ voucher.code }}</td>
         <td>{{ voucher.discount_percent }}%</td>
         <td> {{ voucher.is_active ? 'Active' : 'Inactive' }} </td>
-        <button (click)="editVoucher(voucher)">Edit</button>
+        <td><div class="edit-voucher-button-container">
+          <button (click)="editVoucher(voucher)">Edit</button>
+        </div></td>
         }
 
       </tr>
