@@ -206,12 +206,12 @@ export class VouchersComponent {
         next: (resp: any) => {
           alert(resp.message);
           this.loadVouchers();
-          this.showAddOverlay = false;
+          this.closeOverlay()
         },
         error: (err: any) => {
           alert(err.error.message);
           console.error('Error saving voucher: ', err);
-          this.showAddOverlay = false;
+          this.closeOverlay()
         }
       })
 
