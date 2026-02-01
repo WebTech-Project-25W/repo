@@ -28,7 +28,9 @@
         <th>Discount Percent</th>
         <th>Active</th>
         <th>
-          <div class="add-voucher-button-container"><button class="add-voucher-button">Add Voucher</button></div>
+          <div class="add-voucher-button-container">
+            <button class="add-voucher-button" (click)="openAddVoucherOverlay()">Add Voucher</button>
+          </div>
         </th>
       </tr>
     </thead>
@@ -70,6 +72,37 @@
     </tbody>
   </table>
 
+  @if (showAddOverlay) {
+    <div class="modal-backdrop" (click)="closeOverlay()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>Add New Voucher</h3>
+        
+        <div class="form-group">
+          <label>Voucher Code</label>
+          <input type="text" [(ngModel)]="newVoucher.code" placeholder="e.g. SUMMER25">
+        </div>
+
+        <div class="form-group">
+          <label>Discount (%)</label>
+          <input type="number" 
+          [(ngModel)]="newVoucher.discount_percent"
+          (input)="onDiscountChange($event)"
+          min="0" max="100" >
+        </div>
+
+        <div class="form-group">
+          <label>Active</label>
+          <input type="checkbox" [(ngModel)]="newVoucher.is_active">
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeOverlay()">Cancel</button>
+          <button class="btn-save" (click)="submitNewVoucher()">Create Voucher</button>
+        </div>
+      </div>
+    </div>
+  }
+
   <div class="pagination-controls">
     <div class="limit-selector">
       <label for="limit">Rows per page:</label>
@@ -90,4 +123,5 @@
       </button>
     </div>
   </div>
+
 </div>

@@ -13,6 +13,10 @@ import { FormsModule } from '@angular/forms';
 export class VouchersComponent {
   vouchers: Voucher[] = [];
 
+  // for adding a new voucher
+  showAddOverlay: boolean = false;
+  newVoucher = { code: '', discount_percent: 0, is_active: true };
+
   // Pagination config
   limit: number = 5;
   currentPage: number = 0;
@@ -84,14 +88,14 @@ export class VouchersComponent {
           Object.assign(voucher, resp.voucher);
           voucher.isBeingEdited = false;
           voucher.isSaving = false;
-      },
+        },
         error: (err: any) => {
           voucher.isBeingEdited = false;
           voucher.isSaving = false;
           alert(err.error.message);
           console.error('Error saving voucher: ', voucher.id);
-      }
-    })
+        }
+      })
   }
 
   savePreviousDiscountValue(value?: number) {
@@ -156,6 +160,30 @@ export class VouchersComponent {
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadVouchers();
+    }
+  }
+
+  openAddVoucherOverlay() {
+    this.showAddOverlay = true;
+  }
+
+  submitNewVoucher() {
+    throw new Error('Method not implemented.');
+  }
+
+  closeOverlay() {
+    this.newVoucher = { code: '', discount_percent: 0, is_active: true };
+    this.showAddOverlay = false;
+  }
+
+  onDiscountChange(event: any) {
+    const value = this.newVoucher.discount_percent;
+    const boundedValue = Math.max(0, Math.min(value, 100));
+
+    this.newVoucher.discount_percent = boundedValue;
+
+    if (event.target.value !== boundedValue.toString()) {
+      event.target.value = boundedValue;
     }
   }
 }
