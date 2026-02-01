@@ -138,6 +138,15 @@ export class AdminService {
     return this.http.put<any>(`${this.apiUrl}/voucher/${id}`, body);
   }
 
+  addVoucher(code: string, discount: number, isActive: boolean) {
+    const body = {
+      code: code,
+      discount: discount,
+      isActive: isActive,
+    }
+    return this.http.post<any>(`${this.apiUrl}/voucher`, body);
+  }
+
   getProfile() {
     return this.http.get<any>(`${this.apiUrl}/profile`)
   }

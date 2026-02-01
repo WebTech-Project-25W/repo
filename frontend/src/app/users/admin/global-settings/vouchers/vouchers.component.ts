@@ -15,7 +15,7 @@ export class VouchersComponent {
 
   // for adding a new voucher
   showAddOverlay: boolean = false;
-  newVoucher = { code: '', discount: 0, is_active: true };
+  newVoucher = { code: '', discount: 0, isActive: true };
 
   // Pagination config
   limit: number = 5;
@@ -84,6 +84,8 @@ export class VouchersComponent {
     this.adminService.putVoucher(voucher.id, code, discount, isActive)
       .subscribe({
         next: (resp: any) => {
+          console.log(resp.voucher);
+          console.log(voucher);
           Object.assign(voucher, resp.voucher);
           voucher.isBeingEdited = false;
           voucher.isSaving = false;
@@ -135,7 +137,7 @@ export class VouchersComponent {
       return;
     }
     // save value of field 
-    this.previousDiscountValue = field === 'min'? this.searchDiscountMin: this.searchDiscountMax ;
+    this.previousDiscountValue = field === 'min' ? this.searchDiscountMin : this.searchDiscountMax;
     this.applyFilters();
   }
 
@@ -176,11 +178,26 @@ export class VouchersComponent {
   }
 
   submitNewVoucher() {
-    console.log(this.newVoucher);
+    const { code, discount, isActive } = this.newVoucher;
+    
+    this.adminService.addVoucher(code, discount, isActive)
+      .subscribe({
+        next: (resp: any) => {
+          alert(resp.message);
+          this.loadVouchers();
+          this.showAddOverlay = false;
+        },
+        error: (err: any) => {
+          alert(err.error.message);
+          console.error('Error saving voucher: ', err);
+          this.showAddOverlay = false;
+        }
+      })
+
   }
 
   closeOverlay() {
-    this.newVoucher = { code: '', discount: 0, is_active: true };
+    this.newVoucher = { code: '', discount: 0, isActive: true };
     this.showAddOverlay = false;
   }
 

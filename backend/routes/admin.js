@@ -488,7 +488,7 @@ router.put('/voucher/:id', async (req, res) => {
         discount_percent = $2,
         is_active = $3
         WHERE id = $4
-        RETURNING id, code, discount_percent, is_active`,
+        RETURNING id, code, discount_percent as discount, is_active as "isActive"`,
       values: [updatedData.code, updatedData.discount, updatedData.isActive, voucherId]
     };
 
@@ -505,6 +505,45 @@ router.put('/voucher/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post('/voucher', async (req, res) => {
+  const { code, discount, isActive } = req.body;
+
+  // 1. Basic Validation
+  if (!code || discount === undefined) {
+    return res.status(400).json({ message: 'Code and discount are required.' });
+  }
+
+  try {
+    // 2. SQL Query
+    // Note: We use "RETURNING" to send back the newly created record
+    const query = {
+      text: `INSERT INTO vouchers (code, discount_percent, is_active) 
+             VALUES ($1, $2, $3) 
+             RETURNING id, code, discount_percent AS discount, is_active AS "isActive"`,
+      values: [code, discount, isActive ?? true]
+    };
+
+    const result = await pool.query(query);
+    const newVoucher = result.rows[0];
+
+    // 3. Send back success response
+    res.status(201).json({
+      message: 'Voucher created successfully',
+      voucher: newVoucher
+    });
+
+  } catch (err) {
+    console.error('Error inserting voucher:', err);
+    
+    // Handle Unique Constraint Violation (e.g., duplicate voucher code)
+    if (err.code === '23505') {
+      return res.status(409).json({ message: 'Voucher code already exists.' });
+    }
+
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
