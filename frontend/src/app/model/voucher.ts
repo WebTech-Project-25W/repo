@@ -5,4 +5,5 @@ export class Voucher {
   is_active!: boolean;
 
   isBeingEdited?: boolean;
+  isSaving?: boolean;
 }

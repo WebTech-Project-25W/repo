@@ -77,14 +77,17 @@ export class VouchersComponent {
 
   saveVoucher(voucher: Voucher, code: string, discount: number, isActive: boolean) {
     // put to update voucher
+    voucher.isSaving = true;
     this.adminService.putVoucher(voucher.id, code, discount, isActive)
       .subscribe({
         next: (resp: any) => {
           Object.assign(voucher, resp.voucher);
           voucher.isBeingEdited = false;
+          voucher.isSaving = false;
       },
         error: (err: any) => {
           voucher.isBeingEdited = false;
+          voucher.isSaving = false;
           alert(err.error.message);
           console.error('Error saving voucher: ', voucher.id);
       }
