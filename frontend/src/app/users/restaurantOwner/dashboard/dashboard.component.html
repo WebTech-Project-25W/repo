@@ -20,24 +20,32 @@
     >
       Menus
     </button>
+
     <button
       (click)="switchSection('orders')"
       [class.active]="activeSection === 'orders'"
     >
       Orders
     </button>
+
     <button
       (click)="switchSection('profile')"
       [class.active]="activeSection === 'profile'"
     >
       Profile
     </button>
+
     <button
       (click)="switchSection('analytics')"
       [class.active]="activeSection === 'analytics'"
     >
       Analytics
     </button>
+
+    <!-- LOGOUT -->
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
   </aside>
 
   <!-- CONTENT -->
@@ -207,8 +215,24 @@
     <section *ngIf="activeSection === 'orders'">
       <h2 class="section-title">Incoming Orders</h2>
 
+      <!-- FILTER BAR -->
+      <div class="order-filter-bar">
+        <label>
+          Status:
+          <select [(ngModel)]="orderStatusFilter">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="preparing">Preparing</option>
+            <option value="ready">Ready</option>
+            <option value="dispatched">Dispatched</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </label>
+      </div>
+
       <div class="card-grid">
-        <div *ngFor="let order of orders" class="order-card">
+        <div *ngFor="let order of filteredOrders" class="order-card">
           <div class="order-header">
             <strong>Order #{{ order.orderid }}</strong>
             <span class="status-badge {{ order.status }}">
@@ -305,6 +329,25 @@
             <strong>Delivery Zone:</strong> {{ savedRestaurant.deliveryzone }}
           </p>
         </div>
+      </div>
+      <hr class="sidebar-divider" />
+
+      <h3 class="section-title">Customer Reviews</h3>
+
+      <p *ngIf="reviews.length === 0" class="muted">
+        No reviews yet for this restaurant.
+      </p>
+
+      <div *ngFor="let review of reviews" class="review-card">
+        <div class="review-header">
+          <span class="rating">⭐ {{ review.rating }}/5</span>
+        </div>
+
+        <p class="review-text">{{ review.description || review.desc }}</p>
+
+        <small class="muted">
+          {{ review.timestamp || review.time | date: "short" }}
+        </small>
       </div>
     </section>
 
