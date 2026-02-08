@@ -143,6 +143,15 @@ export class OwnerService {
       thisWeek: number;
     }>(`${this.baseUrl}/analytics/orders`);
   }
+  // ===============================
+  // REVIEWS (OWNER)
+  // ===============================
+
+  getReviews(restaurantId: number): Observable<any> {
+    return this.http.get(
+      `http://localhost:3000/public/reviews/${restaurantId}`,
+    );
+  }
 
   // ===== TEST ORDER (DEMO) =====
   createTestOrder(): Observable<any> {
