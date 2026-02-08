@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
@@ -62,6 +64,8 @@ export class OwnerDashboardComponent implements OnInit {
   // RESTAURANT
   // ==========================
   restaurant: any = null;
+  reviews: any[] = [];
+  orderStatusFilter: string = 'all';
   restaurants: any[] = [];
   activeRestaurantId: number | null = null;
   // ==========================
@@ -79,7 +83,11 @@ export class OwnerDashboardComponent implements OnInit {
 
   orderInterval: any;
 
-  constructor(private ownerService: OwnerService) {}
+  constructor(
+    private ownerService: OwnerService,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   // ==========================
   // INIT
@@ -110,11 +118,35 @@ export class OwnerDashboardComponent implements OnInit {
     this.loadMenus();
     this.loadOrders();
     this.loadAnalytics();
+    this.loadReviews();
 
     // start auto-refresh AFTER selection
     this.orderInterval = setInterval(() => {
       this.loadOrders();
     }, 5000);
+  }
+  loadReviews(): void {
+    if (!this.activeRestaurantId) return;
+
+    this.ownerService.getReviews(this.activeRestaurantId).subscribe({
+      next: (res: any) => {
+        this.reviews = res?.reviews ?? [];
+        console.log('REVIEWS LOADED:', this.reviews);
+      },
+      error: (err) => {
+        console.error('REVIEWS ERROR', err);
+        this.reviews = [];
+      },
+    });
+  }
+  get filteredOrders(): any[] {
+    if (this.orderStatusFilter === 'all') {
+      return this.orders;
+    }
+
+    return this.orders.filter(
+      (order) => order.status === this.orderStatusFilter,
+    );
   }
 
   // ==========================
@@ -354,6 +386,12 @@ export class OwnerDashboardComponent implements OnInit {
         },
         error: () => alert('Failed to save restaurant settings'),
       });
+  }
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    this.router.navigate(['/login']);
   }
 
   // ==========================
