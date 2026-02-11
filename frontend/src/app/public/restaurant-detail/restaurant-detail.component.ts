@@ -26,17 +26,16 @@ export class RestaurantDetailComponent implements OnInit {
   discountAmount: number = 0;
   finalTotal: number | null = null;
   voucherMessage: string = '';
-  readonly CART_KEY = 'offline_cart';
-
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
 
   isCustomerView = false;
 
   ngOnInit(): void {
-    this.restoreCart();
     this.isCustomerView = this.router.url.startsWith('/customer');
     const id = this.route.snapshot.paramMap.get('id');
+
+    this.restoreCart();
 
     // restaurant info
     this.http
@@ -299,14 +298,26 @@ applyVoucher() {
 }
 
 saveCart() {
-  localStorage.setItem('offline_cart', JSON.stringify(this.cart));
+  const restaurantId = this.restaurant?.id;
+  if (!restaurantId) return;
+
+  const key = `offline_cart_${restaurantId}`;
+  localStorage.setItem(key, JSON.stringify(this.cart));
 }
 
 restoreCart() {
-  const saved = localStorage.getItem('offline_cart');
+  const id = this.route.snapshot.paramMap.get('id');
+  if (!id) return;
+
+  const key = `offline_cart_${id}`;
+  const saved = localStorage.getItem(key);
+
   if (saved) {
     this.cart = JSON.parse(saved);
+  } else {
+    this.cart = [];
   }
 }
+
 
 }
