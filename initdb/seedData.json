@@ -441,6 +441,7 @@
 }
 
   ],
+  "deliveryZones": ["A", "B", "C"],
   "reviews": [
     {
       "restoID": 0,

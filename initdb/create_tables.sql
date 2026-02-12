@@ -43,6 +43,13 @@ CREATE TABLE LogInHistory
 
 CREATE INDEX idx_login_history_user_email ON public.LogInHistory(userEmail);
 
+DROP TABLE IF EXISTS DeliveryZone;
+CREATE TABLE DeliveryZone
+(
+  deliveryZone char(1) PRIMARY KEY,
+  status BOOLEAN NOT NULL DEFAULT 'true'
+);
+
 DROP TYPE IF EXISTS blocked_status;
 CREATE TYPE blocked_status as ENUM('not-blocked', 'warned', 'blocked');
 CREATE TABLE Customer
@@ -52,8 +59,12 @@ CREATE TABLE Customer
   address varchar(100),
   postcode varchar(100),
   phoneNumber varchar(100),
-  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C')),
-  points INTEGER NOT NULL DEFAULT 0
+  deliveryZone char(1),
+  points INTEGER NOT NULL DEFAULT 0,
+
+  CONSTRAINT fk_delivery_zone
+    FOREIGN KEY(deliveryZone) 
+    REFERENCES deliveryZone(deliveryZone) ON DELETE SET NULL
 );
 
 CREATE TABLE SiteManager
@@ -80,7 +91,11 @@ CREATE TABLE restaurant
 
   cuisine varchar(50),
   openingHours varchar(100),
-  deliveryZone char(1) CHECK (deliveryZone IN ('A','B','C'))
+  deliveryZone char(1),
+  
+  CONSTRAINT fk_delivery_zone
+    FOREIGN KEY(deliveryZone) 
+    REFERENCES deliveryZone(deliveryZone) ON DELETE SET NULL
 );
 
 

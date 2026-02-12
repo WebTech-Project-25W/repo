@@ -26,6 +26,16 @@ async function resetDatabase() {
     console.log("Applying create_tables.sql...");
     await client.query(sql);
 
+    // seed deliveryZones
+    console.log("Seeding delivery zones...");
+    for (const deliveryZone of seedData.deliveryZones) {
+      await client.query(
+        "INSERT INTO DeliveryZone VALUES ($1)",
+        [deliveryZone]
+      );
+    };
+
+
     // Helper Function to Hash and Insert Users
     const seedUser = async (
       user,
