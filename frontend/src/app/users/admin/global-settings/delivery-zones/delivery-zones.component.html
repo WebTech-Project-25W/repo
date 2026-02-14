@@ -1,0 +1,107 @@
+<div class="delivery-zones-container">
+  <h2>Delivery Zones</h2>
+
+  <div class="filter-bar">
+    <input type="text" name="searchId" [(ngModel)]="searchId" placeholder="Search by id..."
+      (keyup.enter)="applyFilters()">
+    <select [(ngModel)]="searchIsActive">
+      <option value=""> </option>
+      <option value="true">Active</option>
+      <option value="false">Inactive</option>
+    </select>
+    <button (click)="applyFilters()" class="btn-search">Search</button>
+    <button (click)="clearFilters()" class="btn-clear">Clear</button>
+  </div>
+
+  <table class="delivery-zones-table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Active</th>
+        <th>
+          <div class="delivery-zone-button-container">
+            <button class="add-delivery-zone-button" (click)="openAddDeliveryZoneOverlay()">Add Delivery Zone</button>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (deliveryZone of deliveryZones; track deliveryZone.id) {
+      <tr>
+        <td>{{ deliveryZone.id }}</td>
+        <td>
+          @if (!deliveryZone.isUpdating) {
+          <select class="status-pill" [ngModel]="deliveryZone.isActive" 
+            [attr.data-status]="deliveryZone.isActive"
+            (change)="onIsActiveChange($event, deliveryZone)">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+          } @else {
+          <span class="status-pill loading-label">
+            <span class="spinner"></span> Updating.
+          </span>
+          }
+        </td>
+        <div class=delivery-zone-button-container>
+          <td>
+            <button class="delete-delivery-zone-button" (click)="deleteDeliveryZone(deliveryZone)">Delete</button>
+          </td>
+        </div>
+
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="3" class="no-data">No delivery zones found.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (showAddOverlay) {
+  <div class="modal-backdrop" (click)="closeOverlay()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Add New DeliveryZone</h3>
+
+      <div class="form-group">
+        <label>DeliveryZone Code</label>
+        <input #zoneInput type="text" [(ngModel)]="newDeliveryZone.id" placeholder="e.g. 'A'"
+        (keyup.enter)="submitNewDeliveryZone()">
+      </div>
+
+      <div class="form-group">
+        <label>Active</label>
+        <input type="checkbox" [(ngModel)]="newDeliveryZone.isActive"
+        (keyup.enter)="submitNewDeliveryZone()">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeOverlay()">Cancel</button>
+        <button class="btn-save" (click)="submitNewDeliveryZone()">Create DeliveryZone</button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="pagination-controls">
+    <div class="limit-selector">
+      <label for="limit">Rows per page:</label>
+      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+        <option [ngValue]="50">50</option>
+      </select>
+    </div>
+    <div class="page-navigation">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">
+        Previous
+      </button>
+      <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
+      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">
+        Next
+      </button>
+    </div>
+  </div>
+
+</div>
