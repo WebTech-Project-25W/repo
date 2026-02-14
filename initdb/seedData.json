@@ -338,7 +338,9 @@
       "phone": "(01788) 471434",
       "openingHours": "08:00 - 20:00",
       "deliveryZone": "C",
-      "cuisine": "Austrian"
+      "cuisine": "Austrian",
+      "serviceFee": "200",
+      "serviceFeeType": "cents"
     },
     {
       "name": "YumYumHouse",
@@ -349,7 +351,9 @@
       "phone": "(01484) 387035",
       "openingHours": "11:00-22:00",
       "deliveryZone": "B",
-      "cuisine": "Asian"
+      "cuisine": "Asian",
+      "serviceFee": "150",
+      "serviceFeeType": "cents"
     },
     {
       "name": "Eatery",
@@ -360,7 +364,9 @@
       "phone": "(01233) 416101",
       "openingHours": "08:00 - 20:00",
       "deliveryZone": "A",
-      "cuisine": "Italian"
+      "cuisine": "Italian",
+      "serviceFee": "100",
+      "serviceFeeType": "cents"
     },
     {
       "name": "ScranFud",
@@ -371,7 +377,9 @@
       "phone": "(01757) 667027",
       "openingHours": "08:00 - 20:00",
       "deliveryZone": "A",
-      "cuisine": "Austrian"
+      "cuisine": "Austrian",
+      "serviceFee": "300",
+      "serviceFeeType": "cents"
     },
     {
       "name": "Nutri",
@@ -382,7 +390,9 @@
       "phone": "(01708) 308411",
       "openingHours": "08:00-20:00",
       "deliveryZone": "A",
-      "cuisine": "Asian"
+      "cuisine": "Asian",
+      "serviceFee": "5",
+      "serviceFeeType": "percent"
     },
     {
       "name": "Bella Napoli",
@@ -393,7 +403,9 @@
       "phone": "(0208) 9487321",
       "openingHours": "10:00-21:30",
       "deliveryZone": "A",
-      "cuisine": "Italian"
+      "cuisine": "Italian",
+      "serviceFee": "7",
+      "serviceFeeType": "percent"
 },
 {
       "name": "Golden Bamboo",
@@ -404,7 +416,9 @@
       "phone": "(020) 83467922",
       "openingHours": "11:00-22:00",
       "deliveryZone": "B",
-      "cuisine": "Asian"
+      "cuisine": "Asian",
+      "serviceFee": "15",
+      "serviceFeeType": "percent"
 },
 {
       "name": "Alpen Stube",
@@ -415,7 +429,9 @@
       "phone": "(01727) 853410",
       "openingHours": "09:00-20:00",
       "deliveryZone": "C",
-      "cuisine": "Austrian"
+      "cuisine": "Austrian",
+      "serviceFee": "20",
+      "serviceFeeType": "percent"
 },
 {
       "name": "Roma Express",
@@ -426,7 +442,9 @@
       "phone": "(01923) 224589",
       "openingHours": "11:30-22:30",
       "deliveryZone": "B",
-      "cuisine": "Italian"
+      "cuisine": "Italian",
+      "serviceFee": "30",
+      "serviceFeeType": "percent"
 },
 {
       "name": "Sakura Kitchen",
@@ -682,7 +700,9 @@
       "items": [
         { "dishID": 0, "qty": 2, "price": 18.5 },
         { "dishID": 1, "qty": 1, "price": 12.0 }
-      ]
+      ],
+      "serviceFee": "200",
+      "serviceFeeType": "cents"
     },
     {
       "customerEmail": "Brian@bobble.co.uk",
@@ -692,7 +712,9 @@
       "items": [
         { "dishID": 1, "qty": 2, "price": 12.0 },
         { "dishID": 2, "qty": 1, "price": 10.5 }
-      ]
+      ],
+      "serviceFee": "100",
+      "serviceFeeType": "cents"
     },
     {
       "customerEmail": "Cam@cambridge.edu.uk",
@@ -701,7 +723,9 @@
       "addr": "The Conifers, Sodyllt Bank, Dudleston",
       "items": [
         { "dishID": 3, "qty": 3, "price": 12.0 }
-      ]
+      ],
+      "serviceFee": "170",
+      "serviceFeeType": "cents"
     },
     {
       "customerEmail": "Dan@deven.at",
@@ -711,7 +735,9 @@
       "items": [
         { "dishID": 4, "qty": 1, "price": 11.5 },
         { "dishID": 5, "qty": 2, "price": 8.5 }
-      ]
+      ],
+      "serviceFee": "210",
+      "serviceFeeType": "cents"
     },
     {
       "customerEmail": "Emily@Ely.fr",
@@ -721,7 +747,9 @@
       "items": [
         { "dishID": 7, "qty": 1, "price": 13.5 },
         { "dishID": 8, "qty": 1, "price": 7.5 }
-      ]
+      ],
+      "serviceFee": "50",
+      "serviceFeeType": "cents"
     },
     {
       "customerEmail": "Amy@abc.com",
@@ -731,7 +759,9 @@
       "items": [
         { "dishID": 2, "qty": 1, "price": 10.5 },
         { "dishID": 3, "qty": 1, "price": 12.0 }
-      ]
+      ],
+      "serviceFee": "5",
+      "serviceFeeType": "percent"
     },
     {
       "customerEmail": "Brian@bobble.co.uk",
@@ -740,7 +770,9 @@
       "addr": "46 Beatrice Avenue, Saltash",
       "items": [
         { "dishID": 0, "qty": 1, "price": 18.5 }
-      ]
+      ],
+      "serviceFee": "15",
+      "serviceFeeType": "percent"
     },
     {
       "customerEmail": "Cam@cambridge.edu.uk",
@@ -749,7 +781,9 @@
       "addr": "The Conifers, Sodyllt Bank, Dudleston",
       "items": [
         { "dishID": 6, "qty": 2, "price": 9.0 }
-      ]
+      ],
+      "serviceFee": "7",
+      "serviceFeeType": "percent"
     },
     {
       "customerEmail": "Dan@deven.at",
@@ -759,7 +793,9 @@
       "items": [
         { "dishID": 0, "qty": 1, "price": 18.5 },
         { "dishID": 1, "qty": 2, "price": 12.0 }
-      ]
+      ],
+      "serviceFee": "2",
+      "serviceFeeType": "percent"
     },
     {
       "customerEmail": "Emily@Ely.fr",
@@ -768,7 +804,9 @@
       "addr": "14 Stour Road, Grays",
       "items": [
         { "dishID": 2, "qty": 2, "price": 10.5 }
-      ]
+      ],
+      "serviceFee": "20",
+      "serviceFeeType": "percent"
     },
     {
       "customerEmail": "Amy@abc.com",

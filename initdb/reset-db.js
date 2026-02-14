@@ -89,8 +89,8 @@ async function resetDatabase() {
     for (const restaurant of seedData.restaurants) {
       const result = await client.query(
         `INSERT INTO Restaurant 
-   (name, ownerEmail, approvalStatus, address, postcode, phoneNumber, cuisine, openingHours, deliveryZone) 
-   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+   (name, ownerEmail, approvalStatus, address, postcode, phoneNumber, cuisine, openingHours, deliveryZone, serviceFee, serviceFeeType) 
+   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
    RETURNING id`,
         [
           restaurant.name,
@@ -102,6 +102,8 @@ async function resetDatabase() {
           restaurant.cuisine || null,
           restaurant.openingHours || null,
           restaurant.deliveryZone || null,
+          restaurant.serviceFee || null,
+          restaurant.serviceFeeType || null
         ],
       );
 
@@ -146,12 +148,14 @@ async function resetDatabase() {
     console.log("Seeding Orders...");
     for (const order of seedData.orders) {
       const result = await client.query(
-        'INSERT INTO "Order" (customerEmail, restaurantID, status, deliveryAddress) VALUES ($1, $2, $3, $4) RETURNING orderID',
+        'INSERT INTO "Order" (customerEmail, restaurantID, status, deliveryAddress, serviceFee, serviceFeeType) VALUES ($1, $2, $3, $4, $5, $6) RETURNING orderID',
         [
           order.customerEmail,
           restoIDs[order.restoID],
           order.status,
           order.addr,
+          order.serviceFee || null,
+          order.serviceFeeType || null
         ],
       );
       const orderId = result.rows[0].orderid;

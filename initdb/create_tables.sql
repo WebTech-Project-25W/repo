@@ -79,6 +79,8 @@ CREATE TABLE RestaurantOwner
 
 DROP TYPE IF EXISTS approval_status;
 CREATE TYPE approval_status as ENUM('pending', 'rejected', 'approved', 'suspended');
+DROP TYPE IF EXISTS service_fee_type;
+CREATE TYPE service_fee_type as ENUM('cents', 'percent');
 CREATE TABLE restaurant
 (
   id SERIAL PRIMARY KEY,
@@ -95,7 +97,12 @@ CREATE TABLE restaurant
   
   CONSTRAINT fk_delivery_zone
     FOREIGN KEY(deliveryZone) 
-    REFERENCES deliveryZone(id) ON DELETE SET NULL
+    REFERENCES deliveryZone(id) ON DELETE SET NULL,
+
+  serviceFee int,
+  serviceFeeType service_fee_type,
+  CONSTRAINT fee_requires_type
+    CHECK (serviceFee IS NULL OR serviceFeeType IS NOT NULL)
 );
 
 
@@ -136,7 +143,11 @@ CREATE TABLE "Order" (
     status order_status DEFAULT 'pending',
     discountCodes varchar(50),
     deliveryAddress varchar(255),
-    deliveryOptions varchar(100)
+    deliveryOptions varchar(100),
+    serviceFee int,
+    serviceFeeType service_fee_type,
+    CONSTRAINT fee_requires_type
+      CHECK (serviceFee IS NULL OR serviceFeeType IS NOT NULL)
 );
 
 CREATE TABLE OrderItem (
