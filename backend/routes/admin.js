@@ -470,8 +470,8 @@ router.get('/vouchers', async (req, res) => {
     })
 
   } catch (error) {
-    console.error("Error while vouchers users:", error.message);
-    res.status(500).json({ error: "Error while vouchers users: " + error.message });
+    console.error("Error while fetching vouchers:", error.message);
+    res.status(500).json({ error: "Error while fetching vouchers: " + error.message });
   }
 });
 
@@ -497,7 +497,7 @@ router.put('/voucher/:id', async (req, res) => {
 
     const result = await pool.query(query);
 
-    if (result.rows[0] === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ message: "Voucher not found" });
     }
 
