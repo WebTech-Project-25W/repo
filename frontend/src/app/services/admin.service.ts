@@ -113,6 +113,37 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/key-stats`);
   }
 
+  getDeliveryZones(id: number | undefined, isActive: boolean | undefined, limit: number, offset: number) {
+    let params = new HttpParams();
+
+    if (id) { params = params.set('id', id.toString()); }
+    if (isActive) { params = params.set('isActive', isActive.toString()); }
+    if (limit !== undefined) { params = params.set('limit', limit.toString()); }
+    if (offset !== undefined) { params = params.set('offset', offset.toString()); }
+
+    return this.http.get<any>(`${this.apiUrl}/delivery-zones`, { params });
+  }
+
+  updateDeliveryZone(id: String, isActive: boolean) {
+    const body = {
+      id: id,
+      isActive: isActive,
+    }
+    return this.http.put<any>(`${this.apiUrl}/delivery-zone/${id}`, body);
+  }
+
+  addDeliveryZone(id: string, isActive: boolean) {
+    const body = {
+      id: id,
+      isActive: isActive,
+    }
+    return this.http.post<any>(`${this.apiUrl}/delivery-zone`, body);
+  }
+
+  deleteDeliveryZone(id: String) {
+    return this.http.delete<any>(`${this.apiUrl}/delivery-zone/${id}`);
+  }
+
   getVouchers(searchFilters: any, limit: number, offset: number) {
     let params = new HttpParams();
 
