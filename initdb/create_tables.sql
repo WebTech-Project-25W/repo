@@ -46,8 +46,8 @@ CREATE INDEX idx_login_history_user_email ON public.LogInHistory(userEmail);
 DROP TABLE IF EXISTS DeliveryZone;
 CREATE TABLE DeliveryZone
 (
-  deliveryZone char(1) PRIMARY KEY,
-  status BOOLEAN NOT NULL DEFAULT 'true'
+  id char(1) PRIMARY KEY,
+  isActive BOOLEAN NOT NULL DEFAULT 'true'
 );
 
 DROP TYPE IF EXISTS blocked_status;
@@ -64,7 +64,7 @@ CREATE TABLE Customer
 
   CONSTRAINT fk_delivery_zone
     FOREIGN KEY(deliveryZone) 
-    REFERENCES deliveryZone(deliveryZone) ON DELETE SET NULL
+    REFERENCES deliveryZone(id) ON DELETE SET NULL
 );
 
 CREATE TABLE SiteManager
@@ -95,7 +95,7 @@ CREATE TABLE restaurant
   
   CONSTRAINT fk_delivery_zone
     FOREIGN KEY(deliveryZone) 
-    REFERENCES deliveryZone(deliveryZone) ON DELETE SET NULL
+    REFERENCES deliveryZone(id) ON DELETE SET NULL
 );
 
 
