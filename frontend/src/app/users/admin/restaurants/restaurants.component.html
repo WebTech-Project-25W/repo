@@ -42,6 +42,7 @@
         <th>phone number</th>
         <th>cuisine</th>
         <th>delivery zone</th>
+        <th>service fee</th>
         <th>status</th>
       </tr>
     </thead>
@@ -56,6 +57,7 @@
         <td>{{ restaurant.phonenumber }}</td>
         <td>{{ restaurant.cuisine }}</td>
         <td>{{ restaurant.deliveryzone }}</td>
+        <td>{{ serviceFeeToString(restaurant) }}</td>
         <td>
           <select *ngIf="!restaurant.isUpdating" [class.status-pill]="true"
             [attr.data-status]="restaurant.approvalstatus" [ngModel]="restaurant.approvalstatus"

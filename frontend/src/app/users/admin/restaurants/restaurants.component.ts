@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
+import { Restaurant } from '../../../model/restaurant';
 
 @Component({
   selector: 'app-restaurants',
@@ -72,6 +73,25 @@ export class RestaurantsComponent {
     });
   }
 
+  serviceFeeToString(restaurant: Restaurant): string {
+    if (!restaurant.serviceFeeType || !restaurant.serviceFee) {
+      return '';
+    }
+
+    if (restaurant.serviceFeeType === 'cents') {
+      return (restaurant.serviceFee/100).toLocaleString('en-GB', {
+        style: 'currency',
+        currency: 'EUR',
+      });
+    }
+    
+    if (restaurant.serviceFeeType === 'percent') {
+      return restaurant.serviceFee+'%';
+    }
+    
+    return '';
+  }
+
   applyFilters(): void {
     this.currentPage = 0;
     this.loadRestaurants();
@@ -96,12 +116,12 @@ export class RestaurantsComponent {
   }
 
   onStatusChange(event: any, restaurant: any) {
-    
+
     const oldValue = restaurant.approvalstatus;
     const newValue = event.target.value;
     restaurant.isUpdating = true;
 
-    this.adminService.updateApprovalStatus(restaurant.id, newValue) 
+    this.adminService.updateApprovalStatus(restaurant.id, newValue)
       .subscribe({
         next: (response: any) => {
           restaurant.approvalstatus = response.approvalstatus;
@@ -116,26 +136,26 @@ export class RestaurantsComponent {
   }
 
   isTransitionAllowed(currentStatus: string, targetStatus: string): boolean {
-  // Always allow keeping the current status
-  if (currentStatus === targetStatus) return true;
+    // Always allow keeping the current status
+    if (currentStatus === targetStatus) return true;
 
-  switch (currentStatus) {
-    case 'pending':
-      // From pending, you can only go to approved or rejected
-      return ['approved', 'rejected'].includes(targetStatus);
-    case 'approved':
-      // From approved, you can only suspend
-      return targetStatus === 'suspended';
-    case 'suspended':
-      // From suspended, you can only go back to approved
-      return targetStatus === 'approved';
-    case 'rejected':
-      // rejected is a final state
-      return false; 
-    default:
-      return false;
+    switch (currentStatus) {
+      case 'pending':
+        // From pending, you can only go to approved or rejected
+        return ['approved', 'rejected'].includes(targetStatus);
+      case 'approved':
+        // From approved, you can only suspend
+        return targetStatus === 'suspended';
+      case 'suspended':
+        // From suspended, you can only go back to approved
+        return targetStatus === 'approved';
+      case 'rejected':
+        // rejected is a final state
+        return false;
+      default:
+        return false;
+    }
   }
-}
 
   nextPage(): void {
     // Prevent navigating past the last page
