@@ -162,7 +162,19 @@ router.get('/restaurants', async (req, res) => {
   const { id, name, owner, status, address, phoneNum, postcode, cuisine, deliveryZone, limit = 50, offset = 0 } = req.query;
 
   // Start with a base query
-  let query = `SELECT *, COUNT(*) OVER() as totalEntries FROM restaurant WHERE 1=1`;
+  let query = `SELECT 
+    id,
+    name,
+    owneremail,
+    address,
+    postcode,
+    phonenumber,
+    cuisine,
+    deliveryzone, 
+    approvalStatus,
+    servicefee as "serviceFee",
+    servicefeetype as "serviceFeeType",
+    COUNT(*) OVER() as totalEntries FROM restaurant WHERE 1=1`;
   const params = [];
 
   // Dynamically add filters
