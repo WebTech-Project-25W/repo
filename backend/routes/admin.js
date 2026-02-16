@@ -301,8 +301,8 @@ router.put('/restaurants/:id/service-fee', async (req, res) => {
     return res.status(400).json({ error: "Don't be ridiculous: service fee too large." });
   }
 
-  if (Number.isNaN(Number(updateServiceFee))) {
-    return res.status(400).json({ error: "Service fee must be a number." });
+  if (!Number.isInteger(Number(updateServiceFee))) {
+    return res.status(400).json({ error: "Service fee must be a whole number of cents or percent." });
   }
 
   const query = {
