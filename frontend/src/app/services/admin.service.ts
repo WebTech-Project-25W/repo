@@ -50,12 +50,12 @@ export class AdminService {
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
 
-    return this.http.get<any>(`${this.apiUrl}/customers`, { params });
+    return this.http.get<any>(`${this.apiUrl}/users/customers`, { params });
   }
 
   updateBlockedStatus(userEmail: number, newStatus: string) {
     return this.http.patch(
-      `${this.apiUrl}/customers/${userEmail}/blocked-status`,
+      `${this.apiUrl}/users/customers/${userEmail}/blocked-status`,
       { "blockedStatus": newStatus }
     );
   }
