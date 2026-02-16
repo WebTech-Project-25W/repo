@@ -283,10 +283,50 @@ router.patch('/restaurants/:id/approval-status', async (req, res) => {
 
     res.status(200).json(results.rows[0]);
   } catch (error) {
-    console.error(`Error while approving restaurant with id: "${restaurantId}"`, error.message);
-    res.status(500).json({ error: `Error while approving restaurant with id: "${restaurantId}"` + error.message });
+    console.error(`Error while updating approval status of restaurant with id: "${restaurantId}"`, error.message);
+    res.status(500).json({ error: `Error while updating approval status of restaurant with id: "${restaurantId}"` + error.message });
   }
 })
+
+router.put('/restaurants/:id/service-fee', async (req, res) => {
+  const restaurantId = req.params.id;
+  let { updateServiceFee, updateServiceFeeType } = req.body;
+  updateServiceFee = (updateServiceFee === '') ? 0 : updateServiceFee;
+
+  if (updateServiceFee < 0) {
+    return res.status(400).json({ error: "Service fee must be greater or equal to 0." });
+  }
+
+  if (updateServiceFee > 2147483647) {
+    return res.status(400).json({ error: "Don't be ridiculous: service fee too large." });
+  }
+
+  if (Number.isNaN(Number(updateServiceFee))) {
+    return res.status(400).json({ error: "Service fee must be a number." });
+  }
+
+  const query = {
+    text: `UPDATE restaurant SET
+          servicefee = $1,
+          servicefeetype = $2
+          WHERE id = $3
+          RETURNING id, servicefee as "serviceFee", servicefeetype as "serviceFeeType"`,
+    values: [updateServiceFee, updateServiceFeeType, restaurantId]
+  };
+
+  try {
+    const results = await pool.query(query);
+
+    if (results.rows.length <= 0) {
+      return res.status(409).json({ error: `No restaurants with id "${restaurantId}".` });
+    }
+
+    res.status(200).json(results.rows[0]);
+  } catch (error) {
+    console.error(`Error while updating approval status of restaurant with id: "${restaurantId}"`, error.message);
+    res.status(500).json({ error: `"${restaurantId}"` + error.message });
+  }
+});
 
 router.get('/login-logs', async (req, res) => {
   const { email, status, limit = 50, offset = 0 } = req.query;
