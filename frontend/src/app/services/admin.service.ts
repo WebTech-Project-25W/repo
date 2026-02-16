@@ -119,7 +119,7 @@ export class AdminService {
   }
 
   getKeyStats() {
-    return this.http.get<any>(`${this.apiUrl}/key-stats`);
+    return this.http.get<any>(`${this.apiUrl}/analytics/key-stats`);
   }
 
   getDeliveryZones(id: number | undefined, isActive: boolean | undefined, limit: number, offset: number) {
