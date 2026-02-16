@@ -3,6 +3,7 @@ import { AdminService } from '../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Restaurant } from '../../../model/restaurant';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-restaurants',
@@ -91,21 +92,27 @@ export class RestaurantsComponent {
     return '';
   }
 
-  
+
   editServiceFee(restaurant: any) {
-    restaurant.updateServiceFee = (restaurant.serviceFeeType==='percent') ? restaurant.serviceFee : restaurant.serviceFee/100;
+    restaurant.updateServiceFee = (restaurant.serviceFeeType === 'percent') ? restaurant.serviceFee : restaurant.serviceFee / 100;
     restaurant.updateServiceFeeType = restaurant.serviceFeeType;
     restaurant.isEditingServiceFee = true;
   }
-  
+
   saveServiceFee(restaurant: any) {
     // only update if changed
     if (restaurant.serviceFee !== restaurant.updateServiceFee || restaurant.serviceFeeType !== restaurant.updateServiceFeeType) {
+      let updateServiceFee = (restaurant.updateServiceFee) ? restaurant.updateServiceFee : 0;
+      updateServiceFee = (restaurant.updateServiceFeeType === 'cents') ? updateServiceFee * 100 : updateServiceFee;
 
-      let updateServiceFee = (restaurant.updateServiceFee) ? restaurant.updateServiceFee : 0 ;
-      updateServiceFee = (restaurant.updateServiceFeeType==='cents') ? updateServiceFee*100 : updateServiceFee;
-      
+      restaurant.isUpdatingServiceFee = true;
       this.adminService.updateServiceFee(restaurant.id, updateServiceFee, restaurant.updateServiceFeeType)
+        .pipe(
+          finalize(() => {
+            restaurant.isUpdatingServiceFee = false;
+            restaurant.isEditingServiceFee = false;
+          })
+        )
         .subscribe({
           next: (resp: any) => {
             restaurant.serviceFee = resp.serviceFee;
@@ -113,12 +120,13 @@ export class RestaurantsComponent {
           },
           error: (err: any) => {
             console.error(err.error);
-          }
+          },
         })
 
+    } else {
+      restaurant.isEditingServiceFee = false;
     }
 
-    restaurant.isEditingServiceFee = false;
     return;
   }
   applyFilters(): void {

@@ -67,13 +67,13 @@
               <option value="percent">%</option>
             </select>
           }
-          
-            @if (!restaurant.isEditingServiceFee) {
-              <button (click)="editServiceFee(restaurant)">edit</button>
-            } @else {
-              <button (click)="saveServiceFee(restaurant)">save</button>
-            }
-          
+          @if (!restaurant.isEditingServiceFee && !restaurant.isUpdatingServiceFee) {
+            <button (click)="editServiceFee(restaurant)">edit</button>
+          } @else if (!restaurant.isUpdatingServiceFee) {
+            <button (click)="saveServiceFee(restaurant)">save</button>
+          } @else {
+            <span class="spinner"></span>
+          }
         </div></td>
         <td>
           <select *ngIf="!restaurant.isUpdatingStatus" [class.status-pill]="true"
