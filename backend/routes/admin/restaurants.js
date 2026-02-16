@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../pool.js');
 
-// routes prefixed by '/restaurants' in use in admin.js file
+// prefix '/admin/restaurants'
 
 router.get('/', async (req, res) => {
   const { id, name, owner, status, address, phoneNum, postcode, cuisine, deliveryZone, limit = 50, offset = 0 } = req.query;

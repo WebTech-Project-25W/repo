@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../pool.js');
 
-// prefix 'admin/logs/'
+// prefix '/admin/logs'
 
 router.get('/logins', async (req, res) => {
   const { email, status, limit = 50, offset = 0 } = req.query;

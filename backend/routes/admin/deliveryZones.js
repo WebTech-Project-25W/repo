@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../pool.js');
 
-// prefixed by '/delivery-zones' in admin.js
+// prefix '/admin/delivery-zones'
 
 router.get('/', async (req, res) => {
   const { limit = 50, offset = 0 } = req.query;

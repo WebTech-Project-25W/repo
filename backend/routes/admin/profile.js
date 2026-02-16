@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../pool.js');
 
-// prefixed by /profile' in admin.js
+// prefix '/admin/profile'
 
 router.get('/', async (req, res) => {
   const email = req.user.email;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../pool.js');
 
-// prefix 'admin/analytics/'
+// prefix '/admin/analytics'
 
 router.get('/key-stats', async (req, res) => {
   try {

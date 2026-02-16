@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../pool.js');
 
-// routes prefixed by '/vouchers' in admin.jss
+// prefix '/admin/vouchers'
 
 router.get('/', async (req, res) => {
   const { limit = 50, offset = 0 } = req.query;
