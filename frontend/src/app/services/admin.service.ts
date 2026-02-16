@@ -109,6 +109,15 @@ export class AdminService {
     );
   }
 
+  updateServiceFee(restaurantId: number, updateServiceFee: number, updateServiceFeeType: string) {
+    return this.http.put<any>(`${this.apiUrl}/restaurants/${restaurantId}/service-fee`,
+      { 
+        "updateServiceFee": updateServiceFee, 
+        "updateServiceFeeType": updateServiceFeeType
+      }
+    )
+  }
+
   getKeyStats() {
     return this.http.get<any>(`${this.apiUrl}/key-stats`);
   }

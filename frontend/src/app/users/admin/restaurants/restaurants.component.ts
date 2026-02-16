@@ -30,7 +30,6 @@ export class RestaurantsComponent {
   searchCuisine: string = '';
   searchDeliveryZone: string = '';
 
-
   constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
@@ -79,19 +78,49 @@ export class RestaurantsComponent {
     }
 
     if (restaurant.serviceFeeType === 'cents') {
-      return (restaurant.serviceFee/100).toLocaleString('en-GB', {
+      return (restaurant.serviceFee / 100).toLocaleString('en-GB', {
         style: 'currency',
         currency: 'EUR',
       });
     }
-    
+
     if (restaurant.serviceFeeType === 'percent') {
-      return restaurant.serviceFee+'%';
+      return restaurant.serviceFee + '%';
     }
-    
+
     return '';
   }
 
+  
+  editServiceFee(restaurant: any) {
+    restaurant.updateServiceFee = (restaurant.serviceFeeType==='percent') ? restaurant.serviceFee : restaurant.serviceFee/100;
+    restaurant.updateServiceFeeType = restaurant.serviceFeeType;
+    restaurant.isEditingServiceFee = true;
+  }
+  
+  saveServiceFee(restaurant: any) {
+    // only update if changed
+    if (restaurant.serviceFee !== restaurant.updateServiceFee || restaurant.serviceFeeType !== restaurant.updateServiceFeeType) {
+
+      let updateServiceFee = (restaurant.updateServiceFee) ? restaurant.updateServiceFee : 0 ;
+      updateServiceFee = (restaurant.updateServiceFeeType==='cents') ? updateServiceFee*100 : updateServiceFee;
+      
+      this.adminService.updateServiceFee(restaurant.id, updateServiceFee, restaurant.updateServiceFeeType)
+        .subscribe({
+          next: (resp: any) => {
+            restaurant.serviceFee = resp.serviceFee;
+            restaurant.serviceFeeType = resp.serviceFeeType;
+          },
+          error: (err: any) => {
+            console.error(err.error);
+          }
+        })
+
+    }
+
+    restaurant.isEditingServiceFee = false;
+    return;
+  }
   applyFilters(): void {
     this.currentPage = 0;
     this.loadRestaurants();
@@ -119,17 +148,17 @@ export class RestaurantsComponent {
 
     const oldValue = restaurant.approvalstatus;
     const newValue = event.target.value;
-    restaurant.isUpdating = true;
+    restaurant.isUpdatingStatus = true;
 
     this.adminService.updateApprovalStatus(restaurant.id, newValue)
       .subscribe({
         next: (response: any) => {
           restaurant.approvalstatus = response.approvalstatus;
-          restaurant.isUpdating = false;
+          restaurant.isUpdatingStatus = false;
         },
         error: (err) => {
           event.target.value = oldValue;
-          restaurant.isUpdating = false;
+          restaurant.isUpdatingStatus = false;
           alert('failed to update status of restaurant: ' + restaurant.id);
         }
       })

@@ -57,9 +57,26 @@
         <td>{{ restaurant.phonenumber }}</td>
         <td>{{ restaurant.cuisine }}</td>
         <td>{{ restaurant.deliveryzone }}</td>
-        <td>{{ serviceFeeToString(restaurant) }}</td>
+        <td><div class="service-fee-container">
+          @if (!restaurant.isEditingServiceFee) {
+            {{ serviceFeeToString(restaurant) }}
+          } @else{
+            <input class="service-fee-input" [(ngModel)]="restaurant.updateServiceFee" placeholder="fee">
+            <select [(ngModel)]="restaurant.updateServiceFeeType">
+              <option value="cents">€</option>
+              <option value="percent">%</option>
+            </select>
+          }
+          
+            @if (!restaurant.isEditingServiceFee) {
+              <button (click)="editServiceFee(restaurant)">edit</button>
+            } @else {
+              <button (click)="saveServiceFee(restaurant)">save</button>
+            }
+          
+        </div></td>
         <td>
-          <select *ngIf="!restaurant.isUpdating" [class.status-pill]="true"
+          <select *ngIf="!restaurant.isUpdatingStatus" [class.status-pill]="true"
             [attr.data-status]="restaurant.approvalstatus" [ngModel]="restaurant.approvalstatus"
             (change)="onStatusChange($event, restaurant)">
 
@@ -70,7 +87,7 @@
             <option *ngIf="isTransitionAllowed(restaurant.approvalstatus, 'suspended')"value="suspended">Suspended</option>
           </select>
 
-          <span *ngIf="restaurant.isUpdating" class="status-pill loading-label">
+          <span *ngIf="restaurant.isUpdatingStatus" class="status-pill loading-label">
             <span class="spinner"></span> Updating.
           </span>
         </td>

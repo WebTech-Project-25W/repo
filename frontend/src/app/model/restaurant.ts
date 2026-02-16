@@ -8,6 +8,4 @@ export class Restaurant{
   phonenumber!: string;
   serviceFee!: number;
   serviceFeeType!: string;
-
-  isUpdating!: boolean;
 }

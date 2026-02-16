@@ -46,6 +46,22 @@
   margin-top: 2px;
 }
 
+.service-fee-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-fee-container > button {
+  padding: 2px;
+  text-align: center;
+}
+
+.service-fee-input {
+  width: 6ch;
+}
+
 /* Status Pills for order_status ENUM */
 .status-pill {
   padding: 5px 10px;
