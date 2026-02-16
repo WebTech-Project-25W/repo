@@ -86,7 +86,7 @@ export class AdminService {
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
 
-    return this.http.get<any>(`${this.apiUrl}/login-logs`, { params });
+    return this.http.get<any>(`${this.apiUrl}/logs/logins`, { params });
   }
 
   getOrderLogs(orderId?: number, email?: string, status?: string, restaurant?: string, limit?: number, offset?: number) {
@@ -99,7 +99,7 @@ export class AdminService {
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
 
-    return this.http.get<any>(`${this.apiUrl}/order-logs`, { params });
+    return this.http.get<any>(`${this.apiUrl}/logs/orders`, { params });
   }
 
   updateApprovalStatus(restaurantId: number, newStatus: string) {

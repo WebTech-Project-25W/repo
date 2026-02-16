@@ -161,7 +161,7 @@ router.patch('/customers/:email/blocked-status', async (req, res) => {
 const restaurantRoutes = require('./admin/restaurants.js')
 router.use('/restaurants', restaurantRoutes);
 
-router.get('/login-logs', async (req, res) => {
+router.get('/logs/logins', async (req, res) => {
   const { email, status, limit = 50, offset = 0 } = req.query;
 
   // Start with a base query
@@ -205,7 +205,7 @@ router.get('/login-logs', async (req, res) => {
   }
 });
 
-router.get('/order-logs', async (req, res) => {
+router.get('/logs/orders', async (req, res) => {
   const { orderId, status, restaurant, customerEmail, limit = 50, offset = 0 } = req.query;
 
   // Start with a base query
