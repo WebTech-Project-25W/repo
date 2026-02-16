@@ -527,7 +527,7 @@ router.get('/vouchers', async (req, res) => {
   }
 });
 
-router.put('/voucher/:id', async (req, res) => {
+router.put('/vouchers/:id', async (req, res) => {
   const voucherId = req.params.id;
   const updatedData = req.body;
 
@@ -568,7 +568,7 @@ router.put('/voucher/:id', async (req, res) => {
   }
 });
 
-router.post('/voucher', async (req, res) => {
+router.post('/vouchers', async (req, res) => {
   const { code, discount, isActive } = req.body;
 
   // 1. Basic Validation
@@ -608,7 +608,7 @@ router.post('/voucher', async (req, res) => {
 });
 
 // DELETE /api/voucher/:id
-router.delete('/voucher/:id', async (req, res) => {
+router.delete('/vouchers/:id', async (req, res) => {
   const { id } = req.params;
 
   // 1. Validation: Ensure the ID is a valid number
@@ -695,7 +695,7 @@ router.get('/delivery-zones', async (req, res) => {
   }
 });
 
-router.put('/delivery-zone/:id', async (req, res) => {
+router.put('/delivery-zones/:id', async (req, res) => {
   const id = req.params.id;
   const updatedIsActive = req.body.isActive;
 
@@ -724,7 +724,7 @@ router.put('/delivery-zone/:id', async (req, res) => {
   }
 });
 
-router.post('/delivery-zone', async (req, res) => {
+router.post('/delivery-zones', async (req, res) => {
   const { id, isActive } = req.body;
 
   // 1. Basic Validation
@@ -766,7 +766,7 @@ router.post('/delivery-zone', async (req, res) => {
 });
 
 // DELETE /api/deliveryZone/:id
-router.delete('/delivery-zone/:id', async (req, res) => {
+router.delete('/delivery-zones/:id', async (req, res) => {
   const { id } = req.params;
 
   // 1. Validation: Ensure the ID is a valid delivery zone

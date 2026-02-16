@@ -138,7 +138,7 @@ export class AdminService {
       id: id,
       isActive: isActive,
     }
-    return this.http.put<any>(`${this.apiUrl}/delivery-zone/${id}`, body);
+    return this.http.put<any>(`${this.apiUrl}/delivery-zones/${id}`, body);
   }
 
   addDeliveryZone(id: string, isActive: boolean) {
@@ -146,11 +146,11 @@ export class AdminService {
       id: id,
       isActive: isActive,
     }
-    return this.http.post<any>(`${this.apiUrl}/delivery-zone`, body);
+    return this.http.post<any>(`${this.apiUrl}/delivery-zones`, body);
   }
 
   deleteDeliveryZone(id: String) {
-    return this.http.delete<any>(`${this.apiUrl}/delivery-zone/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/delivery-zones/${id}`);
   }
 
   getVouchers(searchFilters: any, limit: number, offset: number) {
@@ -175,7 +175,7 @@ export class AdminService {
       discount: discount,
       isActive: isActive,
     }
-    return this.http.put<any>(`${this.apiUrl}/voucher/${id}`, body);
+    return this.http.put<any>(`${this.apiUrl}/vouchers/${id}`, body);
   }
 
   addVoucher(code: string, discount: number, isActive: boolean) {
@@ -184,11 +184,11 @@ export class AdminService {
       discount: discount,
       isActive: isActive,
     }
-    return this.http.post<any>(`${this.apiUrl}/voucher`, body);
+    return this.http.post<any>(`${this.apiUrl}/vouchers`, body);
   }
 
   deleteVoucher(id: number) {
-    return this.http.delete<any>(`${this.apiUrl}/voucher/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/vouchers/${id}`);
   }
 
   getProfile() {
