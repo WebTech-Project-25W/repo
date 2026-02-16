@@ -99,7 +99,7 @@ CREATE TABLE restaurant
     FOREIGN KEY(deliveryZone) 
     REFERENCES deliveryZone(id) ON DELETE SET NULL,
 
-  serviceFee int,
+  serviceFee int CHECK(serviceFee >= 0),
   serviceFeeType service_fee_type,
   CONSTRAINT fee_requires_type
     CHECK (serviceFee IS NULL OR serviceFeeType IS NOT NULL)
@@ -144,7 +144,7 @@ CREATE TABLE "Order" (
     discountCodes varchar(50),
     deliveryAddress varchar(255),
     deliveryOptions varchar(100),
-    serviceFee int,
+    serviceFee int CHECK(serviceFee >= 0),
     serviceFeeType service_fee_type,
     CONSTRAINT fee_requires_type
       CHECK (serviceFee IS NULL OR serviceFeeType IS NOT NULL)
