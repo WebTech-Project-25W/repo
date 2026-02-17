@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Restaurant } from '../../../model/restaurant';
 import { finalize } from 'rxjs';
+import { SpinnerComponent } from "../../../shared/spinner/spinner.component";
 
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, SpinnerComponent],
   templateUrl: './restaurants.component.html',
   styleUrl: './restaurants.component.css'
 })

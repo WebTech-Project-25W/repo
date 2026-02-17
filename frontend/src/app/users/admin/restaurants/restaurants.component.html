@@ -72,7 +72,7 @@
           } @else if (!restaurant.isUpdatingServiceFee) {
             <button (click)="saveServiceFee(restaurant)">save</button>
           } @else {
-            <span class="spinner"></span>
+            <app-spinner/>
           }
         </div></td>
         <td>
@@ -88,7 +88,7 @@
           </select>
 
           <span *ngIf="restaurant.isUpdatingStatus" class="status-pill loading-label">
-            <span class="spinner"></span> Updating.
+            <app-spinner/> Updating.
           </span>
         </td>
       </tr>
