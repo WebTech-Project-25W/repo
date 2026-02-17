@@ -1,0 +1,19 @@
+<div class="pagination-controls">
+  <div class="limit-selector">
+    <label for="limit">Rows per page:</label>
+    <select id="limit" [ngModel]="limit" (ngModelChange)="limitChange.emit($event)">
+      <option [ngValue]="5">5</option>
+      <option [ngValue]="10">10</option>
+      <option [ngValue]="20">20</option>
+      <option [ngValue]="50">50</option>
+    </select>
+  </div>
+  <div class="page-navigation">
+    <button (click)="pageChange.emit(currentPage-1)" [disabled]="currentPage === 0">
+      Previous
+    </button>
+    <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
+    <button (click)="pageChange.emit(currentPage+1)" [disabled]="endIndex >= totalEntries">
+      Next
+    </button>
+  </div>
