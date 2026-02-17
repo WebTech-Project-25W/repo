@@ -3,43 +3,31 @@ import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { User } from '../../../../model/user';
+import { PaginationComponent } from "../../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../../shared/pagination/base-paginated-table';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, PaginationComponent],
   templateUrl: './admins.component.html',
   styleUrl: './admins.component.css'
 })
-export class AdminsComponent implements OnInit {
-  admins: User[] = [];
-
-  // Pagination config
-  limit: number = 5;
-  currentPage: number = 0;
-  totalEntries: number = 0;
-
+export class AdminsComponent extends BasePaginatedTable<User> implements OnInit {
   // Search filters
   searchEmail: string = '';
   searchFirstName: string = '';
   searchLastName: string = '';
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) { 
+    super();
+  }
 
   ngOnInit(): void {
-    this.loadAdmins();
+    this.loadData();
   }
 
-  get startIndex(): number {
-    return this.currentPage * this.limit;
-  }
-
-  get endIndex(): number {
-    const end = (this.currentPage * this.limit) + this.admins.length;
-    return end > this.totalEntries ? this.totalEntries : end;
-  }
-
-  loadAdmins(): void {
+  loadData(): void {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getUsers(
@@ -53,7 +41,7 @@ export class AdminsComponent implements OnInit {
       offset
     ).subscribe({
       next: (resp: any) => {
-        this.admins = resp.data;
+        this.data = resp.data;
         this.totalEntries = parseInt(resp.metadata.totalEntries);
       },
       error: (err: any) => {
@@ -64,7 +52,7 @@ export class AdminsComponent implements OnInit {
 
   applyFilters(): void {
     this.currentPage = 0;
-    this.loadAdmins();
+    this.loadData();
   }
 
   clearFilters(): void {
@@ -72,24 +60,5 @@ export class AdminsComponent implements OnInit {
     this.searchFirstName = '';
     this.searchLastName = '';
     this.applyFilters();
-  }
-
-  onLimitChange(): void {
-    this.currentPage = 0;
-    this.loadAdmins();
-  }
-
-  nextPage(): void {
-    if (this.endIndex < this.totalEntries) {
-      this.currentPage++;
-      this.loadAdmins();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadAdmins();
-    }
   }
 }
