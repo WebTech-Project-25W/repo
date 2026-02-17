@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
-import { AdminDashboardComponent } from './users/admin/dashboard/dashboard.component';
+import { AdminLayoutComponent } from './users/admin/admin-layout/admin-layout.component';
 import { OwnerDashboardComponent } from './users/restaurantOwner/dashboard/dashboard.component';
 
 import { RestaurantsComponent } from './public/restaurants/restaurants.component';
@@ -35,7 +35,7 @@ export const routes: Routes = [
   // 👨‍💼 SITE MANAGER (ADMIN)
   {
     path: 'admin',
-    component: AdminDashboardComponent,
+    component: AdminLayoutComponent,
     children: [
       {
         path: 'dashboard',
