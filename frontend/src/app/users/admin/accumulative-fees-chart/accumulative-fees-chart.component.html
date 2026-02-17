@@ -1,1 +1,9 @@
-<canvas #accumulativeFeesCanvas></canvas>
+@if (isLoadingAccumulativeFees) {
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+}
+
+<div [style.display]="isLoadingAccumulativeFees ? 'none' : 'block'" style="height: 400px;">
+  <canvas #accumulativeFeesCanvas></canvas>
+</div>
