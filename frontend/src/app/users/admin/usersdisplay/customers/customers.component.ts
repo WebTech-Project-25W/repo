@@ -2,23 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
-import { customer } from '../../../../model/customer';
+import { Customer } from '../../../../model/customer';
 import { SpinnerComponent } from "../../../../shared/spinner/spinner.component";
+import { PaginationComponent } from "../../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../../shared/pagination/base-paginated-table';
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [FormsModule, CommonModule, SpinnerComponent],
+  imports: [FormsModule, CommonModule, SpinnerComponent, PaginationComponent],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css'
 })
-export class CustomersComponent implements OnInit {
-  customers: customer[] = [];
-
-  // Pagination config
-  limit: number = 10;
-  currentPage: number = 0;
-  totalEntries: number = 0;
+export class CustomersComponent extends BasePaginatedTable<Customer> implements OnInit {
 
   // Search filters
   searchEmail: string = '';
@@ -28,22 +24,15 @@ export class CustomersComponent implements OnInit {
   searchPostcode: string = '';
   searchDeliveryZone: string = '';
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) {
+    super()
+   }
 
   ngOnInit(): void {
-    this.loadCustomers();
+    this.loadData();
   }
 
-  get startIndex(): number {
-    return this.currentPage * this.limit;
-  }
-
-  get endIndex(): number {
-    const end = (this.currentPage * this.limit) + this.customers.length;
-    return end > this.totalEntries ? this.totalEntries : end;
-  }
-
-  loadCustomers(): void {
+  override loadData(): void {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getCustomers(
@@ -57,7 +46,7 @@ export class CustomersComponent implements OnInit {
       offset
     ).subscribe({
       next: (resp: any) => {
-        this.customers = resp.data;
+        this.data = resp.data;
         this.totalEntries = parseInt(resp.metadata.totalEntries);
       },
       error: (err: any) => {
@@ -68,7 +57,7 @@ export class CustomersComponent implements OnInit {
 
   applyFilters(): void {
     this.currentPage = 0;
-    this.loadCustomers();
+    this.loadData();
   }
 
   clearFilters(): void {
@@ -79,11 +68,6 @@ export class CustomersComponent implements OnInit {
     this.searchPostcode = '';
     this.searchDeliveryZone = '';
     this.applyFilters();
-  }
-
-  onLimitChange(): void {
-    this.currentPage = 0;
-    this.loadCustomers();
   }
 
   // Logic to block/unblock a customer
@@ -104,19 +88,5 @@ export class CustomersComponent implements OnInit {
           alert('Failed to update status of customer: ' + customer.email);
         }
       });
-  }
-
-  nextPage(): void {
-    if (this.endIndex < this.totalEntries) {
-      this.currentPage++;
-      this.loadCustomers();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadCustomers();
-    }
   }
 }
