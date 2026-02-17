@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { AdminService } from '../../../services/admin.service';
+import { AccumulativeFeesChartComponent } from "../accumulative-fees-chart/accumulative-fees-chart.component";
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, AccumulativeFeesChartComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.css'
 })
@@ -37,8 +38,6 @@ export class OverviewComponent implements OnInit {
       }
     });
   }
-
-
 
   getTotalRevenue() {
     return this.revenue;

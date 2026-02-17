@@ -122,6 +122,10 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/analytics/key-stats`);
   }
 
+  getAccumulativeFees() {
+    return this.http.get<any>(`${this.apiUrl}/analytics/accumulative-fees`);
+  }
+
   getDeliveryZones(id: number | undefined, isActive: boolean | undefined, limit: number, offset: number) {
     let params = new HttpParams();
 
