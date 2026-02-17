@@ -3,11 +3,12 @@ import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { customer } from '../../../../model/customer';
+import { SpinnerComponent } from "../../../../shared/spinner/spinner.component";
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, SpinnerComponent],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css'
 })
