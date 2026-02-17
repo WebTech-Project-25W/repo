@@ -68,30 +68,6 @@ option[value="false"]  { color: #842029; background-color: #f8d7da; }
   border: 1px solid #ced4da; 
 }
 
-/* Container to center the spinner inside the card */
-.spinner-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 8px 16px;
-  height: 38px;
-}
-
-/* The Spinner Animation */
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #495057; 
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* Filter Bar Styles */
 .filter-bar {
   display: flex;

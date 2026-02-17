@@ -2,11 +2,13 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DeliveryZone } from '../../../../model/deliveryZone';
 import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
+import { SidebarComponent } from "../../../../shared/sidebar/sidebar.component";
+import { SpinnerComponent } from "../../../../shared/spinner/spinner.component";
 
 @Component({
   selector: 'app-delivery-zones',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SidebarComponent, SpinnerComponent],
   templateUrl: './delivery-zones.component.html',
   styleUrl: './delivery-zones.component.css'
 })
