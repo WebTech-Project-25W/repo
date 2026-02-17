@@ -2,14 +2,15 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { finalize } from 'rxjs';
 import { Chart, registerables } from 'chart.js';
-import 'chartjs-adapter-date-fns'; 
+import 'chartjs-adapter-date-fns';
+import { SpinnerComponent } from "../../../shared/spinner/spinner.component"; 
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-accumulative-fees-chart',
   standalone: true,
-  imports: [],
+  imports: [SpinnerComponent],
   templateUrl: './accumulative-fees-chart.component.html',
   styleUrl: './accumulative-fees-chart.component.css'
 })
