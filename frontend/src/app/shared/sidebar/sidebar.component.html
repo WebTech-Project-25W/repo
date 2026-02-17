@@ -1,0 +1,15 @@
+<aside class="sidebar">
+  <h2 class="brand">{{ title }}</h2>
+
+  <nav class="menu">
+    <a *ngFor="let item of menuItems"
+       [routerLink]="item.route"
+       routerLinkActive="active">
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <div *ngIf="showLogout" class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+</aside>
