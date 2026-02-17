@@ -1,6 +1,6 @@
 import { User } from "./user";
 
-export class customer extends User {
+export class Customer extends User {
   status?: string;
   address?: string;
   postcode?: string;
