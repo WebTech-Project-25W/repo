@@ -9,9 +9,7 @@
         <span class="stat-label">Total Orders</span>
 
         @if (isLoadingStats) {
-        <div class="spinner-container">
-          <div class="spinner"></div>
-        </div>
+          <app-spinner/>
         } @else {
         <span class="stat-value">{{ totalOrders }}</span>
         }
@@ -21,9 +19,7 @@
         <span class="stat-label">Total Revenue</span>
 
         @if (isLoadingStats) {
-        <div class="spinner-container">
-          <div class="spinner"></div>
-        </div>
+          <app-spinner/>
         } @else {
         <span class="stat-value">{{ revenue ?? 0 | currency:'EUR':'symbol':'1.0' }}</span>
         }
@@ -32,9 +28,7 @@
       <div class="stat-card">
         <span class="stat-label">Total Logins</span>
         @if (isLoadingStats) {
-        <div class="spinner-container">
-          <div class="spinner"></div>
-        </div>
+          <app-spinner/>
         } @else {
         <span class="stat-value">{{ totalLogins }}</span>
         }
@@ -43,9 +37,7 @@
       <div class="stat-card">
         <span class="stat-label">Meals Delivered</span>
         @if (isLoadingStats) {
-        <div class="spinner-container">
-          <div class="spinner"></div>
-        </div>
+          <app-spinner/>
         } @else {
         <span class="stat-value">{{ totalMealsDelivered }}</span>
         }

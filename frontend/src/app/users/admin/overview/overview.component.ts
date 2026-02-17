@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { AdminService } from '../../../services/admin.service';
 import { AccumulativeFeesChartComponent } from "../accumulative-fees-chart/accumulative-fees-chart.component";
+import { SpinnerComponent } from "../../../shared/spinner/spinner.component";
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CurrencyPipe, AccumulativeFeesChartComponent],
+  imports: [CurrencyPipe, AccumulativeFeesChartComponent, SpinnerComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.css'
 })

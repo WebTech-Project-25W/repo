@@ -52,29 +52,6 @@ h3 {
   transition: background-color 0.2s ease;
 }
 
-/* Container to center the spinner inside the card */
-.spinner-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: 38px;
-}
-
-/* The Spinner Animation */
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #495057; 
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* fade-in effect for the value when it loads */
 .stat-value {
   animation: fadeIn 0.5s ease-in;
