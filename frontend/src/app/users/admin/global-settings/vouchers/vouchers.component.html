@@ -62,9 +62,7 @@
           #activeInput></td>
         <td><div class="voucher-button-container">
           @if (voucher.isSaving) {
-            <div class="spinner-container">
-              <div class="spinner"></div>
-            </div>
+            <app-spinner/>
           } @else {
             <button (click)="saveVoucher(voucher, codeInput.value, +discountInput.value, activeInput.checked)">Save</button>
           }

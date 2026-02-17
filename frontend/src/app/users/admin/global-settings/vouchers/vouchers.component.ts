@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Voucher } from '../../../../model/voucher';
 import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
+import { SpinnerComponent } from "../../../../shared/spinner/spinner.component";
 
 @Component({
   selector: 'app-vouchers',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SpinnerComponent],
   templateUrl: './vouchers.component.html',
   styleUrl: './vouchers.component.css'
 })
