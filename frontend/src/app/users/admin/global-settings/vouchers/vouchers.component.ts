@@ -1,27 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Voucher } from '../../../../model/voucher';
 import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from "../../../../shared/spinner/spinner.component";
+import { PaginationComponent } from "../../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../../shared/pagination/base-paginated-table';
 
 @Component({
   selector: 'app-vouchers',
   standalone: true,
-  imports: [FormsModule, SpinnerComponent],
+  imports: [FormsModule, SpinnerComponent, PaginationComponent],
   templateUrl: './vouchers.component.html',
   styleUrl: './vouchers.component.css'
 })
-export class VouchersComponent {
-  vouchers: Voucher[] = [];
+export class VouchersComponent extends BasePaginatedTable<Voucher> implements OnInit {
 
   // for adding a new voucher
   showAddOverlay: boolean = false;
   newVoucher = { code: '', discount: 0, isActive: true };
-
-  // Pagination config
-  limit: number = 5;
-  currentPage: number = 0;
-  totalEntries: number = 0;
 
   // Search filters
   searchId?: number;
@@ -32,22 +28,15 @@ export class VouchersComponent {
   //search range
 
   previousDiscountValue?: number;
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.loadVouchers();
+    this.loadData();
   }
 
-  get startIndex(): number {
-    return this.currentPage * this.limit;
-  }
-
-  get endIndex(): number {
-    const end = (this.currentPage * this.limit) + this.vouchers.length;
-    return end > this.totalEntries ? this.totalEntries : end;
-  }
-
-  loadVouchers(): void {
+  override loadData(): void {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getVouchers(
@@ -62,7 +51,7 @@ export class VouchersComponent {
       offset
     ).subscribe({
       next: (resp: any) => {
-        this.vouchers = resp.data;
+        this.data = resp.data;
         this.totalEntries = parseInt(resp.metadata.totalEntries);
       },
       error: (err: any) => {
@@ -105,13 +94,13 @@ export class VouchersComponent {
         .subscribe({
           next: (resp: any) => {
             console.log("voucher deleted succusfully");
-            const updatedVouchers = this.vouchers.filter(v => v.id !== Number(resp.deletedId))
-            this.vouchers = [...updatedVouchers];
+            const updatedVouchers = this.data.filter(v => v.id !== Number(resp.deletedId))
+            this.data = [...updatedVouchers];
             this.totalEntries--;
 
             // handling deleting the last voucher on a page
-            if (this.vouchers.length === 0 && this.currentPage > 0) {
-              this.previousPage();
+            if (this.data.length === 0 && this.currentPage > 0) {
+              this.onPageChange(this.currentPage -1);
             }
           },
           error: (err: any) => {
@@ -165,7 +154,7 @@ export class VouchersComponent {
 
   applyFilters(): void {
     this.currentPage = 0;
-    this.loadVouchers();
+    this.loadData();
   }
 
   clearFilters(): void {
@@ -175,25 +164,6 @@ export class VouchersComponent {
     this.searchDiscountMin = undefined;
     this.searchIsActive = undefined;
     this.applyFilters();
-  }
-
-  onLimitChange(): void {
-    this.currentPage = 0;
-    this.loadVouchers();
-  }
-
-  nextPage(): void {
-    if (this.endIndex < this.totalEntries) {
-      this.currentPage++;
-      this.loadVouchers();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadVouchers();
-    }
   }
 
   openAddVoucherOverlay() {
@@ -207,7 +177,7 @@ export class VouchersComponent {
       .subscribe({
         next: (resp: any) => {
           alert(resp.message);
-          this.loadVouchers();
+          this.loadData();
           this.closeOverlay()
         },
         error: (err: any) => {
