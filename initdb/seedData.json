@@ -688,6 +688,118 @@
     "desc": "Noodle soup with miso broth",
     "price": 12.0,
     "link": "ramen.jpg"
+  },
+    {
+    "menuID": 1,
+    "name": "Classic Margherita Pizza",
+    "desc": "Fresh basil, mozzarella, and tomato sauce",
+    "price": 14.5,
+    "link": "margherita.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Truffle Mushroom Risotto",
+      "desc": "Creamy arborio rice with wild mushrooms",
+      "price": 18.0,
+      "link": "risotto.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Grilled Salmon Fillet",
+      "desc": "Asparagus and lemon butter sauce",
+      "price": 22.5,
+      "link": "salmon.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Spicy Beef Tacos",
+      "desc": "Three tacos with salsa and lime",
+      "price": 13.0,
+      "link": "tacos.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Caesar Salad",
+      "desc": "Crisp romaine, croutons, and parmesan",
+      "price": 10.0,
+      "link": "caesar.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Butter Chicken",
+      "desc": "Creamy tomato-based curry with naan",
+      "price": 16.5,
+      "link": "butter_chicken.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "BBQ Bacon Burger",
+      "desc": "Beef patty, smoked bacon, and onion rings",
+      "price": 15.0,
+      "link": "burger.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Spaghetti Carbonara",
+      "desc": "Pancetta, egg yolk, and pecorino romano",
+      "price": 14.0,
+      "link": "carbonara.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Thai Green Curry",
+      "desc": "Coconut milk, bamboo shoots, and basil",
+      "price": 15.5,
+      "link": "greencurry.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Lamb Gyros",
+      "desc": "Warm pita, tzatziki, and red onions",
+      "price": 12.5,
+      "link": "gyros.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Crispy Calamari",
+      "desc": "Served with spicy marinara dip",
+      "price": 11.0,
+      "link": "calamari.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Quinoa Buddha Bowl",
+      "desc": "Chickpeas, avocado, and tahini dressing",
+      "price": 13.5,
+      "link": "buddha_bowl.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Pork Belly Ramen",
+      "desc": "Soft boiled egg and pickled ginger",
+      "price": 17.0,
+      "link": "ramen.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Buffalo Chicken Wings",
+      "desc": "Served with blue cheese dressing",
+      "price": 12.0,
+      "link": "wings.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Falafel Wrap",
+      "desc": "Hummus, cucumber, and pickled cabbage",
+      "price": 11.5,
+      "link": "falafel.jpg"
+    },
+    {
+      "menuID": 1,
+      "name": "Steak Frites",
+      "desc": "8oz sirloin with garlic herb butter",
+      "price": 24.0,
+      "link": "steak.jpg"
   }
   ],
 
@@ -1134,7 +1246,43 @@
     "customerEmail": "Emily@Ely.fr",
     "dishID": 9,
     "rating": 4
-  }
+  },
+  { "customerEmail": "Amy@abc.com", "dishID": 20, "rating": 4 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 21, "rating": 3 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 22, "rating": 4 },
+  { "customerEmail": "Dan@deven.at", "dishID": 23, "rating": 3 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 24, "rating": 5 },
+  { "customerEmail": "Amy@abc.com", "dishID": 25, "rating": 4 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 26, "rating": 2 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 27, "rating": 3 },
+  { "customerEmail": "Dan@deven.at", "dishID": 28, "rating": 4 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 29, "rating": 4 },
+  { "customerEmail": "Amy@abc.com", "dishID": 30, "rating": 3 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 31, "rating": 3 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 32, "rating": 5 },
+  { "customerEmail": "Dan@deven.at", "dishID": 33, "rating": 4 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 34, "rating": 2 },
+  { "customerEmail": "Amy@abc.com", "dishID": 22, "rating": 4 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 24, "rating": 3 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 26, "rating": 4 },
+  { "customerEmail": "Dan@deven.at", "dishID": 20, "rating": 3 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 28, "rating": 1 },
+  { "customerEmail": "Amy@abc.com", "dishID": 31, "rating": 4 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 33, "rating": 5 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 21, "rating": 3 },
+  { "customerEmail": "Dan@deven.at", "dishID": 25, "rating": 4 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 27, "rating": 3 },
+  { "customerEmail": "Amy@abc.com", "dishID": 34, "rating": 4 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 29, "rating": 2 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 23, "rating": 4 },
+  { "customerEmail": "Dan@deven.at", "dishID": 30, "rating": 3 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 32, "rating": 4 },
+  { "customerEmail": "Amy@abc.com", "dishID": 26, "rating": 3 },
+  { "customerEmail": "Brian@bobble.co.uk", "dishID": 20, "rating": 4 },
+  { "customerEmail": "Cam@cambridge.edu.uk", "dishID": 24, "rating": 5 },
+  { "customerEmail": "Dan@deven.at", "dishID": 31, "rating": 3 },
+  { "customerEmail": "Emily@Ely.fr", "dishID": 22, "rating": 4 },
+  { "customerEmail": "Amy@abc.com", "dishID": 28, "rating": 3 }
   ],
   
   "vouchers": [
