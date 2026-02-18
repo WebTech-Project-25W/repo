@@ -12,9 +12,9 @@ export class PublicService {
   getRestaurants(name?: string, cuisine?: string, searchHours?: string, sortBy?: string, sortDirection?: string | null, limit?: number, offset?: number) {
     let params = new HttpParams();
 
-    if (name !== undefined) { params = params.set('name', name); }
-    if (cuisine !== undefined) { params = params.set('cuisine', cuisine); }
-    if (searchHours !== undefined) { params = params.set('searchHours', searchHours); }
+    if (name !== undefined && name !== '') { params = params.set('name', name); }
+    if (cuisine !== undefined && cuisine !== '') { params = params.set('cuisine', cuisine); }
+    if (searchHours !== undefined && searchHours !== '') { params = params.set('searchHours', searchHours); }
     if (sortBy !== undefined) { params = params.set('sortBy', sortBy); }
     if (sortDirection !== undefined && sortDirection !== null) { params = params.set('sortDirection', sortDirection); }
     
