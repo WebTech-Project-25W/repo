@@ -22,7 +22,7 @@ export class RestaurantsComponent {
   totalEntries: number = 0;
 
   // Search filters
-  searchRestaurantId?: number = undefined;
+  searchRestaurantId?: string = undefined;
   searchName: string = '';
   searchOwner: string = '';
   searchStatus: string = '';
@@ -207,6 +207,14 @@ export class RestaurantsComponent {
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadRestaurants();
+    }
+  }
+
+  checkNumber(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.trim() === '' || isNaN(Number(input.value)) || !Number.isInteger(Number(input.value))) {
+      this.searchRestaurantId = undefined;
+      input.value = '';
     }
   }
 }

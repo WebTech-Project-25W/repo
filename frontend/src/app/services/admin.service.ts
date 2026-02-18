@@ -60,10 +60,12 @@ export class AdminService {
     );
   }
 
-  getRestaurants(restaurantId?: number, name?: string, owner?: string, status?: string, address?: string, phoneNum?: string, postcode?: string, cuisine?: string, deliveryzone?: string, limit?: number, offset?: number) {
+  getRestaurants(restaurantId?: string, name?: string, owner?: string, status?: string, address?: string, phoneNum?: string, postcode?: string, cuisine?: string, deliveryzone?: string, limit?: number, offset?: number) {
     let params = new HttpParams();
 
-    if (restaurantId !== undefined) { params = params.set('id', restaurantId); }
+    console.log(restaurantId);
+
+    if (restaurantId !== undefined && restaurantId !== null) { params = params.set('id', restaurantId); }
     if (name) { params = params.set('name', name); }
     if (owner) { params = params.set('owner', owner); }
     if (status) { params = params.set('status', status); }

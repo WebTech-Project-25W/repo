@@ -25,7 +25,11 @@ router.get('/', async (req, res) => {
 
   // Dynamically add filters
   if (id) {
-    params.push(`%${id}%`);
+    // validation
+    if (id.trim() === '' || isNaN(Number(id)) || !Number.isInteger(Number(id))) {
+      return res.status(400).json({error: "Restaurant Id must be an integer."});
+    }
+    params.push(id);
     query += ` AND id = $${params.length}`;
   }
 

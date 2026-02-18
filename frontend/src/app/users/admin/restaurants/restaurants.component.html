@@ -2,8 +2,8 @@
   <h2>Restaurants</h2>
 
   <div class="filter-bar">
-    <input type="number" name="searchId" [(ngModel)]="searchRestaurantId" placeholder="Search by id..."
-      (keyup.enter)="applyFilters()">
+    <input type="text" name="searchId" [(ngModel)]="searchRestaurantId" placeholder="Search by id..."
+      (keyup.enter)="applyFilters()" (input)="checkNumber($event)">
     <input type="text" name="searchName" [(ngModel)]="searchName" placeholder="Search by name..."
       (keyup.enter)="applyFilters()">
     <input type="text" name="searchOwner" [(ngModel)]="searchOwner" placeholder="Search by owner..."
