@@ -19,8 +19,8 @@ import { PublicService } from '../../../services/public.service';
   styleUrl: './dashboard.component.css'
 })
 export class CustomerDashboardComponent extends BasePaginatedTable<any> implements OnInit{
-searchText: string = '';
-selectedCuisine = 'ALL';
+searchName?: string;
+searchCuisine?: string = '';
 selectedEta: 'ALL' | 'UNDER_30' | '30_60' | 'OVER_60' = 'ALL';
 sortByRating: 'desc' | 'asc' | null = null;
 
@@ -38,8 +38,9 @@ ngOnInit(): void {
 
 override loadData(): void {
   const offset = this.currentPage * this.limit;
+  const sortBy = (this.sortByRating) ? 'rating' : undefined;
 
-  this.publicService.getRestaurants(this.limit, offset)
+  this.publicService.getRestaurants(this.searchName, this.searchCuisine, undefined ,sortBy, this.sortByRating, this.limit, offset)
   .subscribe({
     next: resp => {
       this.data = (resp.data ?? []).map((r: any) => {
@@ -74,14 +75,6 @@ cuisine: string[] = [
 
 get filteredRestaurants() {
   let result = this.data.filter((r) => {
-    const matchesSearch =
-      !this.searchText ||
-      r.name.toLowerCase().includes(this.searchText.toLowerCase());
-
-    const matchesCuisine =
-      this.selectedCuisine === 'ALL' ||
-      r.cuisine?.toLowerCase() === this.selectedCuisine.toLowerCase();
-
     let matchesEta = true;
 
 if (this.selectedEta !== 'ALL') {
@@ -101,7 +94,7 @@ if (this.selectedEta !== 'ALL') {
 }
 
 
-    return matchesSearch && matchesCuisine && matchesEta;
+    return matchesEta;
   });
 
   if (this.sortByRating) {

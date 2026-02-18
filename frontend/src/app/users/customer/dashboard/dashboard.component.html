@@ -12,15 +12,16 @@
     class="search-input"
     type="text"
     placeholder="Search restaurants"
-    [(ngModel)]="searchText"
+    [(ngModel)]="searchName"
+    (keyup.enter)="loadData()"
   />
 
   <div class="filters">
-    <select class="filter-pill" [(ngModel)]="selectedCuisine">
-      <option value="ALL">All cuisines</option>
-      <option value="asian">Asian</option>
-      <option value="italian">Italian</option>
-      <option value="austrian">Austrian</option>
+    <select class="filter-pill" [(ngModel)]="searchCuisine" (change)="loadData()">
+      <option value=''>All cuisines</option>
+      <option value="Asian">Asian</option>
+      <option value="Italian">Italian</option>
+      <option value="Austrian">Austrian</option>
     </select>
 
     <select class="filter-pill" [(ngModel)]="selectedEta">
@@ -30,7 +31,7 @@
       <option value="OVER_60">60+ min</option>
     </select>
 
-    <select class="filter-pill" [(ngModel)]="sortByRating">
+    <select class="filter-pill" [(ngModel)]="sortByRating" (change)="loadData()">
       <option [ngValue]="null">Sort by rating</option>
       <option value="desc">Rating: High → Low</option>
       <option value="asc">Rating: Low → High</option>

@@ -19,7 +19,8 @@ export class RestaurantsComponent extends BasePaginatedTable<any> implements OnI
   loading = true;
 
   // 🔍 search text
-  search = '';
+  searchName?: string;
+  searchHours?: '' | 'morning' | 'evening' = '';
 
   constructor(
     private http: HttpClient, 
@@ -37,7 +38,7 @@ export class RestaurantsComponent extends BasePaginatedTable<any> implements OnI
   override loadData(): void {
   const offset = this.currentPage * this.limit;
 
-  this.publicService.getRestaurants(this.limit, offset)
+  this.publicService.getRestaurants(this.searchName, undefined, this.searchHours, undefined, undefined, this.limit, offset)
   .subscribe({
     next: resp => {
       this.data = (resp.data ?? []);
@@ -66,17 +67,6 @@ export class RestaurantsComponent extends BasePaginatedTable<any> implements OnI
         },
         error: () => {},
       });
-  }
-
-  // ✅ search by NAME + OPENING HOURS
-  get filteredRestaurants() {
-    const q = this.search.toLowerCase();
-
-    return this.data.filter(
-      (r) =>
-        r.name.toLowerCase().includes(q) ||
-        (r.openinghours && r.openinghours.toLowerCase().includes(q))
-    );
   }
 
   openRestaurant(id: number) {

@@ -9,9 +9,15 @@ export class PublicService {
 
   constructor(private http: HttpClient) { }
   
-  getRestaurants(limit: number, offset: number) {
+  getRestaurants(name?: string, cuisine?: string, searchHours?: string, sortBy?: string, sortDirection?: string | null, limit?: number, offset?: number) {
     let params = new HttpParams();
 
+    if (name !== undefined) { params = params.set('name', name); }
+    if (cuisine !== undefined) { params = params.set('cuisine', cuisine); }
+    if (searchHours !== undefined) { params = params.set('searchHours', searchHours); }
+    if (sortBy !== undefined) { params = params.set('sortBy', sortBy); }
+    if (sortDirection !== undefined && sortDirection !== null) { params = params.set('sortDirection', sortDirection); }
+    
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
 

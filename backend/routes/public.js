@@ -7,7 +7,7 @@ const { menuOrderMap } = require("./menuOrderStore");
 // GET all approved restaurants (PUBLIC)
 // =====================================================
 router.get("/restaurants", async (req, res) => {
-  const { limit = 50, offset = 0 } = req.query;
+  const { name, cuisine, searchHours, sortBy, sortDirection, limit = 50, offset = 0 } = req.query;
 
   // validation of limit
   if (limit.trim() === '' || isNaN(Number(limit)) || !Number.isInteger(Number(limit))) {
@@ -40,13 +40,31 @@ router.get("/restaurants", async (req, res) => {
         ON rt.restaurantId = r.id
 
       WHERE r.approvalstatus = 'approved'
-
-      GROUP BY r.id
-      ORDER BY r.name ASC
-
-      LIMIT $1 OFFSET $2
-    `;
+  `;
   const params = [];
+
+  // dynamic filters
+  if (name && name.trim() !== '') {
+    params.push(`%${name}%`);
+    query += ` AND r.name ILIKE $${params.length}`
+  }
+
+  if (cuisine && cuisine.trim !== '') {
+    params.push(cuisine);
+    query += ` AND r.cuisine = $${params.length}`;
+  }
+
+  console.log(searchHours);
+  if (searchHours && searchHours !== '') {
+    // TODO refactor db storage of opening hours to something more useable
+  }
+
+  // sorting
+  query += `
+    GROUP BY r.id
+    ORDER BY r.name ASC
+    LIMIT $${params.length+1} OFFSET $${params.length+2}
+  `;
   params.push(limit, offset);
 
   try {
