@@ -5,49 +5,59 @@ import { PasswordResetComponent } from "../../password-reset/password-reset.comp
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from "../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../shared/pagination/base-paginated-table';
+import { PublicService } from '../../../services/public.service';
 
 
 
 @Component({
   selector: 'app-customer-dashboard',
   standalone: true,
-  imports: [CommonModule,RouterModule,PasswordResetComponent,FormsModule],
+  imports: [CommonModule, RouterModule, PasswordResetComponent, FormsModule, PaginationComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class CustomerDashboardComponent implements OnInit{
-activeSection: 'restaurants' | 'orders' | 'profile' = 'restaurants';
-restaurants: any[] = [];
-searchText: string = '';
-selectedCuisine = 'ALL';
+export class CustomerDashboardComponent extends BasePaginatedTable<any> implements OnInit{
+searchName?: string;
+searchCuisine?: string = '';
 selectedEta: 'ALL' | 'UNDER_30' | '30_60' | 'OVER_60' = 'ALL';
 sortByRating: 'desc' | 'asc' | null = null;
 
 constructor(
-  private http: HttpClient,
-  private router: Router
-) {}
+  private router: Router,
+  private publicService: PublicService
+) {
+  super()
+}
 
 
 ngOnInit(): void {
-  this.http
-    .get<any>('http://localhost:3000/public/restaurants')
-    .subscribe({
-      next: data => {
-        this.restaurants = (data.restaurants ?? []).map((r: any) => {
-          const eta = this.calculateEta(r);
-          return {
-            ...r,
-            etaMin: eta.etaMin,
-            etaMax: eta.etaMax,
-          };
-        });
-      },
-      error: err => {
-        console.error('Failed to load restaurants', err);
-        this.restaurants = [];
-      }
-    });
+  this.loadData();
+}
+
+override loadData(): void {
+  const offset = this.currentPage * this.limit;
+  const sortBy = (this.sortByRating) ? 'averageRating' : undefined;
+
+  this.publicService.getRestaurants(this.searchName, this.searchCuisine, undefined ,sortBy, this.sortByRating, this.limit, offset)
+  .subscribe({
+    next: resp => {
+      this.data = (resp.data ?? []).map((r: any) => {
+        const eta = this.calculateEta(r);
+        return {
+          ...r,
+          etaMin: eta.etaMin,
+          etaMax: eta.etaMax,
+        };
+      });
+      this.totalEntries = parseInt(resp.metadata.totalEntries);
+    },
+    error: err => {
+      console.error('Failed to load restaurants', err);
+      this.data = [];
+    }
+  });
 }
 
 
@@ -64,15 +74,7 @@ cuisine: string[] = [
   ];
 
 get filteredRestaurants() {
-  let result = this.restaurants.filter((r) => {
-    const matchesSearch =
-      !this.searchText ||
-      r.name.toLowerCase().includes(this.searchText.toLowerCase());
-
-    const matchesCuisine =
-      this.selectedCuisine === 'ALL' ||
-      r.cuisine?.toLowerCase() === this.selectedCuisine.toLowerCase();
-
+  let result = this.data.filter((r) => {
     let matchesEta = true;
 
 if (this.selectedEta !== 'ALL') {
@@ -92,31 +94,12 @@ if (this.selectedEta !== 'ALL') {
 }
 
 
-    return matchesSearch && matchesCuisine && matchesEta;
+    return matchesEta;
   });
-
-  if (this.sortByRating) {
-    result = result.sort((a, b) => {
-      const aRating = a.averageRating ?? 0;
-      const bRating = b.averageRating ?? 0;
-
-      return this.sortByRating === 'desc'
-        ? bRating - aRating
-        : aRating - bRating;
-    });
-  }
 
   return result;
 }
 
-
-goToOrders() {
-  this.router.navigate(['/customer/orders']);
-}
-
-goToProfile() {
-  this.router.navigate(['/customer/profile']);
-}
 private ZONE_TIME: Record<string, number> = {
   A: 15,
   B: 25,
@@ -139,21 +122,5 @@ private calculateEta(r: any) {
 getRoundedRating(value: number): number {
   return Math.floor(value || 0);
 }
-
-sortRestaurantsByRating() {
-  if (!this.sortByRating) return;
-
-  this.restaurants = [...this.restaurants].sort((a, b) => {
-    const aRating = a.averageRating || 0;
-    const bRating = b.averageRating || 0;
-
-    if (this.sortByRating === 'desc') {
-      return bRating - aRating; 
-    }
-
-    return aRating - bRating;
-  });
-}
-
 
 }

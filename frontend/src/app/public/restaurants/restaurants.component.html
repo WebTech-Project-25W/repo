@@ -6,11 +6,12 @@
     <input
       type="text"
       placeholder="Search by restaurant name or opening hours"
-      [(ngModel)]="search"
+      [(ngModel)]="searchName"
       class="search"
+      (keyup.enter)="loadData()"
     />
 
-    <select class="filter">
+    <select class="filter" [(ngModel)]="searchHours" (change)="loadData()">
       <option value="">All hours</option>
       <option value="morning">Morning</option>
       <option value="evening">Evening</option>
@@ -20,7 +21,7 @@
   <div class="grid">
     <a
       class="card"
-      *ngFor="let r of filteredRestaurants"
+      *ngFor="let r of data"
       [routerLink]="['/restaurants', r.id]"
     >
       <div
@@ -45,4 +46,13 @@
       </div>
     </a>
   </div>
+
+  <app-pagination
+    [limit]="limit"
+    [currentPage]="currentPage" 
+    [totalEntries]="totalEntries"
+    (limitChange)="onLimitChange($event)"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>      
+
 </div>

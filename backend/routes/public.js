@@ -7,32 +7,111 @@ const { menuOrderMap } = require("./menuOrderStore");
 // GET all approved restaurants (PUBLIC)
 // =====================================================
 router.get("/restaurants", async (req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT
-        r.id,
-        r.name,
-        r.address,
-        r.postcode,
-        r.phonenumber,
-        r.openinghours,
-        r.deliveryzone,
-        r.cuisine,
+  const { name, cuisine, searchHours, sortBy, sortDirection, limit = 50, offset = 0 } = req.query;
 
-        COALESCE(ROUND(AVG(rt.rating)::numeric, 1), 0) AS "averageRating",
-        COUNT(rt.rating) AS "ratingCount"
+  // validation of limit
+  if (limit.trim() === '' || isNaN(Number(limit)) || !Number.isInteger(Number(limit))) {
+    return res.status(400).json({ error: "Limit must be an integer." });
+  }
+
+  // validation of offset
+  if (offset.trim() === '' || isNaN(Number(offset)) || !Number.isInteger(Number(offset))) {
+    return res.status(400).json({ error: "Offset must be an integer." });
+  }
+
+  let query = `
+    SELECT
+      r.id,
+      r.name,
+      r.address,
+      r.postcode,
+      r.phonenumber,
+      r.openinghours,
+      r.deliveryzone,
+      r.cuisine,
+
+      COALESCE(ROUND(AVG(rt.rating)::numeric, 1), 0) AS "averageRating",
+      COUNT(rt.rating) AS "ratingCount",
+
+      COUNT(r.id) OVER() AS "totalEntries"
 
       FROM restaurant r
       LEFT JOIN ratings rt
         ON rt.restaurantId = r.id
 
       WHERE r.approvalstatus = 'approved'
+  `;
+  const params = [];
 
-      GROUP BY r.id
-      ORDER BY r.name
-    `);
+  // dynamic filters
+  if (name && name.trim() !== '') {
+    params.push(`%${name}%`);
+    query += ` AND r.name ILIKE $${params.length}`
+  }
 
-    res.json({ restaurants: result.rows });
+  if (cuisine && cuisine.trim !== '') {
+    params.push(cuisine);
+    query += ` AND r.cuisine = $${params.length}`;
+  }
+
+  if (searchHours && searchHours !== '') {
+    // TODO refactor db storage of opening hours to something more useable
+  }
+
+  // sorting
+  // ensure input is valid column name
+  const sortMapping = {
+    id: 'r.id',
+    name: 'r.name',
+    address: 'r.address',
+    postcode: 'r.postcode',
+    cuisine: 'r.cuisine',
+    averageRating: '"averageRating"',
+    ratingCount: '"ratingCount"'
+  };
+
+  let sortByColumn = sortMapping['name'];
+  if (sortBy && sortBy !== '') {
+    if (sortMapping[sortBy] === undefined) {
+      return res.status(400).json({ error: "Sortby column not valid." })
+    }
+    sortByColumn = sortMapping[sortBy];
+  }
+
+  let sortByDirection = 'ASC';
+  if(sortDirection && sortDirection != '') {
+    const sortDirections = ['DESC', 'ASC'];
+    const sortDirectionIndex = sortDirections.indexOf(sortDirection.toUpperCase());
+    if (sortDirectionIndex === -1) {
+      return res.status(400).json({ error: "Sort direction not valid." })
+    }
+    sortByDirection = sortDirections[sortDirectionIndex];
+  }
+
+
+  query += `
+    GROUP BY r.id
+    ORDER BY ${sortByColumn} ${sortByDirection}
+    LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+  `;
+  params.push(limit, offset);
+
+  try {
+    const result = await pool.query(query, params);
+
+    const totalEntries = result.rows.length > 0 ? parseInt(result.rows[0].totalEntries) : 0;
+
+    res.json({
+      metadata: {
+        totalEntries: totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: result.rows.map(row => {
+        const { totalEntries, ...data } = row;
+        return data;
+      })
+    });
   } catch (err) {
     console.error("PUBLIC RESTAURANTS ERROR:", err);
     res.status(500).json({ message: "Failed to load restaurants" });
