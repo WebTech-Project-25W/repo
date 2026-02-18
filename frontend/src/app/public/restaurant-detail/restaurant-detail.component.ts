@@ -49,10 +49,7 @@ export class RestaurantDetailComponent implements OnInit {
   .get<any>(`http://localhost:3000/public/restaurants/${id}/menus`)
   .subscribe((res) => {
     this.menus = res.menus;
-    this.loadAllDishRatings();
   });
-    // restaurant rating
-    this.refreshRestaurantRating();
 
   
     }
