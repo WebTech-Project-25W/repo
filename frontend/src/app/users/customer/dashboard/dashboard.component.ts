@@ -38,7 +38,7 @@ ngOnInit(): void {
 
 override loadData(): void {
   const offset = this.currentPage * this.limit;
-  const sortBy = (this.sortByRating) ? 'rating' : undefined;
+  const sortBy = (this.sortByRating) ? 'averageRating' : undefined;
 
   this.publicService.getRestaurants(this.searchName, this.searchCuisine, undefined ,sortBy, this.sortByRating, this.limit, offset)
   .subscribe({
@@ -97,17 +97,6 @@ if (this.selectedEta !== 'ALL') {
     return matchesEta;
   });
 
-  if (this.sortByRating) {
-    result = result.sort((a, b) => {
-      const aRating = a.averageRating ?? 0;
-      const bRating = b.averageRating ?? 0;
-
-      return this.sortByRating === 'desc'
-        ? bRating - aRating
-        : aRating - bRating;
-    });
-  }
-
   return result;
 }
 
@@ -133,21 +122,5 @@ private calculateEta(r: any) {
 getRoundedRating(value: number): number {
   return Math.floor(value || 0);
 }
-
-sortRestaurantsByRating() {
-  if (!this.sortByRating) return;
-
-  this.data = [...this.data].sort((a, b) => {
-    const aRating = a.averageRating || 0;
-    const bRating = b.averageRating || 0;
-
-    if (this.sortByRating === 'desc') {
-      return bRating - aRating; 
-    }
-
-    return aRating - bRating;
-  });
-}
-
 
 }

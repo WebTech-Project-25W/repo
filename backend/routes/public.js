@@ -54,16 +54,45 @@ router.get("/restaurants", async (req, res) => {
     query += ` AND r.cuisine = $${params.length}`;
   }
 
-  console.log(searchHours);
   if (searchHours && searchHours !== '') {
     // TODO refactor db storage of opening hours to something more useable
   }
 
   // sorting
+  // ensure input is valid column name
+  const sortMapping = {
+    id: 'r.id',
+    name: 'r.name',
+    address: 'r.address',
+    postcode: 'r.postcode',
+    cuisine: 'r.cuisine',
+    averageRating: '"averageRating"',
+    ratingCount: '"ratingCount"'
+  };
+
+  let sortByColumn = sortMapping['name'];
+  if (sortBy && sortBy !== '') {
+    if (sortMapping[sortBy] === undefined) {
+      return res.status(400).json({ error: "Sortby column not valid." })
+    }
+    sortByColumn = sortMapping[sortBy];
+  }
+
+  let sortByDirection = 'ASC';
+  if(sortDirection && sortDirection != '') {
+    const sortDirections = ['DESC', 'ASC'];
+    const sortDirectionIndex = sortDirections.indexOf(sortDirection.toUpperCase());
+    if (sortDirectionIndex === -1) {
+      return res.status(400).json({ error: "Sort direction not valid." })
+    }
+    sortByDirection = sortDirections[sortDirectionIndex];
+  }
+
+
   query += `
     GROUP BY r.id
-    ORDER BY r.name ASC
-    LIMIT $${params.length+1} OFFSET $${params.length+2}
+    ORDER BY ${sortByColumn} ${sortByDirection}
+    LIMIT $${params.length + 1} OFFSET $${params.length + 2}
   `;
   params.push(limit, offset);
 
