@@ -2,45 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from "../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../shared/pagination/base-paginated-table';
 
 @Component({
   selector: 'app-order-log', // Updated selector
   standalone: true,
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, PaginationComponent],
   templateUrl: './order-log.component.html',
   styleUrl: './order-log.component.css'
 })
-export class OrderLogComponent implements OnInit {
-  logs: any[] = []; // Changed to any[] to match OrderHistory schema
-
-  // Pagination config
-  limit: number = 10;
-  currentPage: number = 0;
-  totalEntries: number = 0;
-
+export class OrderLogComponent extends BasePaginatedTable<any> implements OnInit {
   // Search filters
   searchOrderId?: number = undefined;
   searchEmail: string = '';
   searchStatus: string = '';
   searchRestaurant: string = ''; // Added restaurant search
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) { 
+    super();
+  }
 
   ngOnInit(): void {
-    this.loadLogs();
+    this.loadData();
   }
 
-  // Getters for cleaner HTML template logic
-  get startIndex(): number {
-    return this.currentPage * this.limit;
-  }
-
-  get endIndex(): number {
-    const end = (this.currentPage * this.limit) + this.logs.length;
-    return end > this.totalEntries ? this.totalEntries : end;
-  }
-
-  loadLogs(): void {
+  loadData(): void {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getOrderLogs(
@@ -52,7 +39,7 @@ export class OrderLogComponent implements OnInit {
       offset
     ).subscribe({
       next: (resp: any) => {
-        this.logs = resp.data;
+        this.data = resp.data;
         this.totalEntries = parseInt(resp.metadata.totalEntries);
         console.log('Order logs loaded:', resp);
       },
@@ -64,7 +51,7 @@ export class OrderLogComponent implements OnInit {
 
   applyFilters(): void {
     this.currentPage = 0;
-    this.loadLogs();
+    this.loadData();
   }
 
   clearFilters(): void {
@@ -73,25 +60,5 @@ export class OrderLogComponent implements OnInit {
     this.searchStatus = '';
     this.searchRestaurant = ''; // Reset restaurant search
     this.applyFilters();
-  }
-  
-  onLimitChange(): void {
-    this.currentPage = 0;
-    this.loadLogs();
-  }
-
-  nextPage(): void {
-    // Prevent navigating past the last page
-    if (this.endIndex < this.totalEntries) {
-      this.currentPage++;
-      this.loadLogs();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadLogs();
-    }
   }
 }

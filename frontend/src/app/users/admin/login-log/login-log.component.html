@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (log of logs; track log.id) {
+      @for (log of data; track log.id) {
       <tr>
         <td>{{ log.time | date:'short' }}</td>
         <td>{{ log.useremail}}</td>
@@ -43,28 +43,13 @@
       }
     </tbody>
   </table>
-  <div class="pagination-controls">
-    <div class="limit-selector">
-      <label for="limit">Rows per page:</label>
-      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
-        <option [ngValue]="5">5</option>
-        <option [ngValue]="10">10</option>
-        <option [ngValue]="20">20</option>
-        <option [ngValue]="50">50</option>
-        <option [ngValue]="100">100</option>
-      </select>
-    </div>
-    <div class="page-navigation">
+  
+  <app-pagination
+    [limit]="limit"
+    [currentPage]="currentPage" 
+    [totalEntries]="totalEntries"
+    (limitChange)="onLimitChange($event)"
+    (pageChange)="onPageChange($event)">
+  ></app-pagination>
 
-      <button (click)="previousPage()" [disabled]="currentPage === 0">
-        Previous
-      </button>
-      
-      <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
-      
-      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">
-        Next
-      </button>
-    </div>
-  </div>
 </div>

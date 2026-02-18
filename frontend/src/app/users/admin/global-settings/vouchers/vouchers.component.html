@@ -41,7 +41,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (voucher of vouchers; track voucher.id) {
+      @for (voucher of data; track voucher.id) {
       <tr>
         <td> {{ voucher.id }} </td>
 
@@ -122,25 +122,12 @@
     </div>
   }
 
-  <div class="pagination-controls">
-    <div class="limit-selector">
-      <label for="limit">Rows per page:</label>
-      <select id="limit" [(ngModel)]="limit" (change)="onLimitChange()">
-        <option [ngValue]="5">5</option>
-        <option [ngValue]="10">10</option>
-        <option [ngValue]="20">20</option>
-        <option [ngValue]="50">50</option>
-      </select>
-    </div>
-    <div class="page-navigation">
-      <button (click)="previousPage()" [disabled]="currentPage === 0">
-        Previous
-      </button>
-      <span>Page {{ currentPage + 1 }} | {{ startIndex + 1 }}-{{ endIndex }} of {{ totalEntries }}</span>
-      <button (click)="nextPage()" [disabled]="endIndex >= totalEntries">
-        Next
-      </button>
-    </div>
-  </div>
+  <app-pagination
+    [limit]="limit"
+    [currentPage]="currentPage" 
+    [totalEntries]="totalEntries"
+    (limitChange)="onLimitChange($event)"
+    (pageChange)="onPageChange($event)">
+  ></app-pagination>
 
 </div>

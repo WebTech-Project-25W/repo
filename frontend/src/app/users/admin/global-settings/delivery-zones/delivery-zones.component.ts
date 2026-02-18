@@ -1,27 +1,21 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DeliveryZone } from '../../../../model/deliveryZone';
 import { AdminService } from '../../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
-import { SidebarComponent } from "../../../../shared/sidebar/sidebar.component";
 import { SpinnerComponent } from "../../../../shared/spinner/spinner.component";
+import { PaginationComponent } from "../../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../../shared/pagination/base-paginated-table';
 
 @Component({
   selector: 'app-delivery-zones',
   standalone: true,
-  imports: [FormsModule, SidebarComponent, SpinnerComponent],
+  imports: [FormsModule, SpinnerComponent, PaginationComponent],
   templateUrl: './delivery-zones.component.html',
   styleUrl: './delivery-zones.component.css'
 })
-export class DeliveryZonesComponent {
-  deliveryZones: DeliveryZone[] = [];
-
+export class DeliveryZonesComponent extends BasePaginatedTable<DeliveryZone> implements OnInit{
   showAddOverlay: boolean = false;
   newDeliveryZone = { id: '', isActive: true };
-
-  // Pagination config
-  limit: number = 5;
-  currentPage: number = 0;
-  totalEntries: number = 0;
 
   // Search filters
   searchId?: number;
@@ -29,22 +23,15 @@ export class DeliveryZonesComponent {
 
   @ViewChild('zoneInput') zoneInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) { 
+    super();
+  }
 
   ngOnInit(): void {
-    this.loadDeliveryZones();
+    this.loadData();
   }
 
-  get startIndex(): number {
-    return this.currentPage * this.limit;
-  }
-
-  get endIndex(): number {
-    const end = (this.currentPage * this.limit) + this.deliveryZones.length;
-    return end > this.totalEntries ? this.totalEntries : end;
-  }
-
-  loadDeliveryZones(): void {
+  override loadData(): void {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getDeliveryZones(
@@ -54,7 +41,7 @@ export class DeliveryZonesComponent {
       offset
     ).subscribe({
       next: (resp: any) => {
-        this.deliveryZones = resp.data;
+        this.data = resp.data;
         this.totalEntries = parseInt(resp.metadata.totalEntries);
       },
       error: (err: any) => {
@@ -105,13 +92,13 @@ export class DeliveryZonesComponent {
         .subscribe({
           next: (resp: any) => {
             console.log(`delivery zone '${resp.deletedId}' deleted successfully`);
-            const updatedDeliveryZones = this.deliveryZones.filter(v => v.id !== resp.deletedId)
-            this.deliveryZones = [...updatedDeliveryZones];
+            const updatedDeliveryZones = this.data.filter(v => v.id !== resp.deletedId)
+            this.data = [...updatedDeliveryZones];
             this.totalEntries--;
 
             // handling deleting the last deliveryzone on a page
-            if (this.deliveryZones.length === 0 && this.currentPage > 0) {
-              this.previousPage();
+            if (this.data.length === 0 && this.currentPage > 0) {
+              this.onPageChange(this.currentPage-1);
             }
           },
           error: (err: any) => {
@@ -123,32 +110,13 @@ export class DeliveryZonesComponent {
 
   applyFilters(): void {
     this.currentPage = 0;
-    this.loadDeliveryZones();
+    this.loadData();
   }
 
   clearFilters(): void {
     this.searchId = undefined;
     this.searchIsActive = undefined;
     this.applyFilters();
-  }
-
-  onLimitChange(): void {
-    this.currentPage = 0;
-    this.loadDeliveryZones();
-  }
-
-  nextPage(): void {
-    if (this.endIndex < this.totalEntries) {
-      this.currentPage++;
-      this.loadDeliveryZones();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadDeliveryZones();
-    }
   }
 
   openAddDeliveryZoneOverlay() {
@@ -168,7 +136,7 @@ export class DeliveryZonesComponent {
       .subscribe({
         next: (resp: any) => {
           alert(resp.message);
-          this.loadDeliveryZones();
+          this.loadData();
           this.closeOverlay()
         },
         error: (err: any) => {

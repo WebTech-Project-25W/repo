@@ -1,25 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Restaurant } from '../../../model/restaurant';
 import { finalize } from 'rxjs';
 import { SpinnerComponent } from "../../../shared/spinner/spinner.component";
+import { BasePaginatedTable } from '../../../shared/pagination/base-paginated-table';
+import { PaginationComponent } from "../../../shared/pagination/pagination.component";
 
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [FormsModule, CommonModule, SpinnerComponent],
+  imports: [FormsModule, CommonModule, SpinnerComponent, PaginationComponent],
   templateUrl: './restaurants.component.html',
   styleUrl: './restaurants.component.css'
 })
-export class RestaurantsComponent {
-  restaurants: any[] = [];
-
-  // Pagination config
-  limit: number = 10;
-  currentPage: number = 0;
-  totalEntries: number = 0;
+export class RestaurantsComponent extends BasePaginatedTable<any> implements OnInit {
 
   // Search filters
   searchRestaurantId?: string = undefined;
@@ -32,22 +28,15 @@ export class RestaurantsComponent {
   searchCuisine: string = '';
   searchDeliveryZone: string = '';
 
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.loadRestaurants();
+    this.loadData();
   }
 
-  get startIndex(): number {
-    return this.currentPage * this.limit;
-  }
-
-  get endIndex(): number {
-    const end = (this.currentPage * this.limit) + this.restaurants.length;
-    return end > this.totalEntries ? this.totalEntries : end;
-  }
-
-  loadRestaurants(): void {
+  override loadData(): void {
     const offset = this.currentPage * this.limit;
 
     this.adminService.getRestaurants(
@@ -64,7 +53,7 @@ export class RestaurantsComponent {
       offset
     ).subscribe({
       next: (resp: any) => {
-        this.restaurants = resp.data;
+        this.data = resp.data;
         this.totalEntries = parseInt(resp.metadata.totalEntries);
         console.log('restaurants loaded:', resp);
       },
@@ -132,7 +121,7 @@ export class RestaurantsComponent {
   }
   applyFilters(): void {
     this.currentPage = 0;
-    this.loadRestaurants();
+    this.loadData();
   }
 
   clearFilters(): void {
@@ -146,11 +135,6 @@ export class RestaurantsComponent {
     this.searchDeliveryZone = '';
     this.searchStatus = '';
     this.applyFilters();
-  }
-
-  onLimitChange(): void {
-    this.currentPage = 0;
-    this.loadRestaurants();
   }
 
   onStatusChange(event: any, restaurant: any) {
@@ -192,21 +176,6 @@ export class RestaurantsComponent {
         return false;
       default:
         return false;
-    }
-  }
-
-  nextPage(): void {
-    // Prevent navigating past the last page
-    if (this.endIndex < this.totalEntries) {
-      this.currentPage++;
-      this.loadRestaurants();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadRestaurants();
     }
   }
 

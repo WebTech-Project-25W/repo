@@ -78,34 +78,6 @@
   padding: 8px 12px;
 }
 
-.pagination-controls {
-  display: flex;
-  justify-content: space-between; /* Pushes items to opposite sides */
-  align-items: center;
-  padding: 1rem;
-  background: #fdfdfd;
-  border: 1px solid #eee;
-  margin-top: -1px; /* Merges border with table */
-}
-
-.limit-selector label {
-  font-size: 0.9rem;
-  margin-right: 8px;
-  color: #555;
-}
-
-.limit-selector select {
-  padding: 4px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.page-navigation {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Spacing between Prev, Page info, and Next */
-}
-
 button {
   padding: 8px 16px;
   cursor: pointer;
