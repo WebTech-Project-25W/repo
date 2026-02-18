@@ -208,7 +208,7 @@ DROP TABLE IF EXISTS vouchers CASCADE;
 CREATE TABLE vouchers (
     id SERIAL PRIMARY KEY,
     code VARCHAR(50) NOT NULL UNIQUE,
-    discount_percent INTEGER NOT NULL CHECK (discount_percent > 0 AND discount_percent <= 100),
+    discount_percent INTEGER NOT NULL CHECK (discount_percent >= 0 AND discount_percent <= 100),
     is_active BOOLEAN NOT NULL DEFAULT true
 );
 
