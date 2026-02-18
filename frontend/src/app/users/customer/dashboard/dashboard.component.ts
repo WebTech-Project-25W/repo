@@ -5,49 +5,58 @@ import { PasswordResetComponent } from "../../password-reset/password-reset.comp
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from "../../../shared/pagination/pagination.component";
+import { BasePaginatedTable } from '../../../shared/pagination/base-paginated-table';
+import { PublicService } from '../../../services/public.service';
 
 
 
 @Component({
   selector: 'app-customer-dashboard',
   standalone: true,
-  imports: [CommonModule,RouterModule,PasswordResetComponent,FormsModule],
+  imports: [CommonModule, RouterModule, PasswordResetComponent, FormsModule, PaginationComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class CustomerDashboardComponent implements OnInit{
-activeSection: 'restaurants' | 'orders' | 'profile' = 'restaurants';
-restaurants: any[] = [];
+export class CustomerDashboardComponent extends BasePaginatedTable<any> implements OnInit{
 searchText: string = '';
 selectedCuisine = 'ALL';
 selectedEta: 'ALL' | 'UNDER_30' | '30_60' | 'OVER_60' = 'ALL';
 sortByRating: 'desc' | 'asc' | null = null;
 
 constructor(
-  private http: HttpClient,
-  private router: Router
-) {}
+  private router: Router,
+  private publicService: PublicService
+) {
+  super()
+}
 
 
 ngOnInit(): void {
-  this.http
-    .get<any>('http://localhost:3000/public/restaurants')
-    .subscribe({
-      next: data => {
-        this.restaurants = (data.restaurants ?? []).map((r: any) => {
-          const eta = this.calculateEta(r);
-          return {
-            ...r,
-            etaMin: eta.etaMin,
-            etaMax: eta.etaMax,
-          };
-        });
-      },
-      error: err => {
-        console.error('Failed to load restaurants', err);
-        this.restaurants = [];
-      }
-    });
+  this.loadData();
+}
+
+override loadData(): void {
+  const offset = this.currentPage * this.limit;
+
+  this.publicService.getRestaurants(this.limit, offset)
+  .subscribe({
+    next: resp => {
+      this.data = (resp.data ?? []).map((r: any) => {
+        const eta = this.calculateEta(r);
+        return {
+          ...r,
+          etaMin: eta.etaMin,
+          etaMax: eta.etaMax,
+        };
+      });
+      this.totalEntries = parseInt(resp.metadata.totalEntries);
+    },
+    error: err => {
+      console.error('Failed to load restaurants', err);
+      this.data = [];
+    }
+  });
 }
 
 
@@ -64,7 +73,7 @@ cuisine: string[] = [
   ];
 
 get filteredRestaurants() {
-  let result = this.restaurants.filter((r) => {
+  let result = this.data.filter((r) => {
     const matchesSearch =
       !this.searchText ||
       r.name.toLowerCase().includes(this.searchText.toLowerCase());
@@ -109,14 +118,6 @@ if (this.selectedEta !== 'ALL') {
   return result;
 }
 
-
-goToOrders() {
-  this.router.navigate(['/customer/orders']);
-}
-
-goToProfile() {
-  this.router.navigate(['/customer/profile']);
-}
 private ZONE_TIME: Record<string, number> = {
   A: 15,
   B: 25,
@@ -143,7 +144,7 @@ getRoundedRating(value: number): number {
 sortRestaurantsByRating() {
   if (!this.sortByRating) return;
 
-  this.restaurants = [...this.restaurants].sort((a, b) => {
+  this.data = [...this.data].sort((a, b) => {
     const aRating = a.averageRating || 0;
     const bRating = b.averageRating || 0;
 

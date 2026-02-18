@@ -45,4 +45,13 @@
       </div>
     </a>
   </div>
+
+  <app-pagination
+    [limit]="limit"
+    [currentPage]="currentPage" 
+    [totalEntries]="totalEntries"
+    (limitChange)="onLimitChange($event)"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>      
+
 </div>

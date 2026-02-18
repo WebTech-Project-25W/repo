@@ -7,20 +7,33 @@ const { menuOrderMap } = require("./menuOrderStore");
 // GET all approved restaurants (PUBLIC)
 // =====================================================
 router.get("/restaurants", async (req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT
-        r.id,
-        r.name,
-        r.address,
-        r.postcode,
-        r.phonenumber,
-        r.openinghours,
-        r.deliveryzone,
-        r.cuisine,
+  const { limit = 50, offset = 0 } = req.query;
 
-        COALESCE(ROUND(AVG(rt.rating)::numeric, 1), 0) AS "averageRating",
-        COUNT(rt.rating) AS "ratingCount"
+  // validation of limit
+  if (limit.trim() === '' || isNaN(Number(limit)) || !Number.isInteger(Number(limit))) {
+    return res.status(400).json({ error: "Limit must be an integer." });
+  }
+
+  // validation of offset
+  if (offset.trim() === '' || isNaN(Number(offset)) || !Number.isInteger(Number(offset))) {
+    return res.status(400).json({ error: "Offset must be an integer." });
+  }
+
+  let query = `
+    SELECT
+      r.id,
+      r.name,
+      r.address,
+      r.postcode,
+      r.phonenumber,
+      r.openinghours,
+      r.deliveryzone,
+      r.cuisine,
+
+      COALESCE(ROUND(AVG(rt.rating)::numeric, 1), 0) AS "averageRating",
+      COUNT(rt.rating) AS "ratingCount",
+
+      COUNT(r.id) OVER() AS "totalEntries"
 
       FROM restaurant r
       LEFT JOIN ratings rt
@@ -29,10 +42,29 @@ router.get("/restaurants", async (req, res) => {
       WHERE r.approvalstatus = 'approved'
 
       GROUP BY r.id
-      ORDER BY r.name
-    `);
+      ORDER BY r.name ASC
 
-    res.json({ restaurants: result.rows });
+      LIMIT $1 OFFSET $2
+    `;
+  const params = [];
+  params.push(limit, offset);
+
+  try {
+    const result = await pool.query(query, params);
+
+    const totalEntries = result.rows.length > 0 ? parseInt(result.rows[0].totalEntries) : 0;
+
+    res.json({
+      metadata: {
+        totalEntries: totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: result.rows.map(row => {
+        const { totalEntries, ...data } = row;
+        return data;
+      })
+    });
   } catch (err) {
     console.error("PUBLIC RESTAURANTS ERROR:", err);
     res.status(500).json({ message: "Failed to load restaurants" });
