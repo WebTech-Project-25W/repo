@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -27,6 +27,7 @@ export class RestaurantDetailComponent implements OnInit {
   discountAmount: number = 0;
   finalTotal: number | null = null;
   voucherMessage: string = '';
+  @ViewChildren(MenuComponent) menuComponents!: QueryList<MenuComponent>;
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {}
 
@@ -184,7 +185,7 @@ refreshRestaurantRating() {
     });
 }
 
-rateDish(event: { dishId: number, rating: number}) {
+rateDish(event: { menuID: number, dishId: number, rating: number}) {
 const dishId = event.dishId;
 const star = event.rating;
 
@@ -196,36 +197,13 @@ const star = event.rating;
     }
   ).subscribe({
     next: () => {
-      this.refreshDishRating(dishId);
+     const target = this.menuComponents.find(m => m.menuID === event.menuID);
+     // trigger menu component to reload its data when dish rating event is sent out
+     target?.loadData()
     },
     error: () => {
       alert("Failed to submit dish rating");
     }
-  });
-}
-
-refreshDishRating(dishId: number) {
-  this.http
-    .get<any>(`http://localhost:3000/public/dishes/${dishId}/ratings`)
-    .subscribe(res => {
-
-      const dish = this.menus
-        .flatMap(m => m.dishes)
-        .find(d => d.dishid === dishId);
-
-      if (dish) {
-        dish.averageRating = res.average;
-        dish.ratingCount = res.count;
-      }
-
-    });
-}
-
-loadAllDishRatings() {
-  this.menus.forEach((menu: any) => {
-    menu.dishes.forEach((dish: any) => {
-      this.refreshDishRating(dish.dishid);
-    });
   });
 }
 

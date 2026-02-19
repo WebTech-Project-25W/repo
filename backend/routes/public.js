@@ -171,7 +171,7 @@ router.get("/menus/:menuID", async (req, res) => {
     let query = `
         SELECT d.dishid, d.menuid, d.name, d.description, d.price, d.photolink, 
         COALESCE(AVG(r.rating),0)::numeric(2,1) as "averageRating", 
-        COUNT(*) AS "ratingCount",
+        COUNT(r.dishid) AS "ratingCount",
         COUNT(*) OVER() as "totalEntries"
         FROM dish as d LEFT JOIN ratings r on d.dishid = r.dishid
         WHERE d.menuid = $1

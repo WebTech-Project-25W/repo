@@ -17,7 +17,7 @@ export class MenuComponent extends BasePaginatedTable<any> implements OnInit {
   @Input() desc?: string;
   @Input() controlsTemplate?: TemplateRef<any> | null = null;
 
-  @Output() dishRated = new EventEmitter<{ dishId: number, rating: number }>();
+  @Output() dishRated = new EventEmitter<{ menuID: number, dishId: number, rating: number }>();
 
   constructor(private publicService: PublicService) {
     super();
@@ -49,7 +49,7 @@ export class MenuComponent extends BasePaginatedTable<any> implements OnInit {
     return Math.floor(value || 0);
   }
 
-  onStarClick(dishId: number, rating: number) {
-    this.dishRated.emit({ dishId, rating });
+  onStarClick( dishId: number, rating: number) {
+    this.dishRated.emit({ menuID: this.menuID, dishId, rating });
   }
 }
