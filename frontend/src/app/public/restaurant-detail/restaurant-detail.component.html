@@ -75,43 +75,22 @@
 
 
   <!-- MENUS -->
-  <div class="menu-card" *ngFor="let menu of menus">
-    <h2>{{ menu.name }}</h2>
-    <p class="desc">{{ menu.description }}</p>
-
-    <div class="dish" *ngFor="let dish of menu.dishes">
-      <div class="dish-left">
-        <strong>{{ dish.name }}</strong>
-        <p>{{ dish.description }}</p>
+   @for (menu of menus; track menu.menuid) {
+    <app-menu
+      [menu]="menu"
+      [controlsTemplate]="controls"
+      (dishRated)="rateDish($event)">
+    </app-menu>
+  }
+      
+    <ng-template #controls let-dish="dish">
+      <div *ngIf="isCustomer" class="qty-controls" >
+        <button (click)="decrease(dish)">−</button>
+        <span>{{ getQuantity(dish) }}</span>
+        <button (click)="increase(dish)">+</button>
       </div>
+    </ng-template>
 
-      <div class="dish-right">
-
-    <div class="dish-rating">
-      <ng-container *ngFor="let star of [1,2,3,4,5]">
-        <span
-  class="star"
-  [class.filled]="star <= getRoundedRating(dish.averageRating || 0)"
-  (click)="rateDish(dish.dishid, star)"
->
-  ★
-</span>
-
-      </ng-container>
-
-      <span class="rating-text">
-        {{ dish.averageRating || 0 }} · {{ dish.ratingCount || 0 }} ratings
-      </span>
-    </div>
-    <span class="price">{{ dish.price }} €</span>
-    <div class="qty-controls" *ngIf="isCustomer">
-    <button (click)="decrease(dish)">−</button>
-    <span>{{ getQuantity(dish) }}</span>
-    <button (click)="increase(dish)">+</button>
-    </div>
-    </div>
-    </div>
-  </div>
   <!-- CART (Customer only) -->
 <div class="cart" *ngIf="isCustomer && cart.length > 0">
   <h3>Cart</h3>

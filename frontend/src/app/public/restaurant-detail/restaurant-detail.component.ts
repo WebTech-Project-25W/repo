@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MenuComponent } from "../../shared/menu/menu.component";
 
 @Component({
   selector: 'app-restaurant-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, MenuComponent],
   templateUrl: './restaurant-detail.component.html',
   styleUrls: ['./restaurant-detail.component.css'],
 })
@@ -183,7 +184,10 @@ refreshRestaurantRating() {
     });
 }
 
-rateDish(dishId: number, star: number) {
+rateDish(event: { dishId: number, rating: number}) {
+const dishId = event.dishId;
+const star = event.rating;
+
   this.http.post(
     "http://localhost:3000/customer/ratings/dish",
     {

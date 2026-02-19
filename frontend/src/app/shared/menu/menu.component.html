@@ -1,0 +1,35 @@
+<div class="menu-card">
+  <h2>{{ menu.name }}</h2>
+  <p class="desc">{{ menu.description }}</p>
+
+  @for (dish of menu.dishes; track dish.dishid) {
+    <div class="dish">
+      <div class="dish-left">
+        <strong>{{ dish.name }}</strong>
+        <p>{{ dish.description }}</p>
+      </div>
+
+      <div class="dish-right">
+
+        <div class="dish-rating">
+          <ng-container *ngFor="let star of [1,2,3,4,5]">
+            <span class="star" [class.filled]="star <= getRoundedRating(dish.averageRating || 0)"
+            (click)="onStarClick(dish.dishid, star)">
+              ★
+            </span>
+
+          </ng-container>
+
+          <span class="rating-text">
+            {{ dish.averageRating || 0 }} · {{ dish.ratingCount || 0 }} ratings
+          </span>
+        </div>
+        <span class="price">{{ dish.price }} €</span>
+
+        <ng-container 
+          *ngTemplateOutlet="controlsTemplate || null; context: { dish: dish }">
+        </ng-container>
+      </div>
+    </div>
+  }
+</div>
