@@ -16,7 +16,8 @@ export class AdminLayoutComponent {
     { label: 'Login Log', route: '/admin/login-log' },
     { label: 'Users', route: '/admin/users' },
     { label: 'Restaurants', route: '/admin/restaurants' },
-    { label: 'Global Settings', route: '/admin/global-settings' }
+    { label: 'Global Settings', route: '/admin/global-settings' },
+    { label: 'My Profile', route: '/admin/profile' }
   ]
 
 }
