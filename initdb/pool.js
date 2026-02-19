@@ -9,4 +9,4 @@ const pool = new Pool({
   port: cfg.database.port || 5432,
 });
 
-module.exports = pool;
+module.exports = pool; 
