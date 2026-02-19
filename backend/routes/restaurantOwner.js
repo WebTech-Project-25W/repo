@@ -320,6 +320,25 @@ router.put("/restaurant/settings", async (req, res) => {
     }
 
     const id = r.rows[0].id;
+    // if deliveryZone is provided, ensure it is active
+    if (deliveryZone) {
+      const zoneCheck = await pool.query(
+        `
+        SELECT 1
+        FROM deliveryzone
+        WHERE id = $1
+          AND isactive = true
+        `,
+        [deliveryZone],
+      );
+
+      if (zoneCheck.rows.length === 0) {
+        return res.status(400).json({
+          message:
+            "Selected delivery zone is not active. Please choose an active delivery zone.",
+        });
+      }
+    }
 
     const updated = await pool.query(
       `
@@ -483,6 +502,27 @@ router.put("/dishes/:dishID", async (req, res) => {
   } catch (err) {
     console.error("UPDATE DISH ERROR:", err);
     res.status(500).json({ message: "Failed to update dish" });
+  }
+});
+// =====================================================
+// ACTIVE DELIVERY ZONES FOR OWNER
+// =====================================================
+router.get("/delivery-zones/active", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT id
+      FROM deliveryzone
+      WHERE isactive = true
+      ORDER BY id
+      `,
+    );
+
+    // return simple list like ["A","B","C"]
+    res.json({ zones: result.rows.map((row) => row.id) });
+  } catch (err) {
+    console.error("GET /owner/delivery-zones/active ERROR:", err);
+    res.status(500).json({ message: "Failed to load delivery zones" });
   }
 });
 
