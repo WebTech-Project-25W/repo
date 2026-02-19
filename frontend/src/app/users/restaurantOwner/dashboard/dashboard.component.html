@@ -317,11 +317,17 @@
           <label>
             Delivery Zone
             <select [(ngModel)]="restaurant.deliveryzone">
-              <option>Zone A</option>
-              <option>Zone B</option>
-              <option>Zone C</option>
+              <option [ngValue]="null" disabled>Select delivery zone</option>
+              <option *ngFor="let z of activeDeliveryZones" [ngValue]="z">
+                Zone {{ z }}
+              </option>
             </select>
           </label>
+
+          <p *ngIf="inactiveDeliveryZone" class="warning-text">
+            This restaurant is assigned to an inactive delivery zone. Please
+            choose one of the active zones above.
+          </p>
         </div>
 
         <button class="primary-btn" (click)="saveSettings()">

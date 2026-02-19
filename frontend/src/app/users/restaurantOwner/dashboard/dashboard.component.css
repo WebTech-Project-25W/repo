@@ -86,6 +86,11 @@
   flex: 1;
   padding: 24px;
 }
+.warning-text {
+  margin-top: 0.5rem;
+  color: #b00020;
+  font-size: 0.85rem;
+}
 
 .page-title {
   margin-bottom: 16px;
