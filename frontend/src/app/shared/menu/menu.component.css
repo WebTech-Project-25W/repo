@@ -1,0 +1,75 @@
+.menu-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.menu-card h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.desc {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.dish {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dish:last-child {
+  border-bottom: none;
+}
+
+.dish-left p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.dish-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.price {
+  font-weight: 600;
+  font-size: 18px;
+  min-width: 70px; 
+  text-align: right;
+}
+
+.add-btn {
+  margin-left: 12px;
+  padding: 4px 10px;
+  border: none;
+  background: #111;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.star {
+  font-size: 18px;
+  color: #ddd;
+}
+
+.star.filled {
+  color: #f5b301;
+}
+
+.star.clickable {
+  cursor: pointer;
+}
+
+.star.clickable:hover {
+  transform: scale(1.1);
+}
