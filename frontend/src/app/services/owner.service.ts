@@ -31,6 +31,12 @@ export class OwnerService {
   getRestaurants(): Observable<any> {
     return this.http.get(`${this.baseUrl}/restaurants`);
   }
+  getActiveDeliveryZones(): Observable<{ zones: string[] }> {
+    return this.http.get<{ zones: string[] }>(
+      `${this.baseUrl}/delivery-zones/active`,
+    );
+  }
+
   getMyRestaurants(): Observable<any> {
     return this.http.get(`${this.baseUrl}/restaurants`);
   }
