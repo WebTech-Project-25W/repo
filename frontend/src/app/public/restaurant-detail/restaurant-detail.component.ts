@@ -99,7 +99,7 @@ getQuantity(dish: any): number {
 }
 
 remove(item: any) {
-  this.cart = this.cart.filter(i => i.dish.id !== item.dish.id);
+  this.cart = this.cart.filter(i => i.dish.dishid !== item.dish.dishid);
   this.saveCart();
 }
 
