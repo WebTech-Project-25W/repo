@@ -68,6 +68,9 @@ export class OwnerDashboardComponent implements OnInit {
   orderStatusFilter: string = 'all';
   restaurants: any[] = [];
   activeRestaurantId: number | null = null;
+  activeDeliveryZones: string[] = [];
+  inactiveDeliveryZone = false;
+
   // ==========================
   // ORDERS  ✅ STEP 2
   // ==========================
@@ -109,10 +112,31 @@ export class OwnerDashboardComponent implements OnInit {
       },
     });
   }
+  loadActiveDeliveryZones(): void {
+    this.ownerService.getActiveDeliveryZones().subscribe({
+      next: (res: any) => {
+        this.activeDeliveryZones = res?.zones ?? [];
+
+        if (this.restaurant) {
+          const current = this.restaurant.deliveryzone;
+          this.inactiveDeliveryZone =
+            !!current && !this.activeDeliveryZones.includes(current);
+        }
+      },
+      error: (err) => {
+        console.error('LOAD ACTIVE ZONES ERROR', err);
+        this.activeDeliveryZones = [];
+        this.inactiveDeliveryZone = false;
+      },
+    });
+  }
+
   selectRestaurant(r: any): void {
     this.activeRestaurantId = r.id;
     this.restaurant = { ...r };
     this.savedRestaurant = { ...r };
+
+    this.loadActiveDeliveryZones(); //
 
     // now load data FOR THIS RESTAURANT
     this.loadMenus();
@@ -125,6 +149,7 @@ export class OwnerDashboardComponent implements OnInit {
       this.loadOrders();
     }, 5000);
   }
+
   loadReviews(): void {
     if (!this.activeRestaurantId) return;
 
@@ -370,6 +395,11 @@ export class OwnerDashboardComponent implements OnInit {
   // RESTAURANT SETTINGS
   // ==========================
   saveSettings(): void {
+    if (!this.restaurant.deliveryzone) {
+      alert('Please select an active delivery zone before saving.');
+      return;
+    }
+
     this.ownerService
       .updateRestaurantSettings({
         restaurantID: this.restaurant.restaurantid,
@@ -380,13 +410,17 @@ export class OwnerDashboardComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          // ✅ only update preview AFTER save
           this.savedRestaurant = { ...this.restaurant };
+          this.inactiveDeliveryZone = false;
           alert('Restaurant settings saved');
         },
-        error: () => alert('Failed to save restaurant settings'),
+        error: (err) => {
+          console.error(err);
+          alert(err?.error?.message || 'Failed to save restaurant settings');
+        },
       });
   }
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
