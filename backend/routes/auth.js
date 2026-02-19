@@ -62,9 +62,9 @@ router.post("/login", async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: false, // TODO !! change to true and use https !!
+      secure: true,
       sameSite: "lax",
-      maxAge: parseToMSeconds(cfg.auth.expiration).toString(),
+      maxAge: parseToMSeconds(cfg.auth.expiration),
       path: "/",
     });
 
