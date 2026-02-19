@@ -165,7 +165,7 @@ router.get("/restaurants/:restaurantID/menus", async (req, res) => {
 // =====================================================
 router.get("/menus/:menuID", async (req, res) => {
   const menuID = Number(req.params.menuID)
-  const { limit = 50, offset = 0 } = req.query;
+  const { searchTerm, sortField, sortDirection, limit = 50, offset = 0 } = req.query;
 
   try {
     let query = `
@@ -178,13 +178,47 @@ router.get("/menus/:menuID", async (req, res) => {
       `;
     const params = [];
     params.push(menuID);
-    
+
     // dynamic filters
+    if (searchTerm && searchTerm.trim() !== '') {
+      params.push(`%${searchTerm}%`, `%${searchTerm}%`);
+      query += `
+       AND d.name ILIKE $${params.length-1}
+      OR d.description ILIKE $${params.length}`;
+    }
 
     //paginate
+    const sortMapping = {
+      dishid: 'd.dishid',
+      name: 'd.name',
+      description: 'd.description',
+      price: 'd.price',
+      averageRating: '"averageRating"',
+      ratingCount: '"ratingCount"'
+    };
+
+    let sortByColumn = sortMapping['name'];
+    if (sortField && sortField !== '') {
+      if (sortMapping[sortField] === undefined) {
+        return res.status(400).json({ error: "sortField column not valid." })
+      }
+      sortByColumn = sortMapping[sortField];
+    }
+
+    let sortByDirection = 'ASC';
+    if (sortDirection && sortDirection != '') {
+      const sortDirections = ['DESC', 'ASC'];
+      const sortDirectionIndex = sortDirections.indexOf(sortDirection.toUpperCase());
+      if (sortDirectionIndex === -1) {
+        return res.status(400).json({ error: "Sort direction not valid." })
+      }
+      sortByDirection = sortDirections[sortDirectionIndex];
+    }
+
     query += `
       GROUP BY d.dishid
-      LIMIT $${params.length+1} OFFSET $${params.length+2}
+      ORDER BY ${sortByColumn} ${sortByDirection}
+      LIMIT $${params.length + 1} OFFSET $${params.length + 2}
     `;
     params.push(limit, offset);
 

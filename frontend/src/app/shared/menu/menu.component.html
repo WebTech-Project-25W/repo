@@ -1,36 +1,52 @@
 <div class="menu-card">
-  <h2>{{ name }}</h2>
-  <p class="desc">{{ desc }}</p>
+  <header class="menu-header">
+    <div class="header-left">
+      <h2>{{ name }}</h2>
+      <p class="desc">{{ desc }}</p>
+    </div>
+    <div class="header-right">
+      <input class="search-input" type="text" placeholder="dish name or description" [(ngModel)]="searchTerm"
+        (keyup.enter)="loadData()" />
+
+      <select class="filter-pill" [(ngModel)]="inputSortBy" (change)="ParseSortAndLoadData()"
+      [class.is-placeholder]="inputSortBy === null">
+        <option [ngValue]="null">sort by ...</option>
+        <option value="averageRating.desc">Rating: High → Low</option>
+        <option value="averageRating.asc">Rating: Low → High</option>
+        <option value="price.desc">Price: High → Low</option>
+        <option value="price.asc">Price: Low → High</option>
+      </select>
+    </div>
+  </header>
 
   @for (dish of data; track dish.dishid) {
-    <div class="dish">
-      <div class="dish-left">
-        <strong>{{ dish.name }}</strong>
-        <p>{{ dish.description }}</p>
-      </div>
-
-      <div class="dish-right">
-
-        <div class="dish-rating">
-          <ng-container *ngFor="let star of [1,2,3,4,5]">
-            <span class="star" [class.filled]="star <= getRoundedRating(dish.averageRating || 0)"
-            (click)="onStarClick(dish.dishid, star)">
-              ★
-            </span>
-
-          </ng-container>
-
-          <span class="rating-text">
-            {{ dish.averageRating || 0 }} · {{ dish.ratingCount || 0 }} ratings
-          </span>
-        </div>
-        <span class="price">{{ dish.price }} €</span>
-
-        <ng-container 
-          *ngTemplateOutlet="controlsTemplate || null; context: { dish: dish }">
-        </ng-container>
-      </div>
+  <div class="dish">
+    <div class="dish-left">
+      <strong>{{ dish.name }}</strong>
+      <p>{{ dish.description }}</p>
     </div>
+
+    <div class="dish-right">
+
+      <div class="dish-rating">
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <span class="star" [class.filled]="star <= getRoundedRating(dish.averageRating || 0)"
+            (click)="onStarClick(dish.dishid, star)">
+            ★
+          </span>
+
+        </ng-container>
+
+        <span class="rating-text">
+          {{ dish.averageRating || 0 }} · {{ dish.ratingCount || 0 }} ratings
+        </span>
+      </div>
+      <span class="price">{{ dish.price }} €</span>
+
+      <ng-container *ngTemplateOutlet="controlsTemplate || null; context: { dish: dish }">
+      </ng-container>
+    </div>
+  </div>
   }
 
   <app-pagination
@@ -39,5 +55,5 @@
     [totalEntries]="totalEntries"
     (limitChange)="onLimitChange($event)"
     (pageChange)="onPageChange($event)">
-  ></app-pagination>
+    ></app-pagination>
 </div>

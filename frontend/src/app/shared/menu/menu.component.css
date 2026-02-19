@@ -11,6 +11,51 @@
   font-size: 22px;
 }
 
+.menu-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.header-left {
+  flex: 0.6;
+}
+
+.header-right {
+  flex: 1;
+  display: flex;
+  align-items: top;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+
+.search-input,
+.filter-pill {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.filter-pill:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.filter-pill.is-placeholder {
+  color: grey;
+}
+
+.filter-pill option {
+  color: black;
+}
+
+
 .desc {
   color: #6b7280;
   margin-bottom: 20px;

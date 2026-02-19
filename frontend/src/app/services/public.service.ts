@@ -24,8 +24,13 @@ export class PublicService {
     return this.http.get<any>(`${this.apiUrl}/restaurants`, { params });
   }
 
-  getDishes(menuID: number, limit?: number, offset?: number) {
+  getDishes(menuID: number, searchTerm?: string, sortField?: string, sortDirection?: string, limit?: number, offset?: number) {
     let params = new HttpParams();
+
+    if (searchTerm !== undefined && searchTerm.trim() !== '') { params = params.set('searchTerm', searchTerm)};
+
+    if (sortField !== undefined) { params = params.set('sortField', sortField); }
+    if (sortDirection !== undefined && sortDirection !== null) { params = params.set('sortDirection', sortDirection); }
 
     if (limit !== undefined) { params = params.set('limit', limit.toString()); }
     if (offset !== undefined) { params = params.set('offset', offset.toString()); }
