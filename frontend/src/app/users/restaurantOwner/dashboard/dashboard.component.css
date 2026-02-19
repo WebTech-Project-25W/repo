@@ -41,6 +41,40 @@
   border-radius: 4px;
   margin-bottom: 6px;
 }
+.order-item {
+  display: flex;
+  justify-content: space-between;
+}
+.order-items {
+  margin-top: 12px;
+}
+
+.order-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.item-name {
+  font-weight: 500;
+}
+
+.item-meta {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.item-qty {
+  color: #666;
+  font-size: 14px;
+}
+
+.item-price {
+  font-weight: 600;
+}
 
 .sidebar button.active,
 .sidebar button:hover {
