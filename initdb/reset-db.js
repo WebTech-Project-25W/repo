@@ -116,7 +116,7 @@ async function resetDatabase() {
         "INSERT INTO Review (restaurantID, customerEmail, timeStamp, rating, description) VALUES ($1, $2, $3, $4, $5)",
         [
           restoIDs[review.restoID],
-          review.user,
+          review.email,
           review.time,
           review.rating,
           review.desc,
