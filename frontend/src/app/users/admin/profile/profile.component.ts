@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
+import { PasswordResetComponent } from "../../password-reset/password-reset.component";
 
 @Component({
   standalone: true,
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, PasswordResetComponent]
 })
 export class ProfileComponent implements OnInit {
 
