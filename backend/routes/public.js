@@ -79,7 +79,7 @@ router.get("/restaurants", async (req, res) => {
   }
 
   let sortByDirection = 'ASC';
-  if(sortDirection && sortDirection != '') {
+  if (sortDirection && sortDirection != '') {
     const sortDirections = ['DESC', 'ASC'];
     const sortDirectionIndex = sortDirections.indexOf(sortDirection.toUpperCase());
     if (sortDirectionIndex === -1) {
@@ -171,6 +171,59 @@ router.get("/restaurants/:restaurantID/menus", async (req, res) => {
   } catch (err) {
     console.error("PUBLIC MENUS ERROR:", err);
     res.status(500).json({ message: "Failed to load menus" });
+  }
+});
+
+// =====================================================
+// GET menus + dishes of a restaurant (PUBLIC)
+// =====================================================
+router.get("/menus/:menuID", async (req, res) => {
+  const menuID = Number(req.params.menuID)
+  const { limit = 50, offset = 0 } = req.query;
+
+  try {
+    let query = `
+        SELECT d.dishid, d.menuid, d.name, d.description, d.price, d.photolink, 
+        COALESCE(AVG(r.rating),0)::numeric(2,1) as "averageRating", 
+        COUNT(*) AS "ratingCount",
+        COUNT(*) OVER() as "totalEntries"
+        FROM dish as d LEFT JOIN ratings r on d.dishid = r.dishid
+        WHERE d.menuid = $1
+      `;
+    const params = [];
+    params.push(menuID);
+    
+    // dynamic filters
+
+    //paginate
+    query += `
+      GROUP BY d.dishid
+      LIMIT $${params.length+1} OFFSET $${params.length+2}
+    `;
+    params.push(limit, offset);
+
+    const result = await pool.query(query, params);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Menu " + menuID + " not found." });
+    }
+
+    const totalEntries = result.rows.length > 0 ? parseInt(result.rows[0].totalEntries) : 0;
+
+    res.json({
+      metadata: {
+        totalEntries: totalEntries,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
+      },
+      data: result.rows.map(row => {
+        const { totalEntries, ...data } = row;
+        return data;
+      })
+    });
+  } catch (err) {
+    console.error("PUBLIC MENUS ERROR:", err);
+    res.status(500).json({ message: "Failed to load menu: " + menuID });
   }
 });
 
