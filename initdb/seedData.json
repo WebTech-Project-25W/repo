@@ -464,63 +464,63 @@
     {
       "restoID": 0,
       "email": "Amy@abc.com",
-      "rating": 5,
+      "rating": 4,
       "desc": "Best Tafelspitz I have ever had in Vienna!",
       "time": "2025-12-01 18:30:00+01"
     },
     {
       "restoID": 1,
       "email": "Brian@bobble.co.uk",
-      "rating": 4,
+      "rating": 3,
       "desc": "Lovely atmosphere, though the service was a bit slow today.",
       "time": "2025-12-05 12:45:00+00"
     },
     {
       "restoID": 0,
       "email": "Cam@cambridge.edu.uk",
-      "rating": 3,
+      "rating": 2,
       "desc": "Food was okay, but a bit overpriced.",
       "time": "2025-12-10 19:15:00+00"
     },
     {
       "restoID": 2,
       "email": "Dan@deven.at",
-      "rating": 5,
+      "rating": 4,
       "desc": "Phänomenales Essen!",
       "time": "2025-12-15 20:00:00+01"
     },
     {
       "restoID": 1,
       "email": "Emily@Ely.fr",
-      "rating": 4,
+      "rating": 5,
       "desc": "Very charming bistro.",
       "time": "2025-12-20 13:20:00+01"
     },
     {
       "restoID": 4,
       "email": "Amy@abc.com",
-      "rating": 5,
+      "rating": 4,
       "desc": "Healthy meals that actually taste great. Will definitely order again.",
       "time": "2025-12-23 12:30:00+01"
     },
     {
       "restoID": 5,
       "email": "Cam@cambridge.edu.uk",
-      "rating": 4,
+      "rating": 3,
       "desc": "Authentic flavours and friendly service. A solid choice overall.",
       "time": "2025-12-24 19:45:00+01"
     },
     {
       "restoID": 6,
       "email": "Dan@deven.at",
-      "rating": 3,
+      "rating": 2,
       "desc": "Food was decent but delivery took longer than expected.",
       "time": "2025-12-26 20:15:00+01"
       },
       {
   "restoID": 7,
   "email": "Amy@abc.com",
-  "rating": 4,
+  "rating": 5,
   "desc": "Comfort food done right. Portions were generous and very filling.",
   "time": "2025-12-22 18:10:00+01"
 },
