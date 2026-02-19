@@ -77,7 +77,9 @@
   <!-- MENUS -->
    @for (menu of menus; track menu.menuid) {
     <app-menu
-      [menu]="menu"
+      [menuID]="menu.menuid"
+      [name]="menu.name"
+      [desc]="menu.description"
       [controlsTemplate]="controls"
       (dishRated)="rateDish($event)">
     </app-menu>

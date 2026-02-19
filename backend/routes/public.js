@@ -153,20 +153,6 @@ router.get("/restaurants/:restaurantID/menus", async (req, res) => {
       }
     }
 
-    for (let menu of menuRows) {
-      const dishes = await pool.query(`
-        SELECT d.dishid, d.menuid, d.name, d.description, d.price, d.photolink, 
-        COALESCE(AVG(r.rating),0)::numeric(2,1) as "averageRating", 
-        COUNT(*) AS "ratingCount" 
-        FROM dish as d LEFT JOIN ratings r on d.dishid = r.dishid
-        WHERE d.menuid = $1
-        GROUP BY d.dishid
-      `, [
-        menu.menuid,
-      ]);
-      menu.dishes = dishes.rows;
-    }
-
     res.json({ menus: menuRows });
   } catch (err) {
     console.error("PUBLIC MENUS ERROR:", err);

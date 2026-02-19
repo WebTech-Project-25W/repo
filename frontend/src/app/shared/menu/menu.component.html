@@ -1,8 +1,8 @@
 <div class="menu-card">
-  <h2>{{ menu.name }}</h2>
-  <p class="desc">{{ menu.description }}</p>
+  <h2>{{ name }}</h2>
+  <p class="desc">{{ desc }}</p>
 
-  @for (dish of menu.dishes; track dish.dishid) {
+  @for (dish of data; track dish.dishid) {
     <div class="dish">
       <div class="dish-left">
         <strong>{{ dish.name }}</strong>
@@ -32,4 +32,12 @@
       </div>
     </div>
   }
+
+  <app-pagination
+    [limit]="limit"
+    [currentPage]="currentPage" 
+    [totalEntries]="totalEntries"
+    (limitChange)="onLimitChange($event)"
+    (pageChange)="onPageChange($event)">
+  ></app-pagination>
 </div>
