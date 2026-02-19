@@ -410,7 +410,7 @@ router.get("/orders", async (req, res) => {
   const ownerUsername = req.user.email;
 
   try {
-    const orders = await pool.query(
+    const result = await pool.query(
       `
       SELECT
         o.orderid,
@@ -426,7 +426,27 @@ router.get("/orders", async (req, res) => {
       [ownerUsername],
     );
 
-    res.json({ orders: orders.rows });
+    const orders = result.rows;
+
+    // 👇 IMPORTANT: loop over result.rows, not result
+    for (let order of orders) {
+      const itemsResult = await pool.query(
+        `
+  SELECT
+    oi.quantity,
+    oi.unitprice,
+    d.name
+  FROM orderitem oi
+  JOIN dish d ON d.dishid = oi.dishid
+  WHERE oi.orderid = $1
+  `,
+        [order.orderid],
+      );
+
+      order.items = itemsResult.rows;
+    }
+
+    res.json({ orders });
   } catch (err) {
     console.error("GET /owner/orders ERROR:", err);
     res.status(500).json({ message: "Failed to load orders" });

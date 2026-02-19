@@ -241,6 +241,16 @@
           </div>
 
           <p class="muted">Placed {{ order.createdat | date: "short" }}</p>
+          <div *ngFor="let item of order.items" class="order-item-row">
+            <div class="item-name">{{ item.name }}</div>
+
+            <div class="item-meta">
+              <span class="item-qty">x{{ item.quantity }}</span>
+              <span class="item-price">
+                €{{ (item.unitprice * item.quantity).toFixed(2) }}
+              </span>
+            </div>
+          </div>
 
           <div class="order-actions-bar">
             <!-- PENDING -->
