@@ -45,6 +45,8 @@ export class RestaurantDetailComponent implements OnInit {
       .subscribe((res) => {
     this.restaurant = res.restaurant;
     this.loadRestaurantReviews();
+        // restaurant rating
+    this.refreshRestaurantRating();
     });
     // menus
     this.http
