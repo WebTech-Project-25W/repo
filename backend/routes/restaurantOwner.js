@@ -140,17 +140,19 @@ router.post("/menus", async (req, res) => {
 // =====================================================
 router.get("/menus", async (req, res) => {
   const ownerUsername = req.user.email;
+  const { restaurantId } = req.query;
 
   try {
     const result = await pool.query(
       `
-      SELECT m.*
-      FROM menu m
-      JOIN restaurant r ON r.id = m.restaurantid
-      WHERE r.owneremail = $1 
-      AND approvalstatus = 'approved'
+  SELECT m.*
+FROM menu m
+JOIN restaurant r ON r.id = m.restaurantid
+WHERE r.owneremail = $1
+AND r.id = $2
+
       `,
-      [ownerUsername],
+      [ownerUsername, restaurantId],
     );
     const savedOrder = menuOrderMap[ownerUsername];
 
