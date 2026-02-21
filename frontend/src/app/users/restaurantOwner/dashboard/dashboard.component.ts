@@ -178,7 +178,7 @@ export class OwnerDashboardComponent implements OnInit {
   // MENUS
   // ==========================
   loadMenus(): void {
-    this.ownerService.getMenus().subscribe({
+    this.ownerService.getMenus(this.activeRestaurantId!).subscribe({
       next: (res: any) => {
         this.menus = res?.menus ?? [];
         this.loading = false;
