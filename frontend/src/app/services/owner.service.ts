@@ -21,8 +21,8 @@ export class OwnerService {
     });
   }
 
-  getMenus(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/menus`);
+  getMenus(restaurantId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/menus?restaurantId=${restaurantId}`);
   }
 
   createMenu(data: any): Observable<any> {
