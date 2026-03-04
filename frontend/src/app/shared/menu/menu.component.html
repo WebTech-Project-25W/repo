@@ -6,7 +6,7 @@
     </div>
     <div class="header-right">
       <input class="search-input" type="text" placeholder="dish name or description" [(ngModel)]="searchTerm"
-        (keyup.enter)="loadData()" />
+        (keyup.enter)="clearOffsetAndloadData()" />
 
       <select class="filter-pill" [(ngModel)]="inputSortBy" (change)="ParseSortAndLoadData()"
       [class.is-placeholder]="inputSortBy === null">

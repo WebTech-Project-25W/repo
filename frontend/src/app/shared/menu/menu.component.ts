@@ -55,6 +55,11 @@ export class MenuComponent extends BasePaginatedTable<any> implements OnInit {
     })
   }
 
+  clearOffsetAndloadData() {
+    this.currentPage = 0;
+    this.loadData();
+  }
+
   getRoundedRating(value: number): number {
     return Math.floor(value || 0);
   }
