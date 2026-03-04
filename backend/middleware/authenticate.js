@@ -4,7 +4,13 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     try {
-        const token = req.headers.cookie.split('=')[1];
+        cookies = req.headers.cookie.split('; ');
+
+        jwtCookie = cookies.find(row => row.startsWith('jwt='));
+    
+        let token;
+        if (jwtCookie) { token = jwtCookie.split('=')[1]; } 
+
         if (!token) {
             return res.status(401).json({message: "Authentication failed: no token."});
         }
